@@ -1,0 +1,122 @@
+<!--1.Créer une page html-->
+<!DOCTYPE html> 
+<html> 
+	<head>  
+		<title>Votre compte</title>  
+		<meta charset="utf-8">  
+		
+		<!--
+			Charger Bootstrap via CDN-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">     
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">            
+		<!--Inclure jQuery-->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>  
+		
+		<!--Charger le code JavaScript de Bootstrap-->
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>  
+
+		<!--7. Inclure des CSS personnalisés-->
+		<link rel="stylesheet" type="text/css" href="style.css"> 
+		
+		<!--Image de fond et JavaScript personnalisé-->
+		<script type="text/javascript">      
+			$(document).ready(function() {           
+				$('.header').height($(window).height()); 
+			}); 
+		</script> 
+	</head> 	
+	<body> 
+		<!--Ajouter une barre de navigation-->
+		<nav class="navbar navbar-expand-md"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->    
+			<a class="navbar-brand" href="accueil.html"><img src="logo.png" class="img-fluid" width="150"></a>       
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
+				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
+			</button>        
+			<div class="collapse navbar-collapse" id="main-navigation">      
+				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+					<li class="nav-item">
+						<a class="nav-link" href="accueil.html">Accueil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="categories.html">Catégories</a>
+					</li>             
+					<li class="nav-item">
+						<a class="nav-link" href="achat.html">Achat</a>
+					</li>             
+					<li class="nav-item">
+						<a class="nav-link" href="vendre.html">Vendre</a>
+					</li>  
+					<li class="nav-item">
+						<a class="nav-link" href="votre_compte.html">Votre compte</a>
+					</li>             
+					<li class="nav-item">
+						<a class="nav-link" href="panier.html">Panier</a>
+					</li>             
+					<li class="nav-item">
+						<a class="nav-link" href="admin.html">Admin</a>
+					</li>      
+				</ul>       
+			</div> 
+		</nav>
+		
+		<!--Créer un pied de page (footer)-->
+		<footer class="page-footer">   
+			<div class="container">    
+				<div class="row">       
+					<div class="col-lg-3 col-md-3 col-sm-12">	
+						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
+						<ul>  
+							<li>
+								<a href="#">Ferraille ou Trésor</a>
+							</li>    
+							<li>
+								<a href="#">Bon pour le Musée</a>
+							</li> 
+							<li>
+								<a href="#">Accessoires VIP</a>
+							</li>               
+						</ul> 
+					</div> 
+					<div class="col-lg-3 col-md-3 col-sm-12">	
+						<h5 class="text-uppercase font-weight-bold">Achat</h5>
+						<ul>  
+							<li>
+								<a href="#">Enchères</a>
+							</li>    
+							<li>
+								<a href="#">Achetez-le maintenant</a>
+							</li> 
+							<li>
+								<a href="#">Meilleure offre</a>
+							</li>               
+						</ul> 
+					</div>   
+					<div class="col-lg-3 col-md-3 col-sm-12">	
+						<ul>  
+							<li>
+								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.html">Vendre</a> </h5>
+							</li>    
+							<li>
+								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.html">Votre compte</a> </h5>
+							</li>    
+							<li>
+								<h5 class="text-uppercase font-weight-bold"> <a href="admin.html">Admin</a> </h5>
+							</li>            
+						</ul> 
+					</div> 
+
+					<div class="col-lg-3 col-md-3 col-sm-12">       
+						<h5 class="text-uppercase font-weight-bold">Contact</h5>       
+						<p> 37, quai de Grenelle, 75015 Paris, France <br>             
+							info@webDynamique.ece.fr <br>             
+							+33 01 02 03 04 05 <br>             
+							+33 01 03 02 05 04 </p>     
+					</div>   
+				</div>   
+				<div class="footer-copyright text-center"> 
+					<small>&copy; 2019 Copyright | Droit d'auteur: webDynamique.ece.fr</small>					
+				</div> 
+			</div>
+		</footer>
+	</body> 
+</html> 

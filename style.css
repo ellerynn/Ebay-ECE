@@ -1,0 +1,93 @@
+body {   
+	padding: 0px;   
+	margin: 0px;   
+	background: #f2f6e9; 
+} 
+
+/*Les liens sont en police blanche*/
+a {
+      color:white;
+}
+
+/*--- navigation bar ---*/ 
+.navbar {   
+	background:#6ab446; 
+} 
+
+.nav-link, .navbar-brand {   
+	color: #fff;   
+	cursor: pointer; 
+} 
+
+.nav-link {   
+	margingin-right: 1em !important; 
+} 
+
+.nav-link:hover {   
+	color: #000; 
+} 
+
+.navbar-collapse {   
+	justify-content: flex-end; 
+} 
+
+/*barre de recherche*/
+.page-header .inline-form input {
+    display: inline-block;
+    width: 1000px;
+    border: 1px solid lightgrey; 
+    margin: 10px auto;
+}
+
+.page-header .btn {   
+	background-color:white;   
+	border: 1px solid lightgrey;   
+	color: grey;   
+} 
+
+.features {   
+	margin: 1em auto;
+	padding: 1em;   
+	position: relative; 
+} 
+ 
+.page-footer {   
+	background-color: #222;   
+	color: white; /*couleur police HORS LISTE*/
+	padding: 60px 0 30px; 
+} 
+
+.page-footer ul {
+	list-style-type:none;
+}
+ 
+.footer-copyright {   
+	color: #666;   
+	padding: 40px 0; 
+} 
+
+/*16. Ajouter des requêtes multimédia*/
+@media (max-width: 575.98px) { 
+ 
+ 	.description {     
+ 		left: 0;     
+ 		padding: 0 15px;     
+ 		position: absolute;     
+ 		top: 10%;     
+ 		transform: none;     
+ 		text-align: center;   
+ 	}      
+
+ 	.description h1 {     
+ 		font-size: 2em;   
+ 	}      
+
+ 	.description p {     
+ 		font-size: 1.2rem;   
+ 	}      
+
+ 	.features {     
+ 		margin: 0;   
+ 	} 
+ 
+}
