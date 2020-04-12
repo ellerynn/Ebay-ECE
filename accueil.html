@@ -30,30 +30,32 @@
 	</head> 	
 	<body> 
 		<!--Ajouter une barre de navigation-->
-		<nav class="navbar navbar-expand-md"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->    
-			<a class="navbar-brand" href="accueil.html"><img src="logo.png" class="img-fluid" width="150"></a> <!--navbar-brand — utilisé pour l'image de marque du site Web-->       
-			
+		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
-			<div class="collapse navbar-collapse" id="main-navigation">     
+			<form class="navbar-form inline-form">
+				<div class="form-group">
+				  	<span style="color:white;"><i class="fas fa-search"></i></span>
+				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
+				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				</div>
+			</form>
+
+			<div class="collapse navbar-collapse">     
 				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.html">Accueil</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="categories.html">Catégories</a>
-					</li>             
-					<li class="nav-item">
-						<a class="nav-link" href="achat.html">Achat</a>
-					</li>             
-					<li class="nav-item">
-						<a class="nav-link" href="vendre.html">Vendre</a>
-					</li>               
-					<li class="nav-item">
-						<a class="nav-link" href="admin.html">Admin</a>
-					</li>             
+					<li class="nav-item dropdown">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
+					  	<div class="dropdown-menu" id="menu-deroulant">
+						    <a class="nav-link dropdown-item" href="achat.html">Achat</a>
+						    <a class="nav-link dropdown-item" href="vendre.html">Vendre</a>
+						    <a class="nav-link dropdown-item" href="admin.html">Admin</a>
+					  	</div>
+					</li>         
 					<li class="nav-item">
 						<a class="nav-link" href="votre_compte.html"><i class="fas fa-user"></i></a>
 					</li>        
@@ -63,22 +65,54 @@
 				</ul>       
 			</div> 
 		</nav>
-		
-		<!--Créer un conteneur de contenu de la page-->
-		<header class="page-header">
-			<form class="navbar-form navbar-right inline-form text-center">
-			    <div class="form-group">
-				   	<i class="fas fa-search"></i>
-				   	<input type="search" class="input-sm form-control" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
-			    </div>
-			</form> 			
-		</header>
+
+		<header class="page-header header container-fluid"> <!-- -fluid permet de s'assurer que le conteneur s'étend sur toute la largeur de l'écran. Il y a aussi juste un container, avec des largeurs fixes appliquées = espace des deux côtés de l'écran.-->
+			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12" id="fix">
+					<h3 class="text-center">eBay ECE</h3>
+					<p></p>
+					<div class="list-group">
+			        	<a href="#" class="list-group-item">Ferraille ou Trésor</a>
+			          	<a href="#" class="list-group-item">Bon pour le Musée</a>
+			          	<a href="#" class="list-group-item">Accessoires VIP</a>
+			        </div>
+		        </div>
+		        <div class="col-lg-9 col-md-9 col-sm-12">
+					<div id="carousel" class="carousel slide" data-ride="carousel">
+					 	<ul class="carousel-indicators">
+					    	<li data-target="#carousel" data-slide-to="0" class="active"></li>
+					    	<li data-target="#carousel" data-slide-to="1"></li>
+					    	<li data-target="#carousel" data-slide-to="2"></li>
+						</ul>
+
+						<div class="carousel-inner">
+						    <div class="carousel-item active">
+						      	<img src="noir.png" alt="Los Angeles">
+						    </div>
+						    <div class="carousel-item">
+						      	<img src="rose.png" alt="Chicago">
+						    </div>
+						    <div class="carousel-item">
+						      	<img src="gris.png" alt="New York">
+						    </div>
+						</div>
+
+						<a class="carousel-control-prev" href="#carousel" data-slide="prev">
+						    <span class="carousel-control-prev-icon"></span>
+						</a>
+						<a class="carousel-control-next" href="#carousel" data-slide="next">
+						    <span class="carousel-control-next-icon"></span>
+						</a>
+					</div>
+		        </div>
+	    	</div>
+		</header> 		
 
 		<!--Mettre en place une section à quatre colonnes-->
 		<!--20 IMAGES-->
 		<div class="container features">    
 			<div class="row"> <!--A chaque fois qu'on crée des colonnes pour qu’elles servent de conteneur à la grille.-->  
+				<div class="col-lg-3 col-md-3 col-sm-12"></div>
 				<div class="col-lg-3 col-md-3 col-sm-12"> <!--colonnes et de la taille qu'elles auront sur différents écrans + signifie qu'elles occuperont un tiers de l'écran sur les grands et moyens écrans. (12 divisé par 4 est 3) mais l'écran entier sur de petits appareils (12 colonnes sur 12).-->
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -86,15 +120,7 @@
 						</a>     
 						<p>En attente d'images d'items à vendre</p> 
 					</div>
-				</div>          
-				<div class="col-lg-3 col-md-3 col-sm-12">      	        
-					<div class="img-thumbnail">
-						<a href="attente_image.jpg">       
-							<img src="attente_image.jpg" class="img-fluid"> 
-						</a>     
-						<p>En attente d'images d'items à vendre</p> 
-					</div>
-				</div>             
+				</div>               
 				<div class="col-lg-3 col-md-3 col-sm-12">      	        
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -114,6 +140,7 @@
 			</div> 
 			<br>
 			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12"></div>
 				<div class="col-lg-3 col-md-3 col-sm-12">  
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -121,15 +148,7 @@
 						</a>     
 						<p>En attente d'images d'items à vendre</p> 
 					</div>
-				</div>          
-				<div class="col-lg-3 col-md-3 col-sm-12">      	        
-					<div class="img-thumbnail">
-						<a href="attente_image.jpg">       
-							<img src="attente_image.jpg" class="img-fluid"> 
-						</a>     
-						<p>En attente d'images d'items à vendre</p> 
-					</div>
-				</div>             
+				</div>            
 				<div class="col-lg-3 col-md-3 col-sm-12">      	        
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -149,6 +168,7 @@
 			</div> 
 			<br>
 			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12"></div>
 				<div class="col-lg-3 col-md-3 col-sm-12">  
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -156,15 +176,7 @@
 						</a>     
 						<p>En attente d'images d'items à vendre</p> 
 					</div>
-				</div>          
-				<div class="col-lg-3 col-md-3 col-sm-12">      	        
-					<div class="img-thumbnail">
-						<a href="attente_image.jpg">       
-							<img src="attente_image.jpg" class="img-fluid"> 
-						</a>     
-						<p>En attente d'images d'items à vendre</p> 
-					</div>
-				</div>             
+				</div>            
 				<div class="col-lg-3 col-md-3 col-sm-12">      	        
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -184,6 +196,7 @@
 			</div>
 			<br>
 			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12"></div>
 				<div class="col-lg-3 col-md-3 col-sm-12">  
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       
@@ -191,15 +204,7 @@
 						</a>     
 						<p>En attente d'images d'items à vendre</p> 
 					</div>
-				</div>          
-				<div class="col-lg-3 col-md-3 col-sm-12">      	        
-					<div class="img-thumbnail">
-						<a href="attente_image.jpg">       
-							<img src="attente_image.jpg" class="img-fluid"> 
-						</a>     
-						<p>En attente d'images d'items à vendre</p> 
-					</div>
-				</div>             
+				</div>            
 				<div class="col-lg-3 col-md-3 col-sm-12">      	        
 					<div class="img-thumbnail">
 						<a href="attente_image.jpg">       

@@ -1,49 +1,85 @@
 body {   
 	padding: 0px;   
 	margin: 0px;   
-	background: #f2f6e9; 
+	background:white; 
 } 
 
-/*Les liens sont en police blanche*/
+/*Les liens sont en police noire*/
 a {
-      color:white;
+      color:black;
 }
 
 /*--- navigation bar ---*/ 
 .navbar {   
-	background:#6ab446; 
+	background:	#343a40;
+	max-height: 50px; 
 } 
 
 .nav-link, .navbar-brand {   
-	color: #fff;   
-	cursor: pointer; 
+	color:white;   
+	cursor: pointer;
 } 
 
 .nav-link {   
-	margingin-right: 1em !important; 
-} 
-
-.nav-link:hover {   
-	color: #000; 
+	margin-right: 1em !important; 
 } 
 
 .navbar-collapse {   
 	justify-content: flex-end; 
 } 
 
-/*barre de recherche*/
-.page-header .inline-form input {
-    display: inline-block;
-    width: 1000px;
-    border: 1px solid lightgrey; 
-    margin: 10px auto;
+/*menu déoulant*/
+#menu-deroulant a {
+      color:black;
 }
 
-.page-header .btn {   
-	background-color:white;   
-	border: 1px solid lightgrey;   
-	color: grey;   
+.nav-item button {
+	background-color: #343a40;
+	border-color: #343a40;
+	margin-right: 23px;
+	width: 100px;
+}
+
+/*barre de recherche*/
+.inline-form input {
+    display: inline-block;
+    width: 500px;
+    position: relative;
+    margin-top: 17px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.inline-form button {
+    margin-bottom: 2px;
+}
+
+.page-header {
+	margin: 1em auto;
+	padding: 1em;   
+	position: relative; 
+	max-height: 450px;
+	margin-top: 80px;
 } 
+ 
+.page-header h1 {   
+	color: #6ab446; 
+} 
+
+.page-header .list-group {
+	width:180px; 
+	margin-left: 50px;
+}
+
+#fix {
+	position: fixed;
+}
+ 
+#carousel {
+	margin-right: 55px;
+	height: 400px;
+	left:320px;
+}
 
 .features {   
 	margin: 1em auto;
@@ -52,8 +88,8 @@ a {
 } 
  
 .page-footer {   
-	background-color: #222;   
-	color: white; /*couleur police HORS LISTE*/
+	background-color: #343a40;   
+	color:white; /*couleur police HORS LISTE*/
 	padding: 60px 0 30px; 
 } 
 
@@ -62,32 +98,11 @@ a {
 }
  
 .footer-copyright {   
-	color: #666;   
-	padding: 40px 0; 
+	color:white;   
+	padding: 10px 0; 
 } 
 
-/*16. Ajouter des requêtes multimédia*/
-@media (max-width: 575.98px) { 
- 
- 	.description {     
- 		left: 0;     
- 		padding: 0 15px;     
- 		position: absolute;     
- 		top: 10%;     
- 		transform: none;     
- 		text-align: center;   
- 	}      
-
- 	.description h1 {     
- 		font-size: 2em;   
- 	}      
-
- 	.description p {     
- 		font-size: 1.2rem;   
- 	}      
-
- 	.features {     
- 		margin: 0;   
- 	} 
- 
+/*Les liens sont en police blanche*/
+.page-footer a {
+      color:white;
 }

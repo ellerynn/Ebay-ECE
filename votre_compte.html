@@ -21,82 +21,68 @@
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
 	<body> 
-		<nav class="navbar navbar-expand-md">
-			<a class="navbar-brand" href="accueil.html"><img src="logo.png" class="img-fluid" width="150"></a>       
-			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">  
-				<span class="navbar-toggler-icon"></span>     
-			</button>        
+		<nav class="navbar navbar-expand-md fixed-top"> 
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
+				<span class="navbar-toggler-icon"></span>       
+			</button>   
 
-			<div class="collapse navbar-collapse" id="main-navigation">      
-				<ul class="navbar-nav">          
+			<form class="navbar-form inline-form">
+				<div class="form-group">
+				  	<span style="color:white;"><i class="fas fa-search"></i></span>
+				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
+				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				</div>
+			</form>
+
+			<div class="collapse navbar-collapse">     
+				<ul class="navbar-nav">         
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.html">Accueil</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="categories.html">Catégories</a>
-					</li>             
-					<li class="nav-item">
-						<a class="nav-link" href="achat.html">Achat</a>
-					</li>             
-					<li class="nav-item">
-						<a class="nav-link" href="vendre.html">Vendre</a>
-					</li>               
-					<li class="nav-item">
-						<a class="nav-link" href="admin.html">Admin</a>
-					</li>             
+					<li class="nav-item dropdown">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
+					  	<div class="dropdown-menu" id="menu-deroulant">
+						    <a class="nav-link dropdown-item" href="achat.html">Achat</a>
+						    <a class="nav-link dropdown-item" href="vendre.html">Vendre</a>
+						    <a class="nav-link dropdown-item" href="admin.html">Admin</a>
+					  	</div>
+					</li>         
 					<li class="nav-item">
 						<a class="nav-link" href="votre_compte.html"><i class="fas fa-user"></i></a>
 					</li>        
 					<li class="nav-item">
 						<a class="nav-link" href="panier.html"><i class="fas fa-shopping-cart"></i></a>
-					</li>   
-				</ul>      
+					</li>      
+				</ul>       
 			</div> 
 		</nav>
 
-		<header class="page-header">
-			<form class="navbar-form navbar-right inline-form text-center">
-			    <div class="form-group">
-				   	<i class="fas fa-search"></i>
-				   	<input type="search" class="input-sm form-control" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
-			    </div>
-			</form> 			
-		</header>
-
-
 		<!--FORMULAIRE-->
-
-
-		<h1>Inscription</h1>
-		<form action="inscription.php" method="post">
-			<table>
-				<tr>
-					<td>Nom:</td>
-					<td><input type="text" name="nom"></td>
-				</tr>
-				<tr>
-					<td>Prenom:</td>
-					<td><input type="text" name="prenom"></td>
-				</tr>
-				<tr>
-					<td>Email:</td>
-					<td><input type="text" name="email"></td>
-				</tr>
-				<tr>
-					<td>Mot de passe:</td>
-					<td><input type="text" name="motdepasse"></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input name="buttoninscription" type="submit" value="S'inscire">
-					</td>
-				</tr>
-
-			</table>
-		</form>
-	
-
+		<br><br><br>
+		<div class="container features">
+			<h1 class="text-center">Créer un compte</h1>
+			<form action="inscription.php" method="post">
+				<table>
+					<tr>
+						<td><input type="text" name="nom" placeholder="Nom"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="prenom" placeholder="Prénom"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="email" placeholder="Mail"></td>
+					</tr>
+					<tr>
+						<td><input type="password" name="motdepasse" placeholder="Mot de passe"></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input name="buttoninscription" type="submit" value="S'inscrire">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
 		
 		<footer class="page-footer">   
 			<div class="container">    
