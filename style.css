@@ -87,6 +87,12 @@ a {
 	position: relative; 
 } 
 
+#apop1, #apop2 {
+  display: none;
+  position: absolute;
+}
+
+
 #con-insc input {
 	border-top: 0;
 	border-right: 0;
