@@ -60,7 +60,59 @@
 				</ul>       
 			</div> 
 		</nav>
-		
+
+
+
+		<form method='post' action='ajout_produit.php' enctype='multipart/form-data'>
+			<h2>Vendre un produit</h2>
+			<table>
+			<tr>
+				<td>Nom du produit:</td>
+				<td><input type="text" name="nom"></td>
+			</tr>
+			<tr>
+				<td>La/les photo(s):</td>
+				<td><input type="file" name="filephoto[]" id="file" multiple></td>
+			</tr>
+			<tr>
+				<td>Vidéo (facultative):</td>
+				<td><input type="radio" name="video" value="oui">Oui <br>
+					<input type="radio" name="video" value="non">Non <br></td>
+					<!--camille devra modifier ca pour lafficher si bouton oui/non cliquer comme pour connexion -->
+					<td><p>Pour Camille : Caché Le parcourir au début et afficher que quand l'user coche "oui"</p></td> 
+				<td><input type="file" name="filevideo[]" id="file" multiple></td>
+			</tr>
+			<tr>
+				<td>La description</td>
+				<td><textarea name="description" rows="2" cols="20"></textarea></td>
+			</tr>
+			<tr>
+				<td>La Catégorie</td>
+				<td><input type="radio" name="categorie" value="Farraille_tresor">Ferraille ou Trésor <br>
+					<input type="radio" name="categorie" value="Musee">Bon pour le Musée <br>
+					<input type="radio" name="categorie" value="VIP">Accessoire VIP <br></td>
+			</tr>
+			<tr>
+				<td>Le prix</td>
+				<td><input type="number" name="prix"></td>
+			</tr>
+			<tr>
+				<td>Type de vente</td>
+				<td><input type="radio" name="vente1" value="achat_immediat">Achat immédiat <br>
+					<input type="radio" name="vente2" value="enchere">Enchère<br>
+					<input type="radio" name="vente2" value="offre">Meilleur offre<br></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input name="boutonajoutproduit" type="submit" value="Ajouter le produit">
+				</td>
+			</tr>
+		</table>
+            
+        </form>
+
+
+
 		<footer class="page-footer">   
 			<div class="container">    
 				<div class="row">       

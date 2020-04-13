@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  Dim 12 avr. 2020 à 18:43
+-- Généré le :  lun. 13 avr. 2020 à 19:38
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.3.12
 
@@ -53,7 +53,24 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 INSERT INTO `acheteur` (`ID`, `ID_panier`, `Adresse_ligne1`, `Adresse_ligne2`, `Ville`, `Code_Postal`, `Pays`, `Telephone`, `Type_carte`, `Numero_carte`, `Nom_carte`, `Date_exp_carte`, `Code_securite`) VALUES
 (21, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (22, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(23, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(23, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(24, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(26, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `encherir`
+--
+
+DROP TABLE IF EXISTS `encherir`;
+CREATE TABLE IF NOT EXISTS `encherir` (
+  `ID_enchere` int(255) NOT NULL,
+  `ID_acheteur` int(255) DEFAULT NULL,
+  `Nom_item` varchar(255) DEFAULT NULL,
+  `prix_acheteur` int(255) DEFAULT NULL,
+  PRIMARY KEY (`ID_enchere`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -63,14 +80,62 @@ INSERT INTO `acheteur` (`ID`, `ID_panier`, `Adresse_ligne1`, `Adresse_ligne2`, `
 
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE IF NOT EXISTS `item` (
-  `ID_item` int(11) NOT NULL AUTO_INCREMENT,
   `Nom_item` varchar(255) NOT NULL,
-  `Description` varchar(255) NOT NULL,
-  `Video` varchar(255) NOT NULL,
-  `Categorie` varchar(255) NOT NULL,
-  `Prix` int(11) NOT NULL,
-  `ID_type_vente` varchar(255) NOT NULL,
-  PRIMARY KEY (`ID_item`)
+  `ID_type_vente` varchar(255) DEFAULT NULL,
+  `Description` varchar(255) DEFAULT NULL,
+  `Categorie` varchar(255) DEFAULT NULL,
+  `Prix` int(11) DEFAULT NULL,
+  `Video` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Nom_item`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `item`
+--
+
+INSERT INTO `item` (`Nom_item`, `ID_type_vente`, `Description`, `Categorie`, `Prix`, `Video`) VALUES
+('azerty', ' offre', 'zaeez', 'Musee', 123, ''),
+('azert', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('azer', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('aze', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('az', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('a', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('uiop', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
+('uio', ' offre', 'zaeez', 'Musee', 123, 'a.mp3');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `liste_enchere`
+--
+
+DROP TABLE IF EXISTS `liste_enchere`;
+CREATE TABLE IF NOT EXISTS `liste_enchere` (
+  `ID_enchere` int(255) NOT NULL AUTO_INCREMENT,
+  `Nom_item` varchar(255) DEFAULT NULL,
+  `Date_debut` date DEFAULT NULL,
+  `Heure_début` time DEFAULT NULL,
+  `Date_fin` date DEFAULT NULL,
+  `Heure_fin` time DEFAULT NULL,
+  PRIMARY KEY (`ID_enchere`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `meilleur_offre`
+--
+
+DROP TABLE IF EXISTS `meilleur_offre`;
+CREATE TABLE IF NOT EXISTS `meilleur_offre` (
+  `ID_acheteur` int(255) NOT NULL,
+  `ID_vendeur` int(255) NOT NULL,
+  `Nom_item` varchar(255) NOT NULL,
+  `prix_acheteur` int(255) DEFAULT NULL,
+  `prix_vendeur` int(255) DEFAULT NULL,
+  `tentative` int(255) DEFAULT NULL,
+  `statut` int(255) DEFAULT NULL,
+  PRIMARY KEY (`ID_acheteur`,`ID_vendeur`,`Nom_item`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -82,9 +147,9 @@ CREATE TABLE IF NOT EXISTS `item` (
 DROP TABLE IF EXISTS `panier`;
 CREATE TABLE IF NOT EXISTS `panier` (
   `ID_panier` int(11) NOT NULL,
-  `ID_item` int(11) NOT NULL,
+  `Nom_item` varchar(70) NOT NULL,
   `ID_type_vente` varchar(255) NOT NULL,
-  PRIMARY KEY (`ID_item`,`ID_type_vente`,`ID_panier`)
+  PRIMARY KEY (`Nom_item`,`ID_type_vente`,`ID_panier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -96,24 +161,24 @@ CREATE TABLE IF NOT EXISTS `panier` (
 DROP TABLE IF EXISTS `personne`;
 CREATE TABLE IF NOT EXISTS `personne` (
   `ID` int(255) NOT NULL AUTO_INCREMENT,
-  `Nom` varchar(255) NOT NULL,
-  `Prenom` varchar(255) NOT NULL,
-  `Email` varchar(255) NOT NULL,
-  `ID_statut` int(11) NOT NULL,
-  `Mot_de_passe` varchar(255) NOT NULL,
+  `Nom` varchar(255) DEFAULT NULL,
+  `Prenom` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Statut` int(11) DEFAULT NULL,
+  `Mot_de_passe` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
 --
 
-INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `ID_statut`, `Mot_de_passe`) VALUES
-(1, 'Cai', 'Emilie', 'emilie@gmail.com', 1, ''),
-(2, 'Sivapalan', 'Sutharsan', 's.sutharssan@gmail.com', 1, ''),
-(3, 'Bruant', 'Camille', 'camille@gmail.com', 1, ''),
-(4, 'Patrick', 'Claude', 'claude@gmail.com', 2, ''),
-(5, 'Gilles', 'Francois', 'francois@gmail.com', 3, ''),
+INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `Statut`, `Mot_de_passe`) VALUES
+(1, 'Cai', 'Emilie', 'emilie@gmail.com', 1, 'azerty'),
+(2, 'Sivapalan', 'Sutharsan', 's.sutharssan@gmail.com', 1, 'azerty'),
+(3, 'Bruant', 'Camille', 'camille@gmail.com', 1, 'azerty'),
+(4, 'Patrick', 'Claude', 'claude@gmail.com', 2, 'claude@gmail.com'),
+(5, 'Gilles', 'Francois', 'francois@gmail.com', 2, 'azerty'),
 (8, 'Sivapalan', 'Subramaniam', 's.suan@gmail.com', 3, 'qfqeef'),
 (9, 'asa', 'asasas', 'sasas', 3, 'sasasa'),
 (10, 'Sivapalan', 'Subramaniam', 'fefefe', 3, 'fefefe'),
@@ -127,7 +192,9 @@ INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `ID_statut`, `Mot_de_pas
 (20, 'Sivapalan', 'Sutharsan', 'hhhhhhhhhhhhhhhhhh', 3, 'hhhhhhhhhhhhhhhhh'),
 (21, 'Sivapalan', 'Subramaniam', 'iiiiiiiiiiiiiiiii', 3, 'iiiiiiiiiiiiii'),
 (22, 'Sivapalan', 'Subramaniam', 'llllllllllllll', 3, 'llllllllllllllll'),
-(23, 'Sivapalan', 'Subramaniam', 'mmmmmmmmmmmm', 3, 'mmmmmmmmmm');
+(23, 'Sivapalan', 'Subramaniam', 'mmmmmmmmmmmm', 3, 'mmmmmmmmmm'),
+(24, 'dddd', 'azazeeeeeeeeeeeee', 'eeeeeeeeeeeeeeeeeeeeeeeeee', 3, 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'),
+(26, 'ezerzr', 'zrezrerze', 'azezaezeazezea', 3, 'zaeazezeazeaze');
 
 -- --------------------------------------------------------
 
@@ -137,10 +204,23 @@ INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `ID_statut`, `Mot_de_pas
 
 DROP TABLE IF EXISTS `photo`;
 CREATE TABLE IF NOT EXISTS `photo` (
-  `ID_item` int(11) NOT NULL,
   `Nom_photo` varchar(255) NOT NULL,
-  PRIMARY KEY (`Nom_photo`)
+  `Nom_item` varchar(70) NOT NULL,
+  `Direction` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Nom_photo`,`Nom_item`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `photo`
+--
+
+INSERT INTO `photo` (`Nom_photo`, `Nom_item`, `Direction`) VALUES
+('b.jpg', 'a', NULL),
+('a.jpg', 'a', NULL),
+('a.jpg', 'uiop', NULL),
+('b.jpg', 'uiop', NULL),
+('a.jpg', 'uio', NULL),
+('b.jpg', 'uio', NULL);
 
 -- --------------------------------------------------------
 
@@ -150,11 +230,20 @@ CREATE TABLE IF NOT EXISTS `photo` (
 
 DROP TABLE IF EXISTS `vendeur`;
 CREATE TABLE IF NOT EXISTS `vendeur` (
+  `ID` int(11) NOT NULL,
   `Pseudo` varchar(255) NOT NULL,
-  `ID_photo` varchar(255) NOT NULL,
-  `ID_image_fond` varchar(255) NOT NULL,
-  `ID` int(11) NOT NULL
+  `ID_photo` varchar(255) DEFAULT NULL,
+  `ID_image_fond` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Pseudo`,`ID`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `vendeur`
+--
+
+INSERT INTO `vendeur` (`ID`, `Pseudo`, `ID_photo`, `ID_image_fond`) VALUES
+(4, 'Pat', NULL, NULL),
+(5, 'gi', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
