@@ -28,6 +28,7 @@
 		<!--Icones personnalisés-->
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
+
 	<body> 
 		<!--Ajouter une barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
@@ -55,16 +56,63 @@
 						    <a class="nav-link dropdown-item" href="vendre.html">Vendre</a>
 						    <a class="nav-link dropdown-item" href="admin.html">Admin</a>
 					  	</div>
-					</li>         
-					<li class="nav-item">
-						<a class="nav-link" href="votre_compte.html"><i class="fas fa-user"></i></a>
-					</li>        
+					</li>  
+					<li class="nav-item dropdown">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
+					  	<div class="dropdown-menu" id="apop1">
+						    <a class="nav-link dropdown-item" href="votre_compte.html">Mon compte</a>
+						    <a class="nav-link dropdown-item" href="#">Se déconnecter</a>
+					  	</div>
+					  	<div class="dropdown-menu" id="apop2">
+						    <a class="nav-link dropdown-item" href="#">Se connecter</a>
+					  	</div>
+					</li> 
+
+					<script>
+						// Get the button, and when the user clicks on it, execute myFunction
+						document.getElementById("btnpop").onclick = function() {connexion()};
+
+						/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
+						function connexion() {
+						  document.getElementById("apop2").classList.toggle("show");
+						}
+					</script>
+
+					<!--script>
+						var fileSystem=new ActiveXObject("Scripting.FileSystemObject");
+						var fichier=fileSystem.OpenTextFile("connexion.txt", 1 ,true);
+						alert(fichier.ReadAll()); // imprime: "connexion"
+						alert("coucou");
+
+						// Get the button, and when the user clicks on it, execute myFunction
+						document.getElementById("btnpop").onclick = function() {afficher()};
+
+						/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
+						function afficher() 
+						{
+							switch(fichier) 
+							{
+								case false:
+									document.getElementById("menu-deco").classList.toggle("show");
+								  	break;
+								default:
+								  	document.getElementById("menu-co").classList.toggle("show");
+								  	break;
+							}
+							
+						}
+
+						fichier.Close();
+					</script-->
+
 					<li class="nav-item">
 						<a class="nav-link" href="panier.html"><i class="fas fa-shopping-cart"></i></a>
-					</li>      
-				</ul>       
+					</li>    
+				</ul>      
 			</div> 
 		</nav>
+
+
 
 		<header class="page-header header container-fluid"> <!-- -fluid permet de s'assurer que le conteneur s'étend sur toute la largeur de l'écran. Il y a aussi juste un container, avec des largeurs fixes appliquées = espace des deux côtés de l'écran.-->
 			<div class="row"> 
