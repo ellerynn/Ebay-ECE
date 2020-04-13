@@ -28,6 +28,7 @@
 		<!--Icones personnalisés-->
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
+
 	<body> 
 		<!--Ajouter une barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
@@ -55,10 +56,14 @@
 						    <a class="nav-link dropdown-item" href="vendre.html">Vendre</a>
 						    <a class="nav-link dropdown-item" href="admin.html">Admin</a>
 					  	</div>
-					</li>         
-					<li class="nav-item">
-						<a class="nav-link" href="votre_compte.html"><i class="fas fa-user"></i></a>
-					</li>        
+					</li>  
+					<li class="nav-item dropdown">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
+					  	<div class="dropdown-menu" id="menu-deroulant">
+						    <a class="nav-link dropdown-item" href="votre_compte.html">Mon compte</a>
+						    <a class="nav-link dropdown-item" href="#">Se déconnecter</a>
+					  	</div>
+					</li>          
 					<li class="nav-item">
 						<a class="nav-link" href="panier.html"><i class="fas fa-shopping-cart"></i></a>
 					</li>      
