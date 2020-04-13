@@ -94,7 +94,21 @@ a {
 	width: 570px;
 	margin: 10px;
 }
- 
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+}
+
+.show {
+	display:block;
+}
+
 .page-footer {   
 	background-color: #343a40;   
 	color:white; /*couleur police HORS LISTE*/
