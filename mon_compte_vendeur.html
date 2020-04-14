@@ -1,7 +1,8 @@
+<!--1.Créer une page html-->
 <!DOCTYPE html> 
 <html> 
 	<head>  
-		<title>Admin</title>  
+		<title>Vendre</title>  
 		<meta charset="utf-8">  
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1">     
@@ -52,7 +53,7 @@
 						    <a class="nav-link dropdown-item" href="votre_compte.html">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="#">Se déconnecter</a>
 					  	</div>
-					</li>       
+					</li>        
 					<li class="nav-item">
 						<a class="nav-link" href="panier.html"><i class="fas fa-shopping-cart"></i></a>
 					</li>      
@@ -60,98 +61,38 @@
 			</div> 
 		</nav>
 
-		<br><br><br>
 
-		<!--FORMULAIRE SUPRRESSION PRODUIT-->
-		<div class="container-fluid features" id="con-insc">
-			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-12 border-right">
-					<h1 class="text-center">Supprimer un article</h1>
-					<form action="suppression_produit_admin.php" method="post">
-						<table>
-							<tr>
-								<td><input type="text" name="id" placeholder="ID de l'article" required="true"></td>
-							</tr>
-							
-								<td colspan="2" align="center">
-									<input class="btn border btn-outline-secondary rounded-lg" name="buttonsupprimer" type="submit" value="Supprimer">
-								</td>
-							</tr>
-						</table>
-					</form>
-				</div>
-				
 
-				<!--FORMULAIRE AJOUT PRODUIT-->
-				<form method='post' action='ajout_produit.php' enctype='multipart/form-data'>
-			<h2>Vendre un produit</h2>
+		<form method='post' action='ajout_photo_vendeur.php' enctype='multipart/form-data'>
+			<h2>Votre profil</h2>
 			<table>
 			<tr>
-				<td>Nom du produit:</td>
-				<td><input type="text" name="nom"></td>
-			</tr>
-			<tr>
-				<td>La/les photo(s):</td>
+				
+				<td>Modifier votre photo de profil:</td>
 				<td><input type="file" name="filephoto[]" id="file" multiple></td>
 			</tr>
 			<tr>
-				<td>Vidéo (facultative):</td>
-				<td><input type="radio" name="video" value="oui">Oui <br>
-					<input type="radio" name="video" value="non">Non <br></td>
-					<!--camille devra modifier ca pour lafficher si bouton oui/non cliquer comme pour connexion -->
-					<td><p>Pour Camille : Caché Le parcourir au début et afficher que quand l'user coche "oui"</p></td> 
-				<td><input type="file" name="filevideo[]" id="file" multiple></td>
+			<td colspan="2" align="center">
+				<input class="btn border btn-outline-secondary rounded-lg" name="buttonmodifierphotoprofil" type="submit" value="Modifier">
+			</td>
 			</tr>
 			<tr>
-				<td>La description</td>
-				<td><textarea name="description" rows="2" cols="20"></textarea></td>
+				
+				<td>Modifier votre image de fond:</td>
+				<td><input type="file" name="filephotofond[]" id="file" multiple></td>
 			</tr>
 			<tr>
-				<td>La Catégorie</td>
-				<td><input type="radio" name="categorie" value="Farraille_tresor">Ferraille ou Trésor <br>
-					<input type="radio" name="categorie" value="Musee">Bon pour le Musée <br>
-					<input type="radio" name="categorie" value="VIP">Accessoire VIP <br></td>
+			<td colspan="2" align="center">
+				<input class="btn border btn-outline-secondary rounded-lg" name="buttonmodifierimagefond" type="submit" value="Modifier">
+			</td>
 			</tr>
-			<tr>
-				<td>Le prix</td>
-				<td><input type="number" name="prix"></td>
-			</tr>
-			<tr>
-				<td>Type de vente</td>
-				<td><input type="radio" name="vente1" value="achat_immediat">Achat immédiat <br>
-					<input type="radio" name="vente2" value="enchere">Enchère<br>
-					<input type="radio" name="vente2" value="offre">Meilleur offre<br></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<input name="boutonajoutproduit" type="submit" value="Ajouter le produit">
-				</td>
-			</tr>
+
 		</table>
             
         </form>
 
 
 
-					<script>
-						// Get the button, and when the user clicks on it, execute myFunction
-						document.getElementById("btnpop").onclick = function() {connexion()};
-
-						/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-						function connexion() {
-						  document.getElementById("apop").classList.toggle("show");
-						}
-					</script>
-				</div>
-			</div>
-
-		</div>
-
-
-
-
-
-		
 		<footer class="page-footer">   
 			<div class="container">    
 				<div class="row">       
