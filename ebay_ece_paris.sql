@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 13 avr. 2020 à 19:38
+-- Généré le :  mar. 14 avr. 2020 à 10:46
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.3.12
 
@@ -55,7 +55,8 @@ INSERT INTO `acheteur` (`ID`, `ID_panier`, `Adresse_ligne1`, `Adresse_ligne2`, `
 (22, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (23, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (24, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(26, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(26, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(29, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -67,7 +68,7 @@ DROP TABLE IF EXISTS `encherir`;
 CREATE TABLE IF NOT EXISTS `encherir` (
   `ID_enchere` int(255) NOT NULL,
   `ID_acheteur` int(255) DEFAULT NULL,
-  `Nom_item` varchar(255) DEFAULT NULL,
+  `ID_item` int(11) DEFAULT NULL,
   `prix_acheteur` int(255) DEFAULT NULL,
   PRIMARY KEY (`ID_enchere`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -80,28 +81,23 @@ CREATE TABLE IF NOT EXISTS `encherir` (
 
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE IF NOT EXISTS `item` (
+  `ID_item` int(11) NOT NULL AUTO_INCREMENT,
   `Nom_item` varchar(255) NOT NULL,
+  `ID_vendeur` int(11) DEFAULT NULL,
   `ID_type_vente` varchar(255) DEFAULT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `Categorie` varchar(255) DEFAULT NULL,
   `Prix` int(11) DEFAULT NULL,
   `Video` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Nom_item`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID_item`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `item`
 --
 
-INSERT INTO `item` (`Nom_item`, `ID_type_vente`, `Description`, `Categorie`, `Prix`, `Video`) VALUES
-('azerty', ' offre', 'zaeez', 'Musee', 123, ''),
-('azert', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('azer', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('aze', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('az', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('a', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('uiop', ' offre', 'zaeez', 'Musee', 123, 'a.mp3'),
-('uio', ' offre', 'zaeez', 'Musee', 123, 'a.mp3');
+INSERT INTO `item` (`ID_item`, `Nom_item`, `ID_vendeur`, `ID_type_vente`, `Description`, `Categorie`, `Prix`, `Video`) VALUES
+(58, 'az', 12, 'achat_immediat ', 'az', 'Farraille_tresor', 12, '5sec.mp4');
 
 -- --------------------------------------------------------
 
@@ -112,7 +108,7 @@ INSERT INTO `item` (`Nom_item`, `ID_type_vente`, `Description`, `Categorie`, `Pr
 DROP TABLE IF EXISTS `liste_enchere`;
 CREATE TABLE IF NOT EXISTS `liste_enchere` (
   `ID_enchere` int(255) NOT NULL AUTO_INCREMENT,
-  `Nom_item` varchar(255) DEFAULT NULL,
+  `ID_item` int(255) DEFAULT NULL,
   `Date_debut` date DEFAULT NULL,
   `Heure_début` time DEFAULT NULL,
   `Date_fin` date DEFAULT NULL,
@@ -130,12 +126,12 @@ DROP TABLE IF EXISTS `meilleur_offre`;
 CREATE TABLE IF NOT EXISTS `meilleur_offre` (
   `ID_acheteur` int(255) NOT NULL,
   `ID_vendeur` int(255) NOT NULL,
-  `Nom_item` varchar(255) NOT NULL,
+  `ID_item` int(11) NOT NULL,
   `prix_acheteur` int(255) DEFAULT NULL,
   `prix_vendeur` int(255) DEFAULT NULL,
   `tentative` int(255) DEFAULT NULL,
   `statut` int(255) DEFAULT NULL,
-  PRIMARY KEY (`ID_acheteur`,`ID_vendeur`,`Nom_item`)
+  PRIMARY KEY (`ID_acheteur`,`ID_vendeur`,`ID_item`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -147,9 +143,9 @@ CREATE TABLE IF NOT EXISTS `meilleur_offre` (
 DROP TABLE IF EXISTS `panier`;
 CREATE TABLE IF NOT EXISTS `panier` (
   `ID_panier` int(11) NOT NULL,
-  `Nom_item` varchar(70) NOT NULL,
+  `ID_item` int(11) NOT NULL,
   `ID_type_vente` varchar(255) NOT NULL,
-  PRIMARY KEY (`Nom_item`,`ID_type_vente`,`ID_panier`)
+  PRIMARY KEY (`ID_item`,`ID_type_vente`,`ID_panier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -167,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `Statut` int(11) DEFAULT NULL,
   `Mot_de_passe` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
@@ -194,7 +190,8 @@ INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `Statut`, `Mot_de_passe`
 (22, 'Sivapalan', 'Subramaniam', 'llllllllllllll', 3, 'llllllllllllllll'),
 (23, 'Sivapalan', 'Subramaniam', 'mmmmmmmmmmmm', 3, 'mmmmmmmmmm'),
 (24, 'dddd', 'azazeeeeeeeeeeeee', 'eeeeeeeeeeeeeeeeeeeeeeeeee', 3, 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'),
-(26, 'ezerzr', 'zrezrerze', 'azezaezeazezea', 3, 'zaeazezeazeaze');
+(26, 'ezerzr', 'zrezrerze', 'azezaezeazezea', 3, 'zaeazezeazeaze'),
+(29, 'Coucou', 'coucou', 'coucou@gmail.com', 3, 'coucou');
 
 -- --------------------------------------------------------
 
@@ -205,22 +202,18 @@ INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `Statut`, `Mot_de_passe`
 DROP TABLE IF EXISTS `photo`;
 CREATE TABLE IF NOT EXISTS `photo` (
   `Nom_photo` varchar(255) NOT NULL,
-  `Nom_item` varchar(70) NOT NULL,
+  `ID_item` int(70) NOT NULL,
   `Direction` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Nom_photo`,`Nom_item`) USING BTREE
+  PRIMARY KEY (`Nom_photo`,`ID_item`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `photo`
 --
 
-INSERT INTO `photo` (`Nom_photo`, `Nom_item`, `Direction`) VALUES
-('b.jpg', 'a', NULL),
-('a.jpg', 'a', NULL),
-('a.jpg', 'uiop', NULL),
-('b.jpg', 'uiop', NULL),
-('a.jpg', 'uio', NULL),
-('b.jpg', 'uio', NULL);
+INSERT INTO `photo` (`Nom_photo`, `ID_item`, `Direction`) VALUES
+('b.jpg', 58, NULL),
+('a.jpg', 58, NULL);
 
 -- --------------------------------------------------------
 
