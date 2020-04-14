@@ -40,6 +40,11 @@ a {
 	width: 100px;
 }
 
+.centered {
+	margin:0 auto;
+ 	width:300px;
+}
+
 /*barre de recherche*/
 .inline-form input {
     display: inline-block;
@@ -87,18 +92,40 @@ a {
 	position: relative; 
 } 
 
-#apop1, #apop2 {
-  display: none;
-  position: absolute;
-}
-
-
 #con-insc input {
 	border-top: 0;
 	border-right: 0;
 	border-left: 0;
 	width: 570px;
 	margin: 10px;
+}
+
+#con-insc form {
+	margin-top: 3em;
+	margin-bottom: 5em;
+	margin-left:400px;
+}
+
+#cb {
+	margin-right: 5px;
+	margin-left: 10px;
+}
+
+#description {
+	width: 100%;
+	padding: 5px;
+	border-style: dashed;
+	border-radius: 5px;
+}
+
+#vpdt {
+	width: 800px;
+}
+
+#apop2 a, #apop1 a {
+    color:black;
+    background-color: white;
+    border-color: lightgrey;
 }
 
 .dropdown {
