@@ -8,6 +8,7 @@
 		$login = $_SESSION['login'];
 		$psw = $_SESSION['psw'];
 		$statut = $_SESSION['Statut'];
+		$id = $_SESSION['ID'];
 	}
 	// On teste si la variable de session existe et contient une valeur
 	else

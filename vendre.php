@@ -9,13 +9,167 @@
 		$login = $_SESSION['login'];
 		$psw = $_SESSION['psw'];
 		$statut = $_SESSION['Statut'];
+		$id = $_SESSION['ID'];
 	}
 	else 
 	{
-	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  header('Location: connexion.php');
-	  exit();
+	  	// Si inexistante ou nulle, on redirige vers le formulaire de login
+	  	header('Location: connexion.php');
+	  	exit();
 	}
+
+	//On vérifier qu'il n'y a pas de champ manquant
+		$erreur ="";
+
+	if (isset($_POST["boutonajoutproduit"])) 
+	{
+	  	$datetime = date('Y-m-d');
+		echo $datetime;
+		echo date('H:i');
+
+		$nom = isset($_POST["nom"])? $_POST["nom"] : "";
+		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
+		$filevideo = isset($_POST["fileVideo"])? $_POST["fileVideo"] : "";
+		$description = isset($_POST["description"])? $_POST["description"]: "";
+		$categorie = isset($_POST["categorie"])? $_POST["categorie"] : "";
+		$prix = isset($_POST["prix"])? $_POST["prix"] : "";
+		$vente1 = isset($_POST["vente1"])? $_POST["vente1"] : ""; //achat immediat
+		$vente2 = isset($_POST["vente2"])? $_POST["vente2"] : ""; //enchere ou offre
+		$datedebut = isset($_POST["datedebut"])? $_POST["datedebut"] : "";
+		$heuredebut = isset($_POST["heuredebut"])? $_POST["heuredebut"] : "";
+		$datefin = isset($_POST["datefin"])? $_POST["datefin"] : "";
+		$heurefin = isset($_POST["heurefin"])? $_POST["heurefin"] : "";
+		$prixdepart = isset($_POST["prixdepart"])? $_POST["prixdepart"] : "";
+		
+		if ($nom == "")  
+			$erreur .= "Nom est vide. <br>"; 
+		
+		if ($_FILES['filephoto']['name'][0] =="") 
+	 		$erreur .= "Aucune photo n'a été ajouté. <br>";
+	 	
+	 	//verification de type des photos :
+		$countfiles = count($_FILES['filephoto']['name']);
+
+		for($i=0;$i<$countfiles;$i++)
+		{
+			if ($_FILES['filephoto']['type'][$i] != "image/jpeg" && $_FILES['filephoto']['name'][0] !="")
+				$erreur .= "Une ou plusieurs images ne sont pas en .jpg. <br>";	
+		}
+
+	 	//vérification du type de la vidéo
+	 	if (count($_FILES['filevideo']['name']) == 1 && $_FILES['filevideo']['type'][0] != "video/mp4" && $_FILES['filevideo']['name'][0] != "")
+	 	 	$erreur .="La vidéo choisi doit être en .mp4. <br>";
+
+		if ($description == "")  
+		 	$erreur .= "La description est vide. <br>"; 
+		
+		if ($categorie == "")
+		 	$erreur .= "La catégorie est vide. <br>"; 
+		 
+		if (($prix == "" && $vente1 != "") || ($prix == "" && $vente1 != "" && $vente2 == "offre") || ($prix == "" && $vente2 == "offre")) 
+		 	$erreur .= "Le prix est vide. <br>"; 
+		
+		if ($prix != "" && $vente2 == "enchere" && $prixdepart != "" && $prix<$prixdepart)
+		 	$erreur .= "Le prix normal doit être supérieur au prix de départ pour l'enchere. <br>";
+		
+		if ($vente1 == "" && $vente2 =="")
+		 	$erreur .= "Le choix de vente est vide. <br>";
+		
+		if ($vente2 == "enchere")
+		{
+		 	if ($datedebut == "")
+		 		$erreur .= "Vous n'avez pas choisi une date de début pour l'enchère du produit. <br>";
+		 	if ($heuredebut == "")
+		 		$erreur .= "Vous n'avez pas choisi une heure de début pour l'enchère du produit. <br>";
+		 	if ($datefin == "")
+		 		$erreur .= "Vous n'avez pas choisi une date de fin pour l'enchère du produit. <br>";
+		 	if ($heurefin == "")
+		 		$erreur .= "Vous n'avez pas choisi une heure de fin pour l'enchère du produit. <br>";
+		}
+		
+		if ($prixdepart == "" && $vente2 == "enchere") 
+	 	 	$erreur .= "Le prix de départ pour l'enchère est vide. <br>";
+	 	 
+	 	if ($prixdepart >= $prix && $prixdepart != "" && $prix != "" && $vente2 == "enchere")
+	 	 	$erreur .= "le prix pour l'enchère doit être inférieur au prix normal du produit. <br>";
+	 	
+	 	//Si tous les champs sont rempli correctement
+		if ($erreur == "") 
+		{
+		 	$type_vente_choisi = $vente1." ". $vente2;
+		    //identifier votre BDD
+		    $database = "ebay ece paris";
+
+		    $db_handle = mysqli_connect('localhost', 'root', '');
+		    $db_found = mysqli_select_db($db_handle, $database);
+		    ///BDD
+	        if ($db_found) 
+	        {
+	        	$filenamevideo = "";
+				if (isset($fileVideo))
+				{
+				    $countfiles = count($_FILES['filevideo']['name']);
+					for($i=0;$i<$countfiles;$i++)
+					{
+						$filenamevideo = $_FILES['filevideo']['name'][$i];
+						move_uploaded_file($_FILES['filevideo']['tmp_name'][$i],'videos_web/'.$filenamevideo);
+					}
+				}
+				
+				//s'il ne s'agit que d'un enchère Sinon le prix reste en prix par défaut: 
+				if (strlen($type_vente_choisi) == 8)
+					$prix = $prixdepart;
+							
+		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filenamevideo');";
+		        $result = mysqli_query($db_handle, $sql);
+		        //Normalement c'est ajouté , mtn vérifions et extraction de l'ID: 
+		        $sql = "SELECT LAST_INSERT_ID(ID_item) FROM item ";
+		        $result = mysqli_query($db_handle, $sql);
+
+	        	$last_id_item = "";
+	           	if (mysqli_num_rows($result) != 0)
+	            {
+	                echo "Votre item a été ajouté avec succes";
+	                while ($data = mysqli_fetch_assoc($result)) 
+                    {
+                        $last_id_item = $data['LAST_INSERT_ID(ID_item)'];
+                    }
+		        } 
+
+		        //Ajout dans la table photo
+				$countfiles = count($_FILES['filephoto']['name']);
+				for($i=0;$i<$countfiles;$i++)
+				{
+					$filenamephoto = $_FILES['filephoto']['name'][$i];
+					move_uploaded_file($_FILES['filephoto']['tmp_name'][$i],'images_web/'.$filenamephoto);
+					$sql = "INSERT INTO photo(Nom_photo, ID_item) VALUES ('$filenamephoto','$last_id_item');";
+			        $result = mysqli_query($db_handle, $sql);
+				}
+				
+				//Ajout dans la liste d'enchere si enchere.
+				if (strlen($type_vente_choisi) == 8 || strlen($type_vente_choisi) == 22)
+				{
+					echo "je suis dedans";
+					$heuredebut .=":00";
+					$heurefin .=":00";
+					echo "$last_id_item"."<br>";
+					echo "$datedebut"."<br>";
+					echo "$heuredebut"."<br>";
+					echo "$datefin"."<br>";
+					echo "$heurefin"."<br>";
+					echo "$prixdepart"."<br>";
+					$sql = "INSERT INTO liste_enchere(ID_item, Date_debut, Heure_debut, Date_fin, Heure_fin, Prix) VALUES ('$last_id_item', '$datedebut', '$heuredebut', '$datefin', '$heurefin', '$prixdepart');";
+					$result = mysqli_query($db_handle, $sql);
+				}
+	        }
+	        else 
+	            echo "Database not found";
+	    }   
+	    //fermer la connexion
+	    mysqli_close($db_handle); 
+	}  
+	else 
+	    echo "Erreur : <br>$erreur";
 ?>
 
 <!DOCTYPE html> 
@@ -86,7 +240,7 @@
 			    	<br><h2 class="text-center">Vendre un produit</h2><br>
 			    </div>
 			    <div class="panel-body">
-					<form method='post' action='ajout_produit.php' enctype='multipart/form-data'>
+					<form method="post" action="" enctype="multipart/form-data">
 	                  	<div class="form-group">
 	                    	<div class="row">
 	                    		<div class="col-lg-6 col-md-6 col-sm-12">
@@ -95,7 +249,7 @@
 	                        	</div>
 		                    	<div class="col-lg-6 col-md-6 col-sm-12">
 		                    		<p class="font-weight-bold">Prix</p>
-		                        	<input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix" required>
+		                        	<input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix">
 		                        </div>
 		                    </div>
 	                    </div>
