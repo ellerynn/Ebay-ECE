@@ -61,11 +61,11 @@
                         //création dans acheteur
                         $sql = "SELECT * FROM personne WHERE Email LIKE '%$login%'";
                         $result = mysqli_query($db_handle, $sql);
-                        $dat = "";
+                        $id = "";
                         while ($data = mysqli_fetch_assoc($result)) 
                             $dat =$data['ID'];
                             
-                        $sql = "INSERT INTO acheteur(ID) VALUES ('$dat');";
+                        $sql = "INSERT INTO acheteur(ID) VALUES ('$id');";
                         $result = mysqli_query($db_handle, $sql); 
 
                         // On ouvre la session
@@ -74,6 +74,7 @@
                         $_SESSION['login'] = $login;
                         $_SESSION['psw'] = $psw;
                         $_SESSION['Statut'] = $statut;
+                        $_SESSION['ID'] = $id;
                         // On redirige vers le fichier votre_compte.php
                         header('Location: accueil.php');
                     }
