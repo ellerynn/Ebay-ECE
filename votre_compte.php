@@ -91,23 +91,51 @@
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad1">Supprimer un item</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad2">Mes informations</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad3">Messages</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad4">Gérer les vendeurs</button>
 			        </div>
 			        <div class="list-group" style="display: none;" id="lvendeur">
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv1">Supprimer un item</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv2">Mes informations</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv3">Messages</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv4">Offres</button>
 			        </div>
 			        <div class="list-group" style="display: none;" id="lacheteur">
 			          	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac1">Mes informations</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac2">Messages</button>
 			        </div>
 		        </div>
-		        <div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; height: 400px;">
+		        <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
 		        	<div class="panel" id="panel_info">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Mes informations</h2><br>
 					    </div>
-					    <div class="panel-body">					
+					    <div class="panel-body">	
+					    	<button type="button" class="btn" style="display: none;" id="btn_v_info">Modifier mes informations</button>	
+					    	<form method='post' action='ajout_photo_vendeur.php' enctype='multipart/form-data' style="display: none;" id="form_v_info">
+								<h2>Votre profil</h2>
+								<table>
+									<tr>
+										
+										<td>Modifier votre photo de profil:</td>
+										<td><input type="file" name="filephoto[]" id="file" multiple></td>
+									</tr>
+									<tr>
+									<td colspan="2" align="center">
+										<input class="btn border btn-outline-secondary rounded-lg" name="buttonmodifierphotoprofil" type="submit" value="Modifier">
+									</td>
+									</tr>
+									<tr>
+										
+										<td>Modifier votre image de fond:</td>
+										<td><input type="file" name="filephotofond[]" id="file" multiple></td>
+									</tr>
+									<tr>
+									<td colspan="2" align="center">
+										<input class="btn border btn-outline-secondary rounded-lg" name="buttonmodifierimagefond" type="submit" value="Modifier">
+									</td>
+									</tr>
+								</table>
+					        </form>	
 				        </div>
 				    </div>
 
@@ -123,6 +151,57 @@
 					    	<br><h2 class="text-center">Messages</h2><br>
 					    </div>
 					    <div class="panel-body">					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_gv_admin">
+					    <div class="panel-body">
+					    	<div class="row">
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Ajouter un vendeur</h2>
+									<form action="ajout_vendeur.php" method="post">
+										<table>
+											<tr>
+												<td><input type="text" name="nom" placeholder="Nom" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="prenom" placeholder="Prénom" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="pseudo" placeholder="Pseudo" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="email" name="email" placeholder="Mail" required="true"></td>
+											</tr>
+											<tr>
+												<td colspan="2" align="center">
+													<input class="btn border btn-outline-secondary rounded-lg" name="buttonajoutervendeur" type="submit" value="L'ajouter comme vendeur">
+												</td>
+											</tr>
+										</table>
+									</form>
+						    	</div>
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Supprimer un vendeur</h2>
+									<form action="suppression_vendeur.php" method="post">
+										<table>
+											<tr>
+												<td><input type="text" name="id" placeholder="ID" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="pseudo" placeholder="pseudo" required="true"></td>
+											</tr>
+											<tr>
+												<td colspan="2" align="center">
+													<input class="btn border btn-outline-secondary rounded-lg" name="buttonsupprimervendeur" type="submit" value="Supprimer le vendeur">
+												</td>
+											</tr>
+										</table>
+									</form>
+						    	</div>
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Liste vendeurs</h2>	
+						    	</div>			
+						    </div>	
 				        </div>
 				    </div>
 
@@ -148,6 +227,13 @@
 					    <div class="panel-body">					
 				        </div>
 				    </div>
+				    <div class="panel" style="display: none;" id="panel_o_vendeur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Offres</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
 
 					<div class="panel" style="display: none;" id="panel_mes_acheteur">
 					    <div class="panel-heading">
@@ -157,9 +243,6 @@
 				        </div>
 				    </div>
 				</div>
-				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative;">
-					<h3 class="text-center">Ingo G profil</h3>
-		        </div>
 	    	</div>
 		</div> 
 
@@ -245,23 +328,34 @@
 					var panel_mes = document.getElementById("panel_mes_admin");
 					var panel_supp = document.getElementById("panel_supp_admin");
 					var panel_i = document.getElementById("panel_info");
+					var panel_gv = document.getElementById("panel_gv_admin");
 					
 					document.getElementById("bad1").onclick = function() {
 						panel_supp.style.display ="block";
 						panel_i.style.display ="none";
 						panel_mes.style.display ="none";
+						panel_gv.style.display ="none";
 					}
 
 					document.getElementById("bad2").onclick = function() {
 						panel_supp.style.display ="none";
 						panel_i.style.display ="block";
 						panel_mes.style.display ="none";
+						panel_gv.style.display ="none";
 					}
 
 					document.getElementById("bad3").onclick = function() {
 						panel_supp.style.display ="none";
 						panel_i.style.display ="none";
 						panel_mes.style.display ="block";
+						panel_gv.style.display ="none";
+					}
+
+					document.getElementById("bad4").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="none";
+						panel_gv.style.display ="block";
 					}
 				</script> <?php
 			}
@@ -288,26 +382,45 @@
 					var liste = document.getElementById("lvendeur");
 					liste.style.display ="block";
 
+					var bouton = document.getElementById("btn_v_info");
+					bouton.style.display ="block";
+
+					document.getElementById("btn_v_info").onclick = function() {
+						var m = document.getElementById("form_v_info");
+						m.style.display = "block";
+					}
+
 					var panel_supp = document.getElementById("panel_supp_vendeur");
 					var panel_i = document.getElementById("panel_info");
 					var panel_mes = document.getElementById("panel_mes_vendeur");
+					var panel_offres = document.getElementById("panel_o_vendeur");
 
 					document.getElementById("bv1").onclick = function() {
 						panel_supp.style.display ="block";
 						panel_i.style.display ="none";
 						panel_mes.style.display ="none";
+						panel_offres.style.display ="none";
 					}
 
 					document.getElementById("bv2").onclick = function() {
 						panel_supp.style.display ="none";
 						panel_i.style.display ="block";
 						panel_mes.style.display ="none";
+						panel_offres.style.display ="none";
 					}
 
 					document.getElementById("bv3").onclick = function() {
 						panel_supp.style.display ="none";
 						panel_i.style.display ="none";
 						panel_mes.style.display ="block";
+						panel_offres.style.display ="none";
+					}
+
+					document.getElementById("bv4").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="none";
+						panel_offres.style.display ="block";
 					}
 				</script> <?php
 			}
