@@ -82,6 +82,88 @@
 		</nav>
 
 		<br><br><br>
+		<div class="container features"> <!-- -fluid permet de s'assurer que le conteneur s'étend sur toute la largeur de l'écran. Il y a aussi juste un container, avec des largeurs fixes appliquées = espace des deux côtés de l'écran.-->
+			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+					<h3 class="text-center">eBay ECE</h3>
+					<p></p>
+					<div class="list-group" style="display: none;" id="ladmin">
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad1">Supprimer un item</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad2">Mes informations</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad3">Messages</button>
+			        </div>
+			        <div class="list-group" style="display: none;" id="lvendeur">
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv1">Supprimer un item</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv2">Mes informations</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv3">Messages</button>
+			        </div>
+			        <div class="list-group" style="display: none;" id="lacheteur">
+			          	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac1">Mes informations</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac2">Messages</button>
+			        </div>
+		        </div>
+		        <div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; height: 400px;">
+		        	<div class="panel" id="panel_info">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Mes informations</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+
+					<div class="panel" style="display: none;" id="panel_supp_admin">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Supprimer un item</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_mes_admin">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Messages</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+
+					<div class="panel" style="display: none;" id="panel_supp_vendeur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Supprimer un item</h2><br>
+					    </div>
+					    <div class="panel-body">
+						    <form action="suppression_produit.php" method="post">
+								<div class="form-group">
+			                        <input class="form-control" style="width: 100%" type="number" name="id" placeholder="ID de l'article" required>
+			                    </div>
+			                    <div class="form-group">
+			                    	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonsupprimer" type="submit" value="Supprimer">
+								</div>
+							</form>					
+				        </div>
+				    </div>
+					<div class="panel" style="display: none;" id="panel_mes_vendeur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Messages</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+
+					<div class="panel" style="display: none;" id="panel_mes_acheteur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Messages</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative;">
+					<h3 class="text-center">Ingo G profil</h3>
+		        </div>
+	    	</div>
+		</div> 
+
+		<br><br><br>
 		<footer class="page-footer">   
 			<div class="container">    
 				<div class="row">       
@@ -150,11 +232,37 @@
 						var cache = document.getElementById("l3");
 						cache.style.display = "none";
 					}
+
 					document.getElementById("panier").onclick = function() {return false;}
 					document.getElementById("achat").onclick = function() {return false;}
 					document.getElementById("enchere").onclick = function() {return false;}
 					document.getElementById("achetez").onclick = function() {return false;}
 					document.getElementById("offre").onclick = function() {return false;}
+
+					var liste = document.getElementById("ladmin");
+					liste.style.display ="block";
+					
+					var panel_mes = document.getElementById("panel_mes_admin");
+					var panel_supp = document.getElementById("panel_supp_admin");
+					var panel_i = document.getElementById("panel_info");
+					
+					document.getElementById("bad1").onclick = function() {
+						panel_supp.style.display ="block";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="none";
+					}
+
+					document.getElementById("bad2").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="block";
+						panel_mes.style.display ="none";
+					}
+
+					document.getElementById("bad3").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="block";
+					}
 				</script> <?php
 			}
 
@@ -169,12 +277,38 @@
 						var cachebis = document.getElementById("l3");
 						cachebis.style.display = "none";
 					}
+
 					document.getElementById("panier").onclick = function() {return false;}
 					document.getElementById("achat").onclick = function() {return false;}
 					document.getElementById("enchere").onclick = function() {return false;}
 					document.getElementById("achetez").onclick = function() {return false;}
 					document.getElementById("offre").onclick = function() {return false;}
 					document.getElementById("admin").onclick = function() {return false;}
+
+					var liste = document.getElementById("lvendeur");
+					liste.style.display ="block";
+
+					var panel_supp = document.getElementById("panel_supp_vendeur");
+					var panel_i = document.getElementById("panel_info");
+					var panel_mes = document.getElementById("panel_mes_vendeur");
+
+					document.getElementById("bv1").onclick = function() {
+						panel_supp.style.display ="block";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="none";
+					}
+
+					document.getElementById("bv2").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="block";
+						panel_mes.style.display ="none";
+					}
+
+					document.getElementById("bv3").onclick = function() {
+						panel_supp.style.display ="none";
+						panel_i.style.display ="none";
+						panel_mes.style.display ="block";
+					}
 				</script> <?php
 			}
 
@@ -188,8 +322,25 @@
 						var cachebis = document.getElementById("l2");
 						cachebis.style.display = "none";
 					}
+
 					document.getElementById("admin").onclick = function() {return false;}
 					document.getElementById("vendre").onclick = function() {return false;}
+
+					var liste = document.getElementById("lacheteur");
+					liste.style.display ="block";
+					
+					var panel_i = document.getElementById("panel_info");
+					var panel_mes = document.getElementById("panel_mes_acheteur");
+					
+					document.getElementById("bac1").onclick = function() {
+						panel_i.style.display ="block";
+						panel_mes.style.display ="none";
+					}
+
+					document.getElementById("bac2").onclick = function() {
+						panel_i.style.display ="none";
+						panel_mes.style.display ="block";
+					}
 				</script> <?php
 			}				
 			exit();?>
