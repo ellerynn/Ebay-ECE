@@ -5,7 +5,7 @@
 //les photos(autre table) [la partie photo à faire quand on aura fait tout les autres] //enregistre le nom de l'image
 //Une vidéo(si optionnel: choix), la description, choix de catégorie, prix
 
-$ID_VENDEUR_TEMPORAIRE = "4";
+$ID_VENDEUR_TEMPORAIRE = "12";
 
 
 //suppression item
@@ -83,6 +83,24 @@ $ID_VENDEUR_TEMPORAIRE = "4";
 								$sql2 .= " WHERE ID_item = $id";
 								$result = mysqli_query($db_handle, $sql2);
 								echo "Suppression des photos réussi ! . <br>";
+
+								///PARTIE MODIFIER ------
+								//Suppression des items dans la liste d'enchere
+								$sql = "DELETE FROM liste_enchere WHERE ID_item = $id";
+								$result = mysqli_query($db_handle, $sql);
+
+
+								//ATTENTION : LES CODES EN DESSOUS SUJET à MODIFICATION SI PROBLEME
+
+								//Suppression des items dans encherir, si l'item n'existe plus, les données des clients qui ont enchérir sur l'item disparait
+								$sql = "DELETE FROM encherir WHERE ID_item = $id";
+								$result = mysqli_query($db_handle, $sql);
+								//De même dans la table meilleur_offre
+								$sql = "DELETE FROM meilleur_offre WHERE ID_item = $id";
+								$result = mysqli_query($db_handle, $sql);
+								//De même pour le panier du client
+								$sql = "DELETE FROM panier WHERE ID_item = $id";
+								$result = mysqli_query($db_handle, $sql);
 
 							}
 	                    
