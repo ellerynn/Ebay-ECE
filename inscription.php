@@ -51,7 +51,7 @@
                     if (mysqli_num_rows($result) != 0) 
                     {
                         echo "Le compte existe déjà. Veuillez vous connecter";
-                        header('Location: http://localhost/test/connexion.php');
+                        header('Location: connexion.php');
                     } 
                     else 
                     {
@@ -75,7 +75,7 @@
                         $_SESSION['psw'] = $psw;
                         $_SESSION['Statut'] = $statut;
                         // On redirige vers le fichier votre_compte.php
-                        header('Location: http://localhost/test/votre_compte.php');
+                        header('Location: accueil.php');
                     }
                 }
             }
@@ -130,9 +130,9 @@
                     <li class="nav-item dropdown">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
                         <div class="dropdown-menu" id="menu-deroulant">
-                            <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
-                            <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-                            <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
+                            <a class="nav-link dropdown-item" href="achat.php">Achat</a>
+                            <a class="nav-link dropdown-item" href="vendre.php">Vendre</a>
+                            <a class="nav-link dropdown-item" href="admin.php">Admin</a>
                         </div>
                     </li>  
                     <li class="nav-item dropdown">

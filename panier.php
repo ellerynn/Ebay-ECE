@@ -2,11 +2,19 @@
 	include("const.php");
 	// On prolonge la session
 	session_start();
+
 	if(isset($_SESSION['login']))
 	{
 		$login = $_SESSION['login'];
 		$psw = $_SESSION['psw'];
 		$statut = $_SESSION['Statut'];
+	}
+	// On teste si la variable de session existe et contient une valeur
+	else
+	{
+	  // Si inexistante ou nulle, on redirige vers le formulaire de login
+	  header('Location: connexion.php');
+	  exit();
 	}
 ?>
 
@@ -67,13 +75,10 @@
 					  	</div>
 					</li>  
 					<li class="nav-item dropdown">
-						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
-					  	<div class="dropdown-content border rounded" id="apop1">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
+					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="votre_compte.php">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
-					  	</div>
-					  	<div class="dropdown-content border rounded" id="apop2">
-						    <a class="nav-link dropdown-item" href="connexion.php">Se connecter</a>
 					  	</div>
 					</li> 
 					<li class="nav-item">
@@ -102,7 +107,7 @@
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
-						<a href="achat.php" id="l3"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
+						<a href="achat.php"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
 						<ul>  
 							<li>
 								<a href="#">Enchères</a>
@@ -118,13 +123,13 @@
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.php" id="l2">Vendre</a> </h5>
+								<h5 class="text-uppercase font-weight-bold">Vendre</h5>
 							</li>    
 							<li>
 								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="l1">Admin</a> </h5>
+								<h5 class="text-uppercase font-weight-bold">Admin</h5>
 							</li>            
 						</ul> 
 					</div> 
@@ -142,85 +147,5 @@
 				</div> 
 			</div>
 		</footer>
-		
-		<?php
-			if(empty($_SESSION['login'])) 
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop2").classList.toggle("show");
-					}
-				</script> 
-			<?php exit();
-			}
-			else
-			{
-				if($_SESSION['Statut'] == ADMIN)
-				{?>
-					<script>
-						//Bloquer les liens onClick
-						document.getElementById("ades").onclick = function() {desactiver()};
-
-						function desactiver() 
-						{
-							var cache = document.getElementById("l3");
-							cache.style.display = "none";
-						}						
-					</script> <?php
-				}
-
-				elseif($_SESSION['Statut'] == VENDEUR)
-				{?>
-					<script>
-						//Bloquer les liens onClick
-						document.getElementById("ades").onclick = function() {desactiver()};
-
-						function desactiver() 
-						{
-							var cache = document.getElementById("l1");
-							cache.style.display = "none";
-
-							var cachebis = document.getElementById("l3");
-							cachebis.style.display = "none";
-						}
-						
-					</script> <?php
-				}
-
-				elseif($_SESSION['Statut'] == ACHETEUR)
-				{?>
-					<script>
-						document.getElementById("ades").onclick = function() {desactiver()};
-
-						function desactiver() 
-						{
-							var cache = document.getElementById("l1");
-							cache.style.display = "none";
-
-							var cachebis = document.getElementById("l2");
-							cachebis.style.display = "none";
-						}
-						
-					</script> <?php
-				}?>
-				
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop1").classList.toggle("show");
-					}
-				</script> <?php
-				exit();
-			}?>
-?>
 	</body> 
 </html> 

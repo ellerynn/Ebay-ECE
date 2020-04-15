@@ -40,7 +40,7 @@
                 if (mysqli_num_rows($result) == 0 && mysqli_num_rows($resultv) == 0) 
                 {
                     echo "Le compte n'existe pas, veuillez vous inscrire";
-                    header('Location: http://localhost/Ebay-ECE/inscription.php');
+                    header('Location: inscription.php');
                     //AJOUTER UNE ALERTE
                 }
                 
@@ -77,7 +77,7 @@
                             $_SESSION['psw'] = $psw;
                             $_SESSION['Statut'] = $statut;
                             // On redirige vers le fichier votre_compte.php
-                            header('Location: http://localhost/Ebay-ECE/votre_compte.php');
+                            header('Location: accueil.php');
                             exit();
                         }
                         elseif (mysqli_num_rows($result) == 0)
@@ -99,7 +99,7 @@
                             $_SESSION['psw'] = $psw;
                             $_SESSION['Statut'] = $statut;
                             // On redirige vers le fichier votre_compte.php
-                            header('Location: http://localhost/Ebay-ECE/votre_compte.php');
+                            header('Location: accueil.php');
                             exit();
                         }
                         elseif (mysqli_num_rows($result) == 0)

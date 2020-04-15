@@ -66,17 +66,14 @@
 					  	</div>
 					</li>  
 					<li class="nav-item dropdown">
-						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
-					  	<div class="dropdown-content border rounded" id="apop1">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
+					  	<div class="dropdown-menu">
 						    <a class="nav-link dropdown-item" href="votre_compte.php">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
 					  	</div>
-					  	<div class="dropdown-content border rounded" id="apop2">
-						    <a class="nav-link dropdown-item" href="connexion.php">Se connecter</a>
-					  	</div>
 					</li> 
 					<li class="nav-item">
-						<a class="nav-link" href="panier.php"><i class="fas fa-shopping-cart"></i></a>
+						<i class="fas fa-shopping-cart"></i>
 					</li>    
 				</ul>      
 			</div> 
@@ -120,29 +117,23 @@
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
-						<a href="achat.php" id="l3"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
+						<h5 class="text-uppercase font-weight-bold">Achat</h5>
 						<ul>  
-							<li>
-								<a href="#">Enchères</a>
-							</li>    
-							<li>
-								<a href="#">Achetez-le maintenant</a>
-							</li> 
-							<li>
-								<a href="#">Meilleure offre</a>
-							</li>               
+							<li>Enchères</li>    
+							<li>Achetez-le maintenant</li> 
+							<li>Meilleure offre</li>               
 						</ul> 
 					</div>   
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.php" id="l2">Vendre</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.php">Vendre</a> </h5>
 							</li>    
 							<li>
 								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="l1">Admin</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php">Admin</a> </h5>
 							</li>            
 						</ul> 
 					</div> 
@@ -160,35 +151,5 @@
 				</div> 
 			</div>
 		</footer>
-
-		<?php
-			if(empty($_SESSION['login']) || empty($_SESSION['psw'])) 
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop2").classList.toggle("show");
-					}
-				</script> 
-			<?php exit();
-			}
-			else
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop1").classList.toggle("show");
-					}
-				</script> <?php
-				exit();
-			}?>
 	</body> 
 </html> 
