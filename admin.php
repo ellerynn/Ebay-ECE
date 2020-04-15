@@ -67,13 +67,13 @@
 					</li>  
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
-					  	<div class="dropdown-menu">
+					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="votre_compte.php">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
 					  	</div>
 					</li> 
 					<li class="nav-item">
-						<i class="fas fa-shopping-cart"></i>
+						<i class="nav-link fas fa-shopping-cart" style="margin-top: 5px;"></i>
 					</li>    
 				</ul>      
 			</div> 

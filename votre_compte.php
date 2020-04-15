@@ -74,7 +74,7 @@
 					  	</div>
 					</li> 
 					<li class="nav-item">
-						<a class="nav-link" href="panier.php" id="disav"><i class="fas fa-shopping-cart"></i></a>
+						<a class="nav-link" href="panier.php" id="panier"><i class="fas fa-shopping-cart"></i></a>
 					</li>    
 				</ul>      
 			</div> 
@@ -99,29 +99,29 @@
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
-						<a href="achat.php" id="disav"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
-						<ul>  
+						<h5 class="text-uppercase font-weight-bold"><a href="achat.php" id="achat">Achat</a></h5>
+						<ul> 
 							<li>
-								<a href="#" id="disav">Enchères</a>
+								<a href="#" id="enchere">Enchères</a>
 							</li>    
 							<li>
-								<a href="#" id="disav">Achetez-le maintenant</a>
+								<a href="#" id="achetez">Achetez-le maintenant</a>
 							</li> 
 							<li>
-								<a href="#" id="disav">Meilleure offre</a>
+								<a href="#" id="offre">Meilleure offre</a>
 							</li>               
 						</ul> 
 					</div>   
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.php" id="disa">Vendre</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"><a href="vendre.php" id="vendre">Vendre</a></h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"><a href="votre_compte.php">Votre compte</a></h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="disva">Admin</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"><a href="admin.php" id="admin">Admin</a></h5>
 							</li>            
 						</ul> 
 					</div> 
@@ -149,7 +149,11 @@
 						var cache = document.getElementById("l3");
 						cache.style.display = "none";
 					}
-					document.getElementById("disav").onclick = function() {return false;}	
+					document.getElementById("panier").onclick = function() {return false;}
+					document.getElementById("achat").onclick = function() {return false;}
+					document.getElementById("enchere").onclick = function() {return false;}
+					document.getElementById("achetez").onclick = function() {return false;}
+					document.getElementById("offre").onclick = function() {return false;}
 				</script> <?php
 			}
 
@@ -164,8 +168,12 @@
 						var cachebis = document.getElementById("l3");
 						cachebis.style.display = "none";
 					}
-					document.getElementById("disav").onclick = function() {return false;}
-					document.getElementById("disva").onclick = function() {return false;}
+					document.getElementById("panier").onclick = function() {return false;}
+					document.getElementById("achat").onclick = function() {return false;}
+					document.getElementById("enchere").onclick = function() {return false;}
+					document.getElementById("achetez").onclick = function() {return false;}
+					document.getElementById("offre").onclick = function() {return false;}
+					document.getElementById("admin").onclick = function() {return false;}
 				</script> <?php
 			}
 
@@ -179,11 +187,10 @@
 						var cachebis = document.getElementById("l2");
 						cachebis.style.display = "none";
 					}
-					document.getElementById("disa").onclick = function() {return false;}	
-					document.getElementById("disva").onclick = function() {return false;}
+					document.getElementById("admin").onclick = function() {return false;}
+					document.getElementById("vendre").onclick = function() {return false;}
 				</script> <?php
 			}				
-			exit();
-		}?>
+			exit();?>
 	</body> 
 </html> 

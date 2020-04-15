@@ -73,7 +73,7 @@
 					  	</div>
 					</li> 
 					<li class="nav-item">
-						<i class="fas fa-shopping-cart"></i>
+						<i class="nav-link fas fa-shopping-cart" style="margin-top: 5px;"></i>
 					</li>    
 				</ul>      
 			</div> 
@@ -214,7 +214,7 @@
 								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="disv">Admin</a> </h5>
+								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="admin">Admin</a> </h5>
 							</li>            
 						</ul> 
 					</div> 
@@ -242,18 +242,7 @@
 						var cache = document.getElementById("l1");
 						cache.style.display = "none";
 					}		
-					document.getElementById("disv").onclick = function() {return false;}
-				</script> <?php
-			}
-			if($_SESSION['Statut'] == ADMIN)
-			{?>
-				<script>
-					//Bloquer les liens onClick
-					document.getElementById("ades").onclick = function() {
-						var cache = document.getElementById("l1");
-						cache.style.display = "none";
-					}		
-
+					document.getElementById("admin").onclick = function() {return false;}
 				</script> <?php
 			}?>
 	</body> 
