@@ -138,6 +138,11 @@ a {
   position: absolute;
 }
 
+.form-pop {
+  display: none;
+  position: absolute;
+}
+
 .show {
 	display:block;
 }

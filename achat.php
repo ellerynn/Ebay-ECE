@@ -1,4 +1,5 @@
 <?php
+	include("const.php");
 	// On prolonge la session
 	session_start();
 
@@ -12,7 +13,7 @@
 	else
 	{
 	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  header('Location: http://localhost/test/connexion.php');
+	  header('Location: connexion.php');
 	  exit();
 	}
 ?>
@@ -60,9 +61,7 @@
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
-						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
-						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-						    <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
+						    <a class="nav-link dropdown-item" href="achat.php">Achat</a>
 					  	</div>
 					</li>  
 					<li class="nav-item dropdown">

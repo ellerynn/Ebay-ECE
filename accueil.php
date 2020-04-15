@@ -382,6 +382,5 @@
 				</script> <?php
 				exit();
 			}?>
-?>
 	</body> 
 </html> 

@@ -1,4 +1,5 @@
 <?php
+	include("const.php");
 	// On prolonge la session
 	session_start();
 
@@ -12,7 +13,7 @@
 	else 
 	{
 	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  header('Location: http://localhost/test/connexion.php');
+	  header('Location: connexion.php');
 	  exit();
 	}
 ?>
@@ -58,21 +59,17 @@
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
 					<li class="nav-item dropdown">
-						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="ades">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
-						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
 						    <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
 					  	</div>
 					</li>  
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
-					  	<div class="dropdown-content border rounded" id="apop1">
+					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="votre_compte.php">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
-					  	</div>
-					  	<div class="dropdown-content border rounded" id="apop2">
-						    <a class="nav-link dropdown-item" href="connexion.php">Se connecter</a>
 					  	</div>
 					</li> 
 					<li class="nav-item">
@@ -96,7 +93,6 @@
 	                    			<p class="font-weight-bold">Nom du produit</p>
 	                        		<input class="form-control" style="width: 100%" type="text" name="nom" placeholder="Nom du produit" required>
 	                        	</div>
-
 		                    	<div class="col-lg-6 col-md-6 col-sm-12">
 		                    		<p class="font-weight-bold">Prix</p>
 		                        	<input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix" required>
@@ -129,12 +125,53 @@
 	                    <div class="form-group">
 	                    	<p class="font-weight-bold">Type de vente</p>
 	                    	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
-							<input type="checkbox" name="vente2" value="enchere" id="cb">Enchère
+							<input type="checkbox" name="vente2" value="enchere" style="margin-right: 5px;margin-left: 10px;" id="ench" onclick="montrer()">Enchère
 							<input type="checkbox" name="vente2" value="offre" id="cb">Meilleur offre
+						</div>
+						<div class="form-group" style="display: none;" id="jpp">
+							<div class="row">       
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									Date de début : <input class="form-control" type="Date" name="datedebut"> 
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-12">
+									Date de fin : <input class="form-control"  type="Date" name="datefin"> 
+								</div>
+							</div>
+							<div class="row">       
+								<div class="col-lg-4 col-md-4 col-sm-12">
+									Heure de début : <input class="form-control" type="time" name="heuredebut">
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-12">
+									Heure de fin : <input class="form-control" type="time" name="heurefin">
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-12">
+									Prix de départ : <input class="form-control" type="number" name="prixdepart">
+								</div>
+							</div>
 						</div>
 						<div class="form-group">
 	                    	<input name="boutonajoutproduit" type="submit" value="Ajouter le produit">
 						</div>
+
+						<script>
+							function montrer() 
+							{
+								// Get the checkbox
+								var checkBox = document.getElementById("ench");
+								// Get the output text
+								var text = document.getElementById("jpp");
+
+								// If the checkbox is checked, display the output text
+								if (checkBox.checked == true)
+								{
+									text.style.display = "block";
+								} 
+								else 
+								{
+									text.style.display = "none";
+								}
+							}
+						</script> 
                		</form>
                 </div>
             </div>
@@ -201,33 +238,18 @@
 		</footer>
 
 		<?php
-			if(empty($_SESSION['login']) || empty($_SESSION['psw'])) 
+			if($_SESSION['Statut'] == VENDEUR)
 			{?>
 				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
+					//Bloquer les liens onClick
+					document.getElementById("ades").onclick = function() {desactiver()};
 
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
+					function desactiver() 
 					{
-						document.getElementById("apop2").classList.toggle("show");
-					}
-				</script> 
-			<?php exit();
-			}
-			else
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop1").classList.toggle("show");
-					}
+						var cache = document.getElementById("l1");
+						cache.style.display = "none";
+					}		
 				</script> <?php
-				exit();
 			}?>
 	</body> 
 </html> 

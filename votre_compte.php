@@ -1,4 +1,5 @@
 <?php
+	include("const.php");
 	// On prolonge la session
 	session_start();
 
@@ -12,7 +13,7 @@
 	else
 	{
 	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  header('Location: http://localhost/test/connexion.php');
+	  header('Location: http://localhost/Ebay-ECE/connexion.php');
 	  exit();
 	}
 ?>
@@ -58,7 +59,7 @@
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
 					<li class="nav-item dropdown">
-						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="ades">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
@@ -143,7 +144,7 @@
 		</footer>
 
 		<?php
-			if(empty($_SESSION['login']) || empty($_SESSION['psw'])) 
+			if(empty($_SESSION['login'])) 
 			{?>
 				<script>
 					// Get the button, and when the user clicks on it, execute myFunction
@@ -158,7 +159,56 @@
 			<?php exit();
 			}
 			else
-			{?>
+			{
+				if($_SESSION['Statut'] == ADMIN)
+				{?>
+					<script>
+						//Bloquer les liens onClick
+						document.getElementById("ades").onclick = function() {desactiver()};
+
+						function desactiver() 
+						{
+							var cache = document.getElementById("l3");
+							cache.style.display = "none";
+						}						
+					</script> <?php
+				}
+
+				elseif($_SESSION['Statut'] == VENDEUR)
+				{?>
+					<script>
+						//Bloquer les liens onClick
+						document.getElementById("ades").onclick = function() {desactiver()};
+
+						function desactiver() 
+						{
+							var cache = document.getElementById("l1");
+							cache.style.display = "none";
+
+							var cachebis = document.getElementById("l3");
+							cachebis.style.display = "none";
+						}
+						
+					</script> <?php
+				}
+
+				elseif($_SESSION['Statut'] == ACHETEUR)
+				{?>
+					<script>
+						document.getElementById("ades").onclick = function() {desactiver()};
+
+						function desactiver() 
+						{
+							var cache = document.getElementById("l1");
+							cache.style.display = "none";
+
+							var cachebis = document.getElementById("l2");
+							cachebis.style.display = "none";
+						}
+						
+					</script> <?php
+				}?>
+				
 				<script>
 					// Get the button, and when the user clicks on it, execute myFunction
 					document.getElementById("btnpop").onclick = function() {montrer()};
