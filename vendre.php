@@ -233,7 +233,7 @@
 			</div> 
 		</nav>
 
-		<br><br><br><br>
+		<br><br><br>
 		<div class="container border rounded" id="vpdt">
             <div class="panel">
 			    <div class="panel-heading">
@@ -304,7 +304,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-	                    	<input name="boutonajoutproduit" type="submit" value="Ajouter le produit">
+	                    	<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutproduit" type="submit" value="Ajouter le produit">
 						</div>
 
 						<script>
@@ -326,7 +326,7 @@
                 </div>
             </div>
         </div>
-        <br><br><br>
+        <br><br>
 
 		<footer class="page-footer">   
 			<div class="container">    
