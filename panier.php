@@ -2,6 +2,20 @@
 	include("const.php");
 	// On prolonge la session
 	session_start();
+	$ID_temporaire_acheteur = 29;
+	//declaration
+	$table_item = array();
+	$table_photo = array();
+
+	$nom_item = array();
+	$ID_vendeur = array();
+	$description = array();
+	$categorie = array();
+	$prix = array();
+	$video = array();
+	$ID =array();
+	$ID_item = array();
+	$ID_type_vente = array();
 
 	if(isset($_SESSION['login']))
 	{
@@ -14,8 +28,94 @@
 	else
 	{
 	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  header('Location: connexion.php');
+	  //header('Location: connexion.php');
 	  exit();
+	}
+	$database = "ebay ece paris";
+	$db_handle = mysqli_connect('localhost', 'root', '');
+	$db_found = mysqli_select_db($db_handle, $database);
+	if ($db_found) 
+	{
+		$sql = "SELECT * FROM panier WHERE ID LIKE '$ID_temporaire_acheteur' AND ID_type_vente LIKE 'achat_immediat'";
+		$result = mysqli_query($db_handle, $sql);
+
+			if (mysqli_num_rows($result) == 0) {
+				//Livre inexistant
+				echo "Erreur, cet item n'est pas disponible. <br>";
+			} 
+			else {
+				$i=0;
+				while ($data = mysqli_fetch_assoc($result)) 
+				{
+					$ID[$i] = $data['ID'];
+					$ID_item[$i] = $data['ID_item'];
+					$ID_type_vente[$i] = $data['ID_type_vente'];
+					$i++;
+				}
+				
+			}
+
+
+		//On recupère les données de chaque item de la table Item
+		for($a=0; $a < count($ID_item); $a++){
+		$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item[$a]' "; //retrouver les ID_items issu de ID_item[]
+		$result1 = mysqli_query($db_handle, $sql1);
+
+			if (mysqli_num_rows($result1) == 0) {
+				echo "Erreur, cet item n'est pas disponible. <br>";
+			}
+			else {
+				$i=0;
+				$temp = array();
+				while ($data = mysqli_fetch_assoc($result1) ) 
+				{
+					$i_temp = 0;
+					$temp[$i_temp] = $ID_item[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$i_temp++;
+					$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_type_vente']; // i_temp = 3
+					$i_temp++;
+					$temp[$i_temp] = $data['Description']; // i_temp = 4
+					$i_temp++;
+					$temp[$i_temp] = $data['Categorie']; // i_temp = 5
+					$i_temp++;
+					$temp[$i_temp] = $data['Prix']; // i_temp = 6
+					$i_temp++;
+					$temp[$i_temp] = $data['Video']; // i_temp = 7
+
+					$table_item["$ID_item[$a]"] = $temp; // Tableau associatif
+				}
+				
+			}
+
+		}	
+
+		for($a=0; $a < count($ID_item); $a++){
+		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$result1 = mysqli_query($db_handle, $sql1);
+			if (mysqli_num_rows($result1) == 0) {
+				//Livre inexistant
+				echo "Erreur, cet item n'est pas disponible. <br>";
+			} 
+			else {
+				$v = 0;
+				$temp =array();
+				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
+				{
+					$temp[$v] = $data['Nom_photo'];
+					$v++;
+				}
+				$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
+				
+			}
+		}
+	}
+	else
+	{
+		echo "Database not found";
 	}
 ?>
 
@@ -88,6 +188,34 @@
 				</ul>      
 			</div> 
 		</nav>	
+
+		<div class="container-fluid features" id="con-insc">
+			<h1 class="text-center"> Votre panier</h1>
+			<?php
+			$prix_tot_achat = "0";
+			for ($i = 0 ; $i<count($ID_item); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
+				//Affichage des images pour un item donnée :
+				//traitement de la table photo
+				for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
+					echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
+
+				}
+				//traitement de la table item:
+				echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
+				echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
+				echo "Le vendeur de l'item :".$table_item["$ID_item[$i]"][2]."<br>"; 
+				echo "La description de l'item :".$table_item["$ID_item[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
+				echo "Le catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
+				echo "Le Prix de l'item :".$table_item["$ID_item[$i]"][6]."<br>"; 
+				echo "La video de l'item :".$table_item["$ID_item[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
+				$prix_tot_achat+=$table_item["$ID_item[$i]"][6];
+			}
+
+			 
+			echo "Prix total svp: ".$prix_tot_achat;
+			?>
+		</div>
+
 
 		<!--Créer un pied de page (footer)-->
 		<footer class="page-footer">   

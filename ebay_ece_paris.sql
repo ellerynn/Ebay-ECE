@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mer. 15 avr. 2020 à 19:08
+-- Généré le :  jeu. 16 avr. 2020 à 17:12
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.3.12
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `Prix` int(11) DEFAULT NULL,
   `Video` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID_item`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `item`
@@ -103,7 +103,8 @@ INSERT INTO `item` (`ID_item`, `Nom_item`, `ID_vendeur`, `ID_type_vente`, `Descr
 (75, 'Ipad Pro', 12, 'achat_immediat ', 'Voici le nouvel ipad Pro que Sutharsan a achetÃ©', 'VIP', 1090, ''),
 (76, 'Meuble', 12, ' offre', 'voici un meuble', 'Farraille_tresor', 200, ''),
 (77, 'tableau', 12, ' enchere', 'voici un tableau', 'Musee', 500, ''),
-(78, 'Duplicata Ipad Pro', 12, ' offre', 'Exemple', 'VIP', 1090, '');
+(78, 'Duplicata Ipad Pro', 12, ' offre', 'Exemple', 'VIP', 1090, ''),
+(79, 'tablette', 2, 'achat_immediat ', 'zdzzdzzzzzzz', 'Farraille_tresor', 10000, '');
 
 -- --------------------------------------------------------
 
@@ -122,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `liste_enchere` (
   `Prix_premier` int(11) NOT NULL,
   `Prix_second` int(11) DEFAULT NULL,
   `Prix` int(11) NOT NULL,
+  `Fin` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID_enchere`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
@@ -129,8 +131,8 @@ CREATE TABLE IF NOT EXISTS `liste_enchere` (
 -- Déchargement des données de la table `liste_enchere`
 --
 
-INSERT INTO `liste_enchere` (`ID_enchere`, `ID_item`, `Date_debut`, `Heure_debut`, `Date_fin`, `Heure_fin`, `Prix_premier`, `Prix_second`, `Prix`) VALUES
-(5, 77, '2020-04-15', '11:25:00', '2020-04-19', '19:50:00', 590, 580, 500);
+INSERT INTO `liste_enchere` (`ID_enchere`, `ID_item`, `Date_debut`, `Heure_debut`, `Date_fin`, `Heure_fin`, `Prix_premier`, `Prix_second`, `Prix`, `Fin`) VALUES
+(5, 77, '2020-04-15', '11:25:00', '2020-04-19', '19:50:00', 590, 580, 500, 0);
 
 -- --------------------------------------------------------
 
@@ -155,9 +157,9 @@ CREATE TABLE IF NOT EXISTS `meilleur_offre` (
 --
 
 INSERT INTO `meilleur_offre` (`ID_acheteur`, `ID_vendeur`, `ID_item`, `Prix_acheteur`, `Prix_vendeur`, `Tentative`, `Statut`) VALUES
-(30, 12, 76, 199, 200, 5, 2),
-(29, 12, 76, 100, 200, 1, 2),
-(29, 12, 78, 1000, 1090, 1, 2);
+(30, 12, 76, 199, 160, 5, 1),
+(29, 12, 76, 100, 120, 1, 1),
+(29, 12, 78, 1000, 1090, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -183,7 +185,8 @@ INSERT INTO `panier` (`ID`, `ID_item`, `ID_type_vente`) VALUES
 (29, 77, 'enchere'),
 (30, 76, 'offre'),
 (29, 76, 'offre'),
-(29, 78, 'offre');
+(29, 78, 'offre'),
+(29, 79, 'achat_immediat');
 
 -- --------------------------------------------------------
 
@@ -236,10 +239,11 @@ CREATE TABLE IF NOT EXISTS `photo` (
 INSERT INTO `photo` (`Nom_photo`, `ID_item`, `Direction`) VALUES
 ('ipad.jpg', 75, NULL),
 ('ipad_2.jpg', 75, NULL),
-('meuble.jpg', 76, NULL),
+('meuble1.jpg', 76, NULL),
 ('tableau.jpg', 77, NULL),
 ('ipad.jpg', 78, NULL),
-('ipad_2.jpg', 78, NULL);
+('ipad_2.jpg', 78, NULL),
+('a.jpg', 79, NULL);
 
 -- --------------------------------------------------------
 
