@@ -45,7 +45,7 @@
                 if ($login != "") 
                 {
                     //on cherche le livre avec les paramètres titre et auteur
-                    $sql .= " WHERE email LIKE '%$login%'";
+                    $sql .= " WHERE email LIKE '$login'";
                     $result = mysqli_query($db_handle, $sql);
                     //Si on trouve une correspondance : le compte existe deja
                     if (mysqli_num_rows($result) != 0) 
@@ -59,11 +59,11 @@
                         VALUES('$nom', '$prenom','$login', '3', '$psw');";
                         $result = mysqli_query($db_handle, $sql);
                         //création dans acheteur
-                        $sql = "SELECT * FROM personne WHERE Email LIKE '%$login%'";
+                        $sql = "SELECT * FROM personne WHERE Email LIKE '$login'";
                         $result = mysqli_query($db_handle, $sql);
                         $id = "";
                         while ($data = mysqli_fetch_assoc($result)) 
-                            $dat =$data['ID'];
+                            $id =$data['ID'];
                             
                         $sql = "INSERT INTO acheteur(ID) VALUES ('$id');";
                         $result = mysqli_query($db_handle, $sql); 

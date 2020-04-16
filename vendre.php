@@ -158,15 +158,16 @@
 					echo "$datefin"."<br>";
 					echo "$heurefin"."<br>";
 					echo "$prixdepart"."<br>";
-					$sql = "INSERT INTO liste_enchere(ID_item, Date_debut, Heure_debut, Date_fin, Heure_fin, Prix) VALUES ('$last_id_item', '$datedebut', '$heuredebut', '$datefin', '$heurefin', '$prixdepart');";
+					$sql = "INSERT INTO liste_enchere(ID_item, Date_debut, Heure_debut, Date_fin, Heure_fin, Prix_premier, Prix) VALUES ('$last_id_item', '$datedebut', '$heuredebut', '$datefin', '$heurefin', '$prixdepart','$prixdepart');";
 					$result = mysqli_query($db_handle, $sql);
 				}
 	        }
 	        else 
 	            echo "Database not found";
-	    }   
 	    //fermer la connexion
 	    mysqli_close($db_handle); 
+	    }   
+	    
 	}  
 	else 
 	    echo "Erreur : <br>$erreur";
@@ -257,7 +258,7 @@
 	                    	<div class="row">
 	                    		<div class="col-lg-6 col-md-6 col-sm-12">
 	                    			<p class="font-weight-bold">Photo(s)</p>
-	                      			<input type="file" name="filephoto[]" id="file" multiple>
+	                      			<input type="file" name="filephoto[]" id="file" multiple required>
 	                        	</div>
 
 		                    	<div class="col-lg-6 col-md-6 col-sm-12">
@@ -271,7 +272,7 @@
 	                    </div>
 	                    <div class="form-group">
 	                    	<p class="font-weight-bold">Catégorie(s)</p>
-	                        <input type="radio" name="categorie" value="Farraille_tresor" id="cb">Ferraille ou Trésor
+	                        <input type="radio" name="categorie" value="Farraille_tresor" id="cb" required>Ferraille ou Trésor
 							<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
 							<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
 	                    </div>

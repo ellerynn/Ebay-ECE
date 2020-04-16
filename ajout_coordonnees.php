@@ -23,7 +23,7 @@
     		echo "$codePostal<br>";
             echo "$pays<br>";
     		echo "$Telephone<br>";
-    		$sql = "UPDATE acheteur SET Adresse_ligne1 = '$adresseUn', Adresse_ligne2 = '$adresseDeux', Ville = '$ville' , Code_Postal = '$codePostal', Pays = '$pays', Telephone = '$Telephone' WHERE ID = '$ID_temporaire_acheteur';";
+    		$sql = "UPDATE acheteur SET Adresse_ligne1 = '$adresseUn', Adresse_ligne2 = '$adresseDeux', Ville = '$ville' , Code_postal = '$codePostal', Pays = '$pays', Telephone = '$Telephone' WHERE ID = '$ID_temporaire_acheteur';";
     		$result = mysqli_query($db_handle, $sql);
     		echo "ouai";
     	}
