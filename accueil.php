@@ -58,7 +58,7 @@
 			</form>
 
 			<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
@@ -67,9 +67,11 @@
 					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-						    <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
 					  	</div>
-					</li>  
+					</li> 
+					<li class="nav-item">
+						<a style="display: none; transform: translateY(7px); color: white;" href="admin.php" id="ad">Admin.</a>
+					</li> 
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
 					  	<div class="dropdown-content border rounded" id="apop1">
@@ -89,17 +91,17 @@
 
 		<header class="page-header header container-fluid"> <!-- -fluid permet de s'assurer que le conteneur s'étend sur toute la largeur de l'écran. Il y a aussi juste un container, avec des largeurs fixes appliquées = espace des deux côtés de l'écran.-->
 			<div class="row"> 
-				<div class="col-lg-3 col-md-3 col-sm-12" id="fix">
-					<h3 class="text-center">eBay ECE</h3>
-					<p></p>
-					<div class="list-group">
+				<div class="col-lg-3 col-md-3 col-sm-12">
+					<div class="list-group" style="position: fixed; width: 15%;">
+						<h3 class="text-center">eBay ECE</h3>
+						<p></p>
 			        	<a href="#" class="list-group-item">Ferraille ou Trésor</a>
 			          	<a href="#" class="list-group-item">Bon pour le Musée</a>
 			          	<a href="#" class="list-group-item">Accessoires VIP</a>
 			        </div>
 		        </div>
 		        <div class="col-lg-9 col-md-9 col-sm-12">
-		        	<div id="carousel" class="carousel slide" data-ride="carousel">
+		        	<div style="margin-right: 5%;" id="carousel" class="carousel slide" data-ride="carousel">
 					 	<ul class="carousel-indicators">
 					    	<li data-target="#carousel" data-slide-to="0" class="active"></li>
 					    	<li data-target="#carousel" data-slide-to="1"></li>
@@ -108,13 +110,13 @@
 
 						<div class="carousel-inner">
 						    <div class="carousel-item active">
-						      	<img src="noir.png" alt="Los Angeles">
+						      	<img src="noir.png" alt="noir">
 						    </div>
 						    <div class="carousel-item">
-						      	<img src="rose.png" alt="Chicago">
+						      	<img src="rose.png" alt="rose">
 						    </div>
 						    <div class="carousel-item">
-						      	<img src="gris.png" alt="New York">
+						      	<img src="gris.png" alt="gris">
 						    </div>
 						</div>
 
@@ -331,6 +333,9 @@
 							cache.style.display = "none";
 						}	
 
+						var x = document.getElementById("ad");
+						x.style.display = "block";
+
 						document.getElementById("panier").onclick = function() {return false;}
 						document.getElementById("achat").onclick = function() {return false;}
 						document.getElementById("enchere").onclick = function() {return false;}
@@ -344,11 +349,8 @@
 					<script>
 						//Bloquer les liens onClick
 						document.getElementById("ades").onclick = function() {
-							var cache = document.getElementById("l1");
+							var cache = document.getElementById("l3");
 							cache.style.display = "none";
-
-							var cachebis = document.getElementById("l3");
-							cachebis.style.display = "none";
 						}
 
 						document.getElementById("panier").onclick = function() {return false;}
@@ -364,11 +366,8 @@
 				{?>
 					<script>
 						document.getElementById("ades").onclick = function() {
-							var cache = document.getElementById("l1");
+							var cache = document.getElementById("l2");
 							cache.style.display = "none";
-
-							var cachebis = document.getElementById("l2");
-							cachebis.style.display = "none";
 						}
 						
 						document.getElementById("admin").onclick = function() {return false;}

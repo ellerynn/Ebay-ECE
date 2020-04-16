@@ -257,7 +257,7 @@
 					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-						    <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
+						    <a class="nav-link dropdown-item" href="votre_compte.php" id="l1">Admin</a>
 					  	</div>
 					</li>  
 					<li class="nav-item dropdown">
