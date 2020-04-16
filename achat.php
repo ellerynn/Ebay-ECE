@@ -55,7 +55,7 @@
 			</form>
 
 			<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+				<ul class="navbar-nav">          
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
@@ -80,6 +80,35 @@
 		</nav>
 
 		<br><br><br>
+		<div class="container features">
+			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+					<h3 class="text-center">eBay ECE</h3>
+					<p></p>
+					
+			        <div class="list-group">
+			          	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac1">Achat</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac2">Messages</button>
+			        </div>	
+			    </div>
+			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
+			    	<div class="panel" style="display: none;" id="panel_achat">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Acheter</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_mes_acheteur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Messages</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+			    </div>
+			</div>
+		</div>
 		
 		<footer class="page-footer">   
 			<div class="container">    
@@ -135,5 +164,20 @@
 				</div> 
 			</div>
 		</footer>
+
+		<script type="text/javascript">
+			var panel_achat = document.getElementById("panel_achat");
+			var panel_mes = document.getElementById("panel_mes_acheteur");
+					
+			document.getElementById("bac1").onclick = function() {
+				panel_achat.style.display ="block";
+				panel_mes.style.display ="none";
+			}
+
+			document.getElementById("bac2").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="block";
+			}
+		</script>		
 	</body> 
 </html> 

@@ -54,8 +54,8 @@
 				</div>
 			</form>
 
-			<<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+			<div class="collapse navbar-collapse">     
+				<ul class="navbar-nav">    
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
@@ -63,9 +63,11 @@
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="vendre.php">Vendre</a>
-						    <a class="nav-link dropdown-item" href="admin.php">Admin</a>
 					  	</div>
 					</li>  
+					<li class="nav-item">
+						<a style="color: white;" href="admin.php">Admin.</a>
+					</li>
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
@@ -81,25 +83,94 @@
 		</nav>
 
 		<br><br><br>
-		<div class="container-fluid features" id="con-insc">
-			<h1 class="text-center">Supprimer un article</h1>
-			<form action="suppression_produit_admin.php" method="post">
-				<table>
-                    <tr>
-                        <td><input type="text" name="login" placeholder="Identifiant" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="password" name="psw" placeholder="Mot de passe" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="center">
-                        <input class="btn border btn-outline-secondary rounded-lg" name="buttonconnexion" type="submit" value="Connexion">
-                        </td>
-                    </tr>
-                </table>
-			</form>
+		<div class="container features">
+			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+					<h3 class="text-center">eBay ECE</h3>
+					<p></p>
+					<div class="list-group">
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad1">Supprimer un item du site</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad2">Gérer les vendeurs</button>
+			        </div>
+				</div>
+		        <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
+		        	<div class="panel" style="display: none;" id="panel_supp_admin">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Supprimer un item du site</h2><br>
+					    </div>
+					    <div class="panel-body">
+					   		<form action="suppression_produit_admin.php" method="post">
+								<table>
+				                    <tr>
+				                        <td><input type="text" name="login" placeholder="Identifiant" required="true"></td>
+				                    </tr>
+				                    <tr>
+				                        <td><input type="password" name="psw" placeholder="Mot de passe" required="true"></td>
+				                    </tr>
+				                    <tr>
+				                        <td colspan="2" align="center">
+				                        <input class="btn border btn-outline-secondary rounded-lg" name="buttonconnexion" type="submit" value="Connexion">
+				                        </td>
+				                    </tr>
+				                </table>
+							</form>					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_gv_admin">
+					    <div class="panel-body">
+					    	<div class="row">
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Ajouter un vendeur</h2>
+									<form action="ajout_vendeur.php" method="post">
+										<table>
+											<tr>
+												<td><input type="text" name="nom" placeholder="Nom" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="prenom" placeholder="Prénom" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="pseudo" placeholder="Pseudo" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="email" name="email" placeholder="Mail" required="true"></td>
+											</tr>
+											<tr>
+												<td colspan="2" align="center">
+													<input class="btn border btn-outline-secondary rounded-lg" name="buttonajoutervendeur" type="submit" value="L'ajouter comme vendeur">
+												</td>
+											</tr>
+										</table>
+									</form>
+						    	</div>
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Supprimer un vendeur</h2>
+									<form action="suppression_vendeur.php" method="post">
+										<table>
+											<tr>
+												<td><input type="text" name="id" placeholder="ID" required="true"></td>
+											</tr>
+											<tr>
+												<td><input type="text" name="pseudo" placeholder="pseudo" required="true"></td>
+											</tr>
+											<tr>
+												<td colspan="2" align="center">
+													<input class="btn border btn-outline-secondary rounded-lg" name="buttonsupprimervendeur" type="submit" value="Supprimer le vendeur">
+												</td>
+											</tr>
+										</table>
+									</form>
+						    	</div>
+						    	<div class="col-lg-4 col-md-4 col-sm-12">
+						    		<h2 class="text-center">Liste vendeurs</h2>	
+						    	</div>			
+						    </div>	
+				        </div>
+				    </div>
+		        </div>
+		    </div>
 		</div>
-		
+		    			
 		<footer class="page-footer">   
 			<div class="container">    
 				<div class="row">       
@@ -152,5 +223,20 @@
 				</div> 
 			</div>
 		</footer>
+
+		<script type="text/javascript">
+			var panel_supp = document.getElementById("panel_supp_admin");
+			var panel_gv = document.getElementById("panel_gv_admin");
+
+			document.getElementById("bad1").onclick = function() {
+				panel_supp.style.display ="block";
+				panel_gv.style.display ="none";
+			}
+
+			document.getElementById("bad2").onclick = function() {
+				panel_supp.style.display ="none";
+				panel_gv.style.display ="block";
+			}
+		</script>
 	</body> 
 </html> 

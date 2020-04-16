@@ -133,7 +133,6 @@
                         <div class="dropdown-menu" id="menu-deroulant">
                             <a class="nav-link dropdown-item" href="achat.php">Achat</a>
                             <a class="nav-link dropdown-item" href="vendre.php">Vendre</a>
-                            <a class="nav-link dropdown-item" href="admin.php">Admin</a>
                         </div>
                     </li>  
                     <li class="nav-item dropdown">
@@ -150,32 +149,34 @@
         </nav>
 
         <br><br><br>
-        <div class="container-fluid features" id="con-insc">
-            <h1 class="text-center">Créer un compte</h1>
-            <form action="" method="post">
-                <table>
-                    <tr>
-                        <td><input type="text" name="nom" placeholder="Nom" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="prenom" placeholder="Prénom" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="login" placeholder="Mail" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="password" name="psw" placeholder="Mot de passe" required="true"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="center">
-                            <input class="btn border btn-outline-secondary rounded-lg" name="buttoninscription" type="submit" value="S'inscrire">
-                            <p class="text-center"><small>Vous avez déjà un <a href="connexion.php">compte</a> ?
-                            <br><br>Vous êtes vendeur professionnel ?
-                            <br><a href="#">Contactez</a> l'administrateur</small></p>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+        <div class="container-fluid features">
+            <div class="panel border" style="height: 500px; width: 700px; transform: translateX(40%); padding: 50px; margin-bottom: 1em;">
+                <h1 class="text-center">Créer un compte</h1>
+                <form style="transform: translateX(8%);" action="" method="post">
+                    <table>
+                        <tr>
+                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="nom" placeholder="Nom" required="true"></td>
+                        </tr>
+                        <tr>
+                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="prenom" placeholder="Prénom" required="true"></td>
+                        </tr>
+                        <tr>
+                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="login" placeholder="Mail" required="true"></td>
+                        </tr>
+                        <tr>
+                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="password" name="psw" placeholder="Mot de passe" required="true"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center">
+                                <input class="btn border btn-outline-secondary rounded-lg" name="buttoninscription" type="submit" value="S'inscrire">
+                                <p class="text-center"><small>Vous avez déjà un <a href="connexion.php">compte</a> ?
+                                <br><br>Vous êtes vendeur professionnel ?
+                                <br><a href="#">Contactez</a> l'administrateur</small></p>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>  
         </div>
 
         <footer class="page-footer">   
@@ -212,13 +213,13 @@
                     <div class="col-lg-3 col-md-3 col-sm-12">   
                         <ul>  
                             <li>
-                                <h5 class="text-uppercase font-weight-bold"> <a href="vendre.php" id="l2">Vendre</a> </h5>
+                                <h5 class="text-uppercase font-weight-bold"> <a href="vendre.php">Vendre</a> </h5>
                             </li>    
                             <li>
                                 <h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
                             </li>    
                             <li>
-                                <h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="l1">Admin</a> </h5>
+                                <h5 class="text-uppercase font-weight-bold"> <a href="admin.php">Admin</a> </h5>
                             </li>            
                         </ul> 
                     </div> 

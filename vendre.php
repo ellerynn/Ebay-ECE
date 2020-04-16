@@ -18,8 +18,7 @@
 	  	exit();
 	}
 
-	//On vérifier qu'il n'y a pas de champ manquant
-		$erreur ="";
+	$erreur ="";
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
@@ -165,11 +164,11 @@
 	        else 
 	            echo "Database not found";
 	    }   
+	    else 
+	    	echo "Erreur : <br>$erreur";
 	    //fermer la connexion
 	    mysqli_close($db_handle); 
 	}  
-	else 
-	    echo "Erreur : <br>$erreur";
 ?>
 
 <!DOCTYPE html> 
@@ -208,17 +207,19 @@
 			</form>
 
 			<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+				<ul class="navbar-nav">       
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="ades">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
-						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-						    <a class="nav-link dropdown-item" href="admin.php" id="l1">Admin</a>
+						    <a class="nav-link dropdown-item" href="vendre.php">Vendre</a>
 					  	</div>
 					</li>  
+					<li class="nav-item">
+						<a style="display: none; transform: translateY(7px); color: white;" href="admin.php" id="ad">Admin.</a>
+					</li> 
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
@@ -234,99 +235,141 @@
 		</nav>
 
 		<br><br><br>
-		<div class="container border rounded" id="vpdt">
-            <div class="panel">
-			    <div class="panel-heading">
-			    	<br><h2 class="text-center">Vendre un produit</h2><br>
+		<div class="container features">
+			<div class="row"> 
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+					<h3 class="text-center">eBay ECE</h3>
+					<p></p>
+					
+			        <div class="list-group">
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv1">Vendre</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv2">Supprimer une vente</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv3">Messages</button>
+			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv4">Offres</button>
+			        </div>	
 			    </div>
-			    <div class="panel-body">
-					<form method="post" action="" enctype="multipart/form-data">
-	                  	<div class="form-group">
-	                    	<div class="row">
-	                    		<div class="col-lg-6 col-md-6 col-sm-12">
-	                    			<p class="font-weight-bold">Nom du produit</p>
-	                        		<input class="form-control" style="width: 100%" type="text" name="nom" placeholder="Nom du produit" required>
-	                        	</div>
-		                    	<div class="col-lg-6 col-md-6 col-sm-12">
-		                    		<p class="font-weight-bold">Prix</p>
-		                        	<input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix">
-		                        </div>
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-	                    	<div class="row">
-	                    		<div class="col-lg-6 col-md-6 col-sm-12">
-	                    			<p class="font-weight-bold">Photo(s)</p>
-	                      			<input type="file" name="filephoto[]" id="file" multiple>
-	                        	</div>
+			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
+			    	<div class="panel" style="display: none;" id="panel_vendre">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Vendre</h2><br>
+					    </div>
+					    <div class="panel-body">
+							<form method="post" action="" enctype="multipart/form-data">
+						       	<div class="form-group">
+						          	<div class="row">
+						          		<div class="col-lg-6 col-md-6 col-sm-12">
+						           			<p class="font-weight-bold">Nom du produit</p>
+						               		<input class="form-control" style="width: 100%" type="text" name="nom" placeholder="Nom du produit" required>
+						               	</div>
+							            <div class="col-lg-6 col-md-6 col-sm-12">
+							                <p class="font-weight-bold">Prix</p>
+							                <input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix">
+							            </div>
+							        </div>
+						        </div>
+						        <div class="form-group">
+						          	<div class="row">
+						           		<div class="col-lg-6 col-md-6 col-sm-12">
+						                    <p class="font-weight-bold">Photo(s)</p>
+						                    <input type="file" name="filephoto[]" id="file" multiple>
+						                </div>
+										<div class="col-lg-6 col-md-6 col-sm-12">
+							                <p class="font-weight-bold">Vidéo (facultative)</p>
+						                    <input type="file" name="filevideo[]" id="file" multiple>
+							            </div>
+							        </div>
+				                </div>
+						        <div class="form-group">
+						            <textarea name="description" rows="5" cols="100" placeholder="Description" id="description" required></textarea>
+						        </div>
+						        <div class="form-group">
+						            <p class="font-weight-bold">Catégorie(s)</p>
+						            <input type="radio" name="categorie" value="Farraille_tresor" id="cb">Ferraille ou Trésor
+									<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
+									<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
+						        </div>
+						        <!--A BLINDER-->
+						        <div class="form-group">
+						          	<p class="font-weight-bold">Type de vente</p>
+						           	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
+									<input type="checkbox" name="vente2" value="enchere" style="margin-right: 5px;margin-left: 10px;" id="ench" onclick="montrer()">Enchère
+									<input type="checkbox" name="vente2" value="offre" id="cb">Meilleur offre
+								</div>
+								<div class="form-group" style="display: none;" id="jpp">
+									<div class="row">       
+										<div class="col-lg-6 col-md-6 col-sm-12">
+											Date de début : <input class="form-control" type="Date" name="datedebut"> 
+										</div>
+										<div class="col-lg-6 col-md-6 col-sm-12">
+											Date de fin : <input class="form-control"  type="Date" name="datefin"> 
+										</div>
+									</div>
+									<div class="row">       
+										<div class="col-lg-4 col-md-4 col-sm-12">
+											Heure de début : <input class="form-control" type="time" name="heuredebut">
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-12">
+											Heure de fin : <input class="form-control" type="time" name="heurefin">
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-12">
+											Prix de départ : <input class="form-control" type="number" name="prixdepart">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+						           	<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutproduit" type="submit" value="Ajouter le produit">
+								</div>
 
-		                    	<div class="col-lg-6 col-md-6 col-sm-12">
-		                    		<p class="font-weight-bold">Vidéo (facultative)</p>
-	                        		<input type="file" name="filevideo[]" id="file" multiple>
-		                        </div>
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-	                    	<textarea name="description" rows="5" cols="100" placeholder="Description" id="description" required></textarea>
-	                    </div>
-	                    <div class="form-group">
-	                    	<p class="font-weight-bold">Catégorie(s)</p>
-	                        <input type="radio" name="categorie" value="Farraille_tresor" id="cb">Ferraille ou Trésor
-							<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
-							<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
-	                    </div>
-	                    <!--A BLINDER-->
-	                    <div class="form-group">
-	                    	<p class="font-weight-bold">Type de vente</p>
-	                    	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
-							<input type="checkbox" name="vente2" value="enchere" style="margin-right: 5px;margin-left: 10px;" id="ench" onclick="montrer()">Enchère
-							<input type="checkbox" name="vente2" value="offre" id="cb">Meilleur offre
-						</div>
-						<div class="form-group" style="display: none;" id="jpp">
-							<div class="row">       
-								<div class="col-lg-6 col-md-6 col-sm-12">
-									Date de début : <input class="form-control" type="Date" name="datedebut"> 
-								</div>
-								<div class="col-lg-6 col-md-6 col-sm-12">
-									Date de fin : <input class="form-control"  type="Date" name="datefin"> 
-								</div>
-							</div>
-							<div class="row">       
-								<div class="col-lg-4 col-md-4 col-sm-12">
-									Heure de début : <input class="form-control" type="time" name="heuredebut">
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-12">
-									Heure de fin : <input class="form-control" type="time" name="heurefin">
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-12">
-									Prix de départ : <input class="form-control" type="number" name="prixdepart">
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-	                    	<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutproduit" type="submit" value="Ajouter le produit">
-						</div>
+								<script>
+									function montrer() 
+									{
+										// Get the checkbox
+										var checkBox = document.getElementById("ench");
+										// Get the output text
+										var text = document.getElementById("jpp");
 
-						<script>
-							function montrer() 
-							{
-								// Get the checkbox
-								var checkBox = document.getElementById("ench");
-								// Get the output text
-								var text = document.getElementById("jpp");
-
-								// If the checkbox is checked, display the output text
-								if (checkBox.checked == true)
-									text.style.display = "block";
-								else 
-									text.style.display = "none";
-							}
-						</script> 
-               		</form>
-                </div>
-            </div>
-        </div>
-        <br><br>
+										// If the checkbox is checked, display the output text
+										if (checkBox.checked == true)
+											text.style.display = "block";
+										else 
+											text.style.display = "none";
+									}
+								</script> 
+		               		</form>
+		                </div>
+		            </div>
+				    <div class="panel" style="display: none;" id="panel_supp_vendeur">
+		    			<div class="panel-heading">
+		    				<br><h2 class="text-center">Supprimer une vente</h2><br>
+					    </div>
+					    <div class="panel-body">
+						    <form action="suppression_produit.php" method="post">
+								<div class="form-group">
+			                        <input class="form-control" style="width: 100%" type="number" name="id" placeholder="ID de l'article" required>
+			                    </div>
+			                    <div class="form-group">
+			                    	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonsupprimer" type="submit" value="Supprimer">
+								</div>
+							</form>					
+				        </div>
+				    </div>
+					<div class="panel" style="display: none;" id="panel_mes_vendeur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Messages</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_o_vendeur">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Offres</h2><br>
+					    </div>
+					    <div class="panel-body">					
+				        </div>
+				    </div>
+			    </div>
+			</div>
+		</div>	
 
 		<footer class="page-footer">   
 			<div class="container">    
@@ -390,14 +433,52 @@
 		<?php
 			if($_SESSION['Statut'] == VENDEUR)
 			{?>
-				<script>
-					//Bloquer les liens onClick
-					document.getElementById("ades").onclick = function() {
-						var cache = document.getElementById("l1");
-						cache.style.display = "none";
-					}		
+				<script>		
 					document.getElementById("admin").onclick = function() {return false;}
 				</script> <?php
+			}
+
+			else
+			{?>
+				<script type="text/javascript">
+					var x = document.getElementById("ad");
+					x.style.display = "block";
+				</script> <?php
 			}?>
+
+		<script type="text/javascript">
+			var panel_supp = document.getElementById("panel_supp_vendeur");
+			var panel_vendre = document.getElementById("panel_vendre");
+			var panel_mes = document.getElementById("panel_mes_vendeur");
+			var panel_offres = document.getElementById("panel_o_vendeur");
+
+			document.getElementById("bv1").onclick = function() {
+				panel_vendre.style.display ="block";
+				panel_supp.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_offres.style.display ="none";
+			}
+
+			document.getElementById("bv2").onclick = function() {
+				panel_vendre.style.display ="none";
+				panel_supp.style.display ="block";
+				panel_mes.style.display ="none";
+				panel_offres.style.display ="none";
+			}
+
+			document.getElementById("bv3").onclick = function() {
+				panel_supp.style.display ="none";
+				panel_vendre.style.display ="none";
+				panel_mes.style.display ="block";
+				panel_offres.style.display ="none";
+			}
+
+			document.getElementById("bv4").onclick = function() {
+				panel_supp.style.display ="none";
+				panel_vendre.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_offres.style.display ="block";
+			}
+		</script>
 	</body> 
 </html> 

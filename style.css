@@ -28,7 +28,6 @@ a {
 	justify-content: flex-end; 
 } 
 
-/*menu déoulant*/
 #menu-deroulant a {
       color:black;
 }
@@ -38,11 +37,6 @@ a {
 	border-color: #343a40;
 	margin-right: 23px;
 	width: 100px;
-}
-
-.centered {
-	margin:0 auto;
- 	width:300px;
 }
 
 /*barre de recherche*/
@@ -59,6 +53,7 @@ a {
     margin-bottom: 2px;
 }
 
+/*header*/
 .page-header {
 	margin: 1em auto;
 	padding: 1em;   
@@ -76,35 +71,11 @@ a {
 	margin-left: 50px;
 }
 
-#fix {
-	position: fixed;
-}
- 
-#carousel {
-	margin-right: 55px;
-	height: 400px;
-	left:320px;
-}
-
 .features {   
 	margin: 1em auto;
 	padding: 1em;   
 	position: relative; 
 } 
-
-#con-insc input {
-	border-top: 0;
-	border-right: 0;
-	border-left: 0;
-	width: 570px;
-	margin: 10px;
-}
-
-#con-insc form {
-	margin-top: 3em;
-	margin-bottom: 5em;
-	margin-left:400px;
-}
 
 #cb {
 	margin-right: 5px;
@@ -116,10 +87,6 @@ a {
 	padding: 5px;
 	border-style: dashed;
 	border-radius: 5px;
-}
-
-#vpdt {
-	width: 800px;
 }
 
 #apop2 a, #apop1 a {
