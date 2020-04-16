@@ -1,15 +1,23 @@
 <?php
 	// On prolonge la session
+	//LA PARTIE SESSION QUI DIRIGE VERS LA PAGE CONNEXION EST MISE EN COMMENTAIRE EN ATENDANT L'INCORPORATION DE CE FICHIER DANS LE SITE
+	//LE DESIGN EST A REVOIR
+	//LES MESSAGES D'ERREURS SONT POTENTIELLEMENT A REVOIR
+	//A TESTE POUR UN OBJET AVEC 2 TYPE D'ACHATS (pas encore vérifier ni avoir pensé à le faire encore)
+	//
 	session_start();
-	$ID_temporaire_item = 78 ;
+	
+	$ID_temporaire_item = 80 ;
 	$ID_temporaire_acheteur = 29 ;
 	$votre_prix = isset($_POST["votre_prix"])? $_POST["votre_prix"] : "";
 	$votre_prix_offre = isset($_POST["votre_prix_offre"])? $_POST["votre_prix_offre"] : "";
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
+
 	if ($db_found) 
 	{	
+		
 
 		//Récuperation donnee table item
 		$sql = "SELECT * FROM item WHERE ID_item LIKE '$ID_temporaire_item'";
@@ -22,6 +30,7 @@
 		$categorie = "";
 		$prix = "";
 		$video = "";
+		
 			if (mysqli_num_rows($result) == 0) {
 				//Livre inexistant
 				echo "Erreur, cet item n'est pas disponible. <br>";
@@ -30,6 +39,7 @@
 				
 				while ($data = mysqli_fetch_assoc($result) ) 
 				{
+					
 					$nom_item = $data['Nom_item'];
 					$ID_vendeur = $data['ID_vendeur'];
 					$ID_type_vente = $data['ID_type_vente'];
@@ -38,7 +48,6 @@
 					$prix = $data['Prix'];
 					$video = $data['Video'];
 				}
-				
 			}
 
 		//Récuperation donnée table photo
@@ -177,25 +186,30 @@
 	    	$ok1=1;
 	    }
 	    
+	    
 	 }
 	 else 
 	 {
 	      echo "Database not found";
 	 } 
+	 
 
 	// On teste si la variable de session existe et contient une valeur
 	if(isset($_SESSION['login']))
 	{
+		
 		$login = $_SESSION['login'];
 		$psw = $_SESSION['psw'];
 		$statut = $_SESSION['Statut'];
 	}
+
 	else 
 	{
 	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	//  header('Location: http://localhost/test/connexion.php');
-	  exit();
+	  // header('Location: http://localhost/Ebay-ece/connexion.php');
+	  // exit();
 	}
+	
 ?>
 
 <!DOCTYPE html> 
@@ -268,7 +282,6 @@
 		<div class="container-fluid features" id="con-insc">
             <h1 class="text-center"><?php echo $nom_item."<br>"; ?></h1>
             <?php
-            	
             	for ($i = 0 ; $i < count($nom_photo); $i++)
 					echo '<img src = "images_web/'.$nom_photo[$i].'" ><br>';
 
@@ -312,10 +325,7 @@
 				echo $Date_fin."<br>";
 				echo $Heure_fin."<br>";
 				echo $Prixactuelle."<br>";
-
-				
             ?>
-            
         </div>
 
         <br><br><br>
