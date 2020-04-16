@@ -248,56 +248,52 @@
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv4">Offres</button>
 			        </div>	
 			    </div>
-			    <div class="panel-body">
-					<form method="post" action="" enctype="multipart/form-data">
-	                  	<div class="form-group">
-	                    	<div class="row">
-	                    		<div class="col-lg-6 col-md-6 col-sm-12">
-	                    			<p class="font-weight-bold">Nom du produit</p>
-	                        		<input class="form-control" style="width: 100%" type="text" name="nom" placeholder="Nom du produit" required>
-	                        	</div>
-		                    	<div class="col-lg-6 col-md-6 col-sm-12">
-		                    		<p class="font-weight-bold">Prix</p>
-		                        	<input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix">
-		                        </div>
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-	                    	<div class="row">
-	                    		<div class="col-lg-6 col-md-6 col-sm-12">
-	                    			<p class="font-weight-bold">Photo(s)</p>
-	                      			<input type="file" name="filephoto[]" id="file" multiple required>
-	                        	</div>
-
-		                    	<div class="col-lg-6 col-md-6 col-sm-12">
-		                    		<p class="font-weight-bold">Vidéo (facultative)</p>
-	                        		<input type="file" name="filevideo[]" id="file" multiple>
-		                        </div>
-		                    </div>
-	                    </div>
-	                    <div class="form-group">
-	                    	<textarea name="description" rows="5" cols="100" placeholder="Description" id="description" required></textarea>
-	                    </div>
-	                    <div class="form-group">
-	                    	<p class="font-weight-bold">Catégorie(s)</p>
-	                        <input type="radio" name="categorie" value="Farraille_tresor" id="cb" required>Ferraille ou Trésor
-							<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
-							<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
-	                    </div>
-	                    <!--A BLINDER-->
-	                    <div class="form-group">
-	                    	<p class="font-weight-bold">Type de vente</p>
-	                    	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
-							<input type="checkbox" name="vente2" value="enchere" style="margin-right: 5px;margin-left: 10px;" id="ench" onclick="montrer()">Enchère
-							<input type="checkbox" name="vente2" value="offre" id="cb">Meilleur offre
-						</div>
-						<div class="form-group" style="display: none;" id="jpp">
-							<div class="row">       
-								<div class="col-lg-6 col-md-6 col-sm-12">
-									Date de début : <input class="form-control" type="Date" name="datedebut"> 
-								</div>
-								<div class="col-lg-6 col-md-6 col-sm-12">
-									Date de fin : <input class="form-control"  type="Date" name="datefin"> 
+			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 800px;">
+			    	<div class="panel" style="display: none;" id="panel_vendre">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Vendre</h2><br>
+					    </div>
+					    <div class="panel-body">
+							<form method="post" action="" enctype="multipart/form-data">
+						       	<div class="form-group">
+						          	<div class="row">
+						          		<div class="col-lg-6 col-md-6 col-sm-12">
+						           			<p class="font-weight-bold">Nom du produit</p>
+						               		<input class="form-control" style="width: 100%" type="text" name="nom" placeholder="Nom du produit" required>
+						               	</div>
+							            <div class="col-lg-6 col-md-6 col-sm-12">
+							                <p class="font-weight-bold">Prix</p>
+							                <input class="form-control" type="number" style="width: 100%" name="prix" placeholder="Prix">
+							            </div>
+							        </div>
+						        </div>
+						        <div class="form-group">
+						          	<div class="row">
+						           		<div class="col-lg-6 col-md-6 col-sm-12">
+						                    <p class="font-weight-bold">Photo(s)</p>
+						                    <input type="file" name="filephoto[]" id="file" multiple required>
+						                </div>
+										<div class="col-lg-6 col-md-6 col-sm-12">
+							                <p class="font-weight-bold">Vidéo (facultative)</p>
+						                    <input type="file" name="filevideo[]" id="file" multiple>
+							            </div>
+							        </div>
+				                </div>
+						        <div class="form-group">
+						            <textarea name="description" rows="5" cols="100" placeholder="Description" id="description" required></textarea>
+						        </div>
+						        <div class="form-group">
+						            <p class="font-weight-bold">Catégorie(s)</p>
+						            <input type="radio" name="categorie" value="Farraille_tresor" id="cb">Ferraille ou Trésor
+									<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
+									<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
+						        </div>
+						        <!--A BLINDER-->
+						        <div class="form-group">
+						          	<p class="font-weight-bold">Type de vente</p>
+						           	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
+									<input type="checkbox" name="vente2" value="enchere" style="margin-right: 5px;margin-left: 10px;" id="ench" onclick="montrer()">Enchère
+									<input type="checkbox" name="vente2" value="offre" id="cb">Meilleur offre
 								</div>
 								<div class="form-group" style="display: none;" id="jpp">
 									<div class="row">       
