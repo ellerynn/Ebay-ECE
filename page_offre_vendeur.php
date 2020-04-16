@@ -2,6 +2,7 @@
 	// On prolonge la session
 	session_start();
 	$ID_temporaire_vendeur = 12;
+	$contre_offre = isset($_POST["contre_offre"])? $_POST["contre_offre"] : "";
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
@@ -20,13 +21,10 @@
 
 		$table_item = array();
 		$table_photo = array();
-		/*
-		$nom_photo =array();
-		$nom_photo[0] = "";
-		$nom_photo[1] = "";
-		$nom_photo[2] = "";
-		$nom_photo[3] = "";
-		*/
+		$buttonrefuser = array();
+		$buttonaccepter = array();
+		$buttonsoumettre = array();
+
 		$ID_acheteur =array();
 		$ID_item = array();
 		$Prix_acheteur = array();
@@ -81,6 +79,7 @@
 						$table_item["$ID_item[$u]"] = $temp; // Tableau associatif
 					}
 				}
+
 				//toujours dans la boucle for: 
 				$temp_photo = array();
 				$sql = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$u]'";
@@ -91,23 +90,43 @@
 					{
 						$temp_photo[$v] = $data['Nom_photo'];
 						$v++;
-
 					}
 					$table_photo["$ID_item[$u]"]= $temp_photo; //array de photo dans tableau associatif
 				}
 			}
 
-			/*
-			$j = 0;
-			for($k = 0 ; $k < count($ID_item); $k++)
-			$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$k]'";
-			$result1 = mysqli_query($db_handle, $sql1);
-			while ($data = mysqli_fetch_assoc($result1) ) 
+		}
+		for ($a = 0 ; $a < count($ID_item) ; $a++){
+			$buttonrefuser[$a] = "buttonrefuser_".$a;
+			$buttonaccepter[$a] = "buttonaccepter_".$a;
+			$buttonsoumettre[$a] = "buttonsoumettre_".$a;
+		}
+
+		for ($a = 0 ; $a < count($ID_item) ; $a++){
+			if(isset($_POST["$buttonrefuser[$a]"]))
 			{
-				$nom_photo[$j] = $data['Nom_photo'];
-				$j++;
-			}*/
-			
+				$sql = "UPDATE meilleur_offre SET Statut = '1' WHERE ID_item = $ID_item[$a] AND ID_vendeur = $ID_temporaire_vendeur AND ID_acheteur = $ID_acheteur[$a];";
+				$result3 = mysqli_query($db_handle, $sql);
+				header('Location: http://localhost/Ebay-ECE/page_offre_vendeur.php');
+			}
+		}
+		for ($a = 0 ; $a < count($ID_item) ; $a++){
+			if(isset($_POST["$buttonaccepter[$a]"]))
+			{
+				$sql = "UPDATE meilleur_offre SET Statut = '3' WHERE ID_item = $ID_item[$a] AND ID_vendeur = $ID_temporaire_vendeur AND ID_acheteur = $ID_acheteur[$a];";
+				$result = mysqli_query($db_handle, $sql);
+				$sql1 = "UPDATE meilleur_offre SET Statut = '4' WHERE ID_item = $ID_item[$a] AND ID_vendeur = $ID_temporaire_vendeur AND ID_acheteur != $ID_acheteur[$a]";
+				$result1 = mysqli_query($db_handle, $sql1);
+				header('Location: http://localhost/Ebay-ECE/page_offre_vendeur.php');
+			}
+		}
+		for ($a = 0 ; $a < count($ID_item) ; $a++){
+			if(isset($_POST["$buttonsoumettre[$a]"]))
+			{
+				$sql = "UPDATE meilleur_offre SET Statut = '1' , Prix_vendeur = $contre_offre WHERE ID_item = $ID_item[$a] AND ID_vendeur = $ID_temporaire_vendeur AND ID_acheteur = $ID_acheteur[$a];";
+				$result = mysqli_query($db_handle, $sql);
+				header('Location: http://localhost/Ebay-ECE/page_offre_vendeur.php');
+			}
 		}
 	}
 	else
@@ -190,26 +209,31 @@
             <?php
             $m=0;
             	for ($i = 0 ; $i<count($ID_acheteur); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
-
-            		//echo '<img src = "images_web/'.$nom_photo[$m].'" ><br>';
+            		if($Statut[$i] == 2){
+            		//Affichage des images pour un item donnée :
+					for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
+						echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
+					}
 	            	echo "<br>Le ID de acheteur: ".$ID_acheteur[$i]."<br>";
 					echo "Le nom de l'item: ".$table_item["$ID_item[$i]"][1]."<br>";
-					//Affichage des images pour un item donnée :
-					for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
-						echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" ><br>';
-					}
-
+					
 					echo "Le ID de item: ".$ID_item[$i]."<br>";
 					echo "Offre que vous propose acheteur: ".$Prix_acheteur[$i]."<br>";
 					echo "Votre prix: ".$Prix_vendeur[$i]."<br>";
 					echo "C'est ca: ".$Tentative[$i]." tentative. <br>";
 					echo "Le statut de offre: ".$Statut[$i]."<br>";
-					$m++;
 
-/*
-					for ($i = 0 ; $i < count($nom_photo); $i++)
-					echo '<img src = "images_web/'.$nom_photo[$i].'" ><br>';*/
+					echo '<form action="" method="post">';
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$buttonrefuser[$i].'" type="submit" value="Refuser la proposition"><br>';
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$buttonaccepter[$i].'" type="submit" value="Accepter la proposition"><br>';
+					echo '<td><input type="text" name="contre_offre" placeholder="Contre Offre"></td><br>';
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$buttonsoumettre[$i].'" type="submit" value="Soumettre la contre Offre"><br>';
+					echo '</form>';
+
+					$m++;
 				}
+				}
+				
             ?>
             
         </div>

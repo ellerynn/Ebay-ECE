@@ -98,7 +98,7 @@
 	    
 	    //SI l'acheteur clique sur un bouton d'achat
 	    if(isset($_POST["buttonachat"])){
-	    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'achat_immediat ');";
+	    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'achat_immediat');";
 	    	$result = mysqli_query($db_handle, $sql);
 	    }
 	    //SI l'acheteur clique sur un bouton d'enchere
