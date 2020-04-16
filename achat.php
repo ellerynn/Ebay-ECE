@@ -82,17 +82,16 @@
 		<br><br><br>
 		<div class="container features">
 			<div class="row"> 
-				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+				<div class="col-lg-3 col-md-3 col-sm-12">
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
-					
 			        <div class="list-group">
-			          	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac1">Achat</button>
-			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bac2">Messages</button>
+			          	<button type="button" class="list-group-item btn" id="bac1">Achat</button>
+			        	<button type="button" class="list-group-item btn" id="bac2">Messages</button>
 			        </div>	
 			    </div>
-			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
-			    	<div class="panel" style="display: none;" id="panel_achat">
+			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; min-height: 400px;">
+			    	<div class="panel" id="panel_achat">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Acheter</h2><br>
 					    </div>

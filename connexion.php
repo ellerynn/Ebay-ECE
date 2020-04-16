@@ -178,9 +178,9 @@
 
         <br><br><br>
         <div class="container-fluid features">
-            <div class="panel border" style="height: 350px; width: 700px; transform: translateX(40%); padding: 50px; margin-bottom: 1em;">
+            <div class="panel border" style="margin: 0 auto; height: 350px; width: 700px; padding: 50px; margin-bottom: 1em;">
                 <h1 class="text-center">Connexion</h1>
-                <form style="transform: translateX(8%);" action="" method="post">
+                <form style="margin: 0 auto; padding: 50px; padding-top: 10px;" action="" method="post">
                     <table>
                         <tr>
                             <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="login" placeholder="Identifiant" required="true"></td>

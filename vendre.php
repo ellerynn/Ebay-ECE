@@ -237,7 +237,7 @@
 		<br><br><br>
 		<div class="container features">
 			<div class="row"> 
-				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative;">
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
 					
@@ -249,7 +249,7 @@
 			        </div>	
 			    </div>
 			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 800px;">
-			    	<div class="panel" style="display: none;" id="panel_vendre">
+			    	<div class="panel border" style="padding: 1em; border-radius: 5px;" id="panel_vendre">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Vendre</h2><br>
 					    </div>
@@ -338,19 +338,22 @@
 		               		</form>
 		                </div>
 		            </div>
-				    <div class="panel" style="display: none;" id="panel_supp_vendeur">
-		    			<div class="panel-heading">
-		    				<br><h2 class="text-center">Supprimer une vente</h2><br>
-					    </div>
-					    <div class="panel-body">
-						    <form action="suppression_produit.php" method="post">
-								<div class="form-group">
-			                        <input class="form-control" style="width: 100%" type="number" name="id" placeholder="ID de l'article" required>
-			                    </div>
-			                    <div class="form-group">
-			                    	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonsupprimer" type="submit" value="Supprimer">
-								</div>
-							</form>					
+				    <div class="panel border" style="display: none; padding: 1em; padding-bottom: 2em; border-radius: 5px;" id="panel_supp_vendeur">
+					    <div class="panel-body row">
+					    	<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
+					    		<br><h2 class="text-center">Supprimer une vente</h2><br>
+							    <form action="suppression_produit.php" method="post">
+									<div class="form-group">
+				                        <input class="form-control" style="width: 50%; margin: 0 auto" type="number" name="id" placeholder="ID de l'article" required>
+				                    </div>
+				                    <div class="form-group">
+				                    	<input class="form-control" style="width: 30%; margin: 0 auto" name="buttonsupprimer" type="submit" value="Supprimer">
+									</div>
+								</form>	
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
+								<br><h2 class="text-center">Mes ventes</h2><br>
+							</div>				
 				        </div>
 				    </div>
 					<div class="panel" style="display: none;" id="panel_mes_vendeur">

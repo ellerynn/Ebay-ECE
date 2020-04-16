@@ -66,7 +66,7 @@
 					  	</div>
 					</li>  
 					<li class="nav-item">
-						<a style="color: white;" href="admin.php">Admin.</a>
+						<a class="nav-link" href="admin.php">Admin.</a>
 					</li>
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
@@ -76,7 +76,7 @@
 					  	</div>
 					</li> 
 					<li class="nav-item">
-						<i class="nav-link fas fa-shopping-cart" style="margin-top: 5px;"></i>
+						<i class="nav-link fas fa-shopping-cart"></i>
 					</li>    
 				</ul>      
 			</div> 
@@ -85,84 +85,59 @@
 		<br><br><br>
 		<div class="container features">
 			<div class="row"> 
-				<div class="col-lg-3 col-md-3 col-sm-12" style="position: relative; right: 100px;">
+				<div class="col-lg-3 col-md-3 col-sm-12">
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
 					<div class="list-group">
-			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad1">Supprimer un item du site</button>
-			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bad2">Gérer les vendeurs</button>
+			        	<button type="button" class="list-group-item btn" id="bad1">Supprimer un item du site</button>
+			        	<button type="button" class="list-group-item btn" id="bad2">Gérer les vendeurs</button>
 			        </div>
 				</div>
-		        <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 400px;">
-		        	<div class="panel" style="display: none;" id="panel_supp_admin">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Supprimer un item du site</h2><br>
-					    </div>
-					    <div class="panel-body">
-					   		<form action="suppression_produit_admin.php" method="post">
-								<table>
-				                    <tr>
-				                        <td><input type="text" name="login" placeholder="Identifiant" required="true"></td>
-				                    </tr>
-				                    <tr>
-				                        <td><input type="password" name="psw" placeholder="Mot de passe" required="true"></td>
-				                    </tr>
-				                    <tr>
-				                        <td colspan="2" align="center">
-				                        <input class="btn border btn-outline-secondary rounded-lg" name="buttonconnexion" type="submit" value="Connexion">
-				                        </td>
-				                    </tr>
-				                </table>
-							</form>					
+		        <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; min-height: 400px;">
+		        	<div class="panel" id="panel_supp_admin">
+					    <div class="panel-body row">
+					    	<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
+					    		<br><h2 class="text-center">Supprimer un item du site</h2><br>
+							    <form action="suppression_produit_admin.php" method="post">
+									<div class="form-group">
+				                        <input class="form-control" style="width: 50%; margin: 0 auto" type="number" name="id" placeholder="ID de l'article" required>
+				                    </div>
+				                    <div class="form-group">
+				                    	<input class="form-control" style="width: 30%; margin: 0 auto" name="buttonsupprimer" type="submit" value="Supprimer">
+									</div>
+								</form>	
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
+								<br><h2 class="text-center">Liste items</h2><br>
+							</div>				
 				        </div>
 				    </div>
 				    <div class="panel" style="display: none;" id="panel_gv_admin">
-					    <div class="panel-body">
+					    <div class="panel-body border" style="border-radius: 5px;">
 					    	<div class="row">
-						    	<div class="col-lg-4 col-md-4 col-sm-12">
-						    		<h2 class="text-center">Ajouter un vendeur</h2>
-									<form action="ajout_vendeur.php" method="post">
-										<table>
-											<tr>
-												<td><input type="text" name="nom" placeholder="Nom" required="true"></td>
-											</tr>
-											<tr>
-												<td><input type="text" name="prenom" placeholder="Prénom" required="true"></td>
-											</tr>
-											<tr>
-												<td><input type="text" name="pseudo" placeholder="Pseudo" required="true"></td>
-											</tr>
-											<tr>
-												<td><input type="email" name="email" placeholder="Mail" required="true"></td>
-											</tr>
-											<tr>
-												<td colspan="2" align="center">
-													<input class="btn border btn-outline-secondary rounded-lg" name="buttonajoutervendeur" type="submit" value="L'ajouter comme vendeur">
-												</td>
-											</tr>
-										</table>
+						    	<div class="col-lg-4 col-md-4 col-sm-12 border-right" style="padding: 1em;">
+						    		<h4 class="text-center">Ajouter un vendeur</h4>
+									<form action="ajout_vendeur.php" method="post" style="margin-left: 1em;">
+										<div class="form-group">
+					                        <input class="form-control" style="margin-bottom: 5px;" type="text" name="nom" placeholder="Nom" required>
+					                        <input class="form-control" style="margin-bottom: 5px;" type="text" name="prenom" placeholder="Prénom" required>
+					                        <input class="form-control" style="margin-bottom: 5px;" type="text" name="pseudo" placeholder="Pseudo" required>
+					                        <input class="form-control" style="margin-bottom: 5px;" type="email" name="email" placeholder="Mail" required>
+					                    	<input class="form-control" style="width: 50%; margin: 0 auto" name="buttonajoutervendeur" type="submit" value="Ajouter">
+										</div>
 									</form>
 						    	</div>
-						    	<div class="col-lg-4 col-md-4 col-sm-12">
-						    		<h2 class="text-center">Supprimer un vendeur</h2>
+						    	<div class="col-lg-4 col-md-4 col-sm-12" style="padding: 1em;">
+						    		<h4 class="text-center">Supprimer un vendeur</h4>
 									<form action="suppression_vendeur.php" method="post">
-										<table>
-											<tr>
-												<td><input type="text" name="id" placeholder="ID" required="true"></td>
-											</tr>
-											<tr>
-												<td><input type="text" name="pseudo" placeholder="pseudo" required="true"></td>
-											</tr>
-											<tr>
-												<td colspan="2" align="center">
-													<input class="btn border btn-outline-secondary rounded-lg" name="buttonsupprimervendeur" type="submit" value="Supprimer le vendeur">
-												</td>
-											</tr>
-										</table>
-									</form>
-						    	</div>
-						    	<div class="col-lg-4 col-md-4 col-sm-12">
-						    		<h2 class="text-center">Liste vendeurs</h2>	
+										<div class="form-group">
+					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="text" name="id" placeholder="ID vendeur" required>
+					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="text" name="pseudo" placeholder="Pseudo" required>
+					                    	<input class="form-control" style="width: 50%; margin: 0 auto" name="buttonsupprimervendeur" type="submit" value="Supprimer">
+										</div>
+									</div>
+						    	<div class="col-lg-4 col-md-4 col-sm-12" style="padding: 1em;">
+						    		<h4 class="text-center">Liste vendeurs</h4>
 						    	</div>			
 						    </div>	
 				        </div>
