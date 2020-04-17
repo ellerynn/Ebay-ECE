@@ -1,9 +1,9 @@
-﻿-- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump
 -- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  jeu. 16 avr. 2020 à 17:12
+-- Généré le :  ven. 17 avr. 2020 à 08:35
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.3.12
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `Adresse_ligne1` varchar(255) DEFAULT NULL,
   `Adresse_ligne2` varchar(255) DEFAULT NULL,
   `Ville` varchar(255) DEFAULT NULL,
-  `Code_postal` int(11) DEFAULT NULL,
+  `Code_Postal` int(11) DEFAULT NULL,
   `Pays` varchar(255) DEFAULT NULL,
   `Telephone` int(10) DEFAULT NULL,
   `Type_carte` varchar(255) DEFAULT NULL,
@@ -50,10 +50,8 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 -- Déchargement des données de la table `acheteur`
 --
 
-INSERT INTO `acheteur` (`ID`, `Adresse_ligne1`, `Adresse_ligne2`, `Ville`, `Code_postal`, `Pays`, `Telephone`, `Type_carte`, `Numero_carte`, `Nom_carte`, `Date_exp_carte`, `Code_securite`, `Solde`) VALUES
-(30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(29, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(32, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `acheteur` (`ID`, `Adresse_ligne1`, `Adresse_ligne2`, `Ville`, `Code_Postal`, `Pays`, `Telephone`, `Type_carte`, `Numero_carte`, `Nom_carte`, `Date_exp_carte`, `Code_securite`, `Solde`) VALUES
+(30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -69,6 +67,14 @@ CREATE TABLE IF NOT EXISTS `encherir` (
   `Prix_acheteur` int(255) DEFAULT NULL,
   PRIMARY KEY (`ID_enchere`,`ID_acheteur`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `encherir`
+--
+
+INSERT INTO `encherir` (`ID_enchere`, `ID_acheteur`, `ID_item`, `Prix_acheteur`) VALUES
+(5, 30, 77, 590),
+(5, 29, 77, 580);
 
 -- --------------------------------------------------------
 
@@ -119,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `liste_enchere` (
   `Prix` int(11) NOT NULL,
   `Fin` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID_enchere`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `liste_enchere`
@@ -197,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `Statut` int(11) DEFAULT NULL,
   `Mot_de_passe` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
@@ -210,8 +216,7 @@ INSERT INTO `personne` (`ID`, `Nom`, `Prenom`, `Email`, `Statut`, `Mot_de_passe`
 (4, 'Patrick', 'Claude', 'claude@gmail.com', 2, 'claude@gmail.com'),
 (5, 'Gilles', 'Francois', 'francois@gmail.com', 2, 'francois@gmail.com'),
 (30, 'NomAcheteur', 'PrenomAcheteur', 'Acheteur@gmail.com', 3, 'azerty'),
-(29, 'Coucou', 'coucou', 'coucou@gmail.com', 3, 'coucou'),
-(32, 'Pigeon', 'Pigeon', 'pigeon@gmail.com', 3, 'pigeon');
+(29, 'Coucou', 'coucou', 'coucou@gmail.com', 3, 'coucou');
 
 -- --------------------------------------------------------
 
@@ -232,7 +237,6 @@ CREATE TABLE IF NOT EXISTS `photo` (
 --
 
 INSERT INTO `photo` (`Nom_photo`, `ID_item`, `Direction`) VALUES
-<<<<<<< HEAD
 ('ipad.jpg', 75, NULL),
 ('ipad_2.jpg', 75, NULL),
 ('meuble1.jpg', 76, NULL),
