@@ -34,49 +34,34 @@
 
 	if (mysqli_num_rows($result) != 0) 
 	{
-		$i=0;
+		$i=0; $j=0;
+		$temp = array();
 		while ($data = mysqli_fetch_assoc($result)) 
 		{
 			$ID_item[$i] = $data['ID_item'];
 			$i++;
-		}	
-	}
-
-	//recuperation pour mes ventes
-	$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' "; //retrouver les ID_items issu de ID_item[]
-	$result1 = mysqli_query($db_handle, $sql1);
-
-	if (mysqli_num_rows($result1) != 0) 
-	{
-		$i=0;
-		$temp = array();
-		while ($data = mysqli_fetch_assoc($result1) ) 
-		{
+		
 			$i_temp = 0;
-			$temp[$i_temp] = $ID_item[$i]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
 			$i_temp++;
 			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
 
-			$table_item["$ID_item[$i]"] = $temp; // Tableau associatif
-			$i++;
+			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
+			$j++;
 		}
 	}	
 
+	//Récuperation de la première photo de chaque item du vendeur
 	for($a=0; $a < count($ID_item); $a++)
 	{
-		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
-		$result1 = mysqli_query($db_handle, $sql1);
+		$sqlp = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$req = mysqli_query($db_handle, $sqlp);
 		
-		if (mysqli_num_rows($result1) != 0) 
+		if (mysqli_num_rows($req) != 0) 
 		{
-			$v = 0;
-			$temp =array();
-			while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
-			{
-				$temp[$v] = $data['Nom_photo'];
-				$v++;
-			}
-			$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
+			$data = mysqli_fetch_assoc($req);
+			$photo = $data['Nom_photo'];
+			$table_photo["$ID_item[$a]"]= $photo; //array de photo dans tableau associatif
 		}
 	}
 
@@ -412,31 +397,25 @@
 								<br><h2 class="text-center">Mes ventes</h2><br>
 								<?php
 									if(count($ID_item)==0)	
-										echo '<p>Vous ne vendez rien ! <br> Commencez à vendre <a href="vendre.php">ici</a></p>';
-
+									{?>
+										<div class="panel-body row border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
+											echo '<p class = "text-center">Vous ne vendez rien ! Commencez à vendre <a href="vendre.php">ici</a></p>';?>
+										</div><?php
+									}
 									else
 									{						
 										for ($i = 0 ; $i<count($ID_item); $i++)
-										{ 
-											for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++)
-											{
-												echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
-											}
-											//traitement de la table item:
-											echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
-											echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
+										{?>
+											<div class="panel-body row border" style="width: 80%; margin: 0 auto; margin-bottom: 5px; padding: 2px;">
+												<div class="col-lg-3 col-md-3 col-sm-12"><?php 
+													echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"].'" height = 50 width = 50 >';?>
+												</div>
+												<div class="col-lg-9 col-md-9 col-sm-12"><?php 
+													echo "ID de l'item : ".$table_item["$ID_item[$i]"][0]."<br>";
+													echo "Nom de l'item : ".$table_item["$ID_item[$i]"][1];?>
+												</div>
+											</div> <?php
 										}
-										echo "valeur dans table <br> ";
-										echo $table_item["75"][1]."<br>";
-										echo $table_item["76"][1]."<br>";
-										echo $table_item["77"][1]."<br>";
-										echo $table_item["78"][1]."<br>";
-										echo "valeur dans ID_tiem[] <br>";
-										echo $ID_item[0]."<br>";
-										echo $ID_item[1]."<br>";
-										echo $ID_item[2]."<br>";
-										echo $ID_item[3]."<br>";
-
 									}
 								?>
 							</div>				
