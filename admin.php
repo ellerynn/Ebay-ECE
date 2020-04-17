@@ -17,6 +17,79 @@
 	  header('Location: connexion.php');
 	  exit();
 	}
+
+	//identifier votre BDD
+    $database = "ebay ece paris";
+    $db_handle = mysqli_connect('localhost', 'root', '');
+    $db_found = mysqli_select_db($db_handle, $database);
+	$erreur ="";
+
+	$table_item = array();
+	$table_photo = array();
+	$nom_item = array();
+	$ID_item = array();
+	$ID_vendeur = array();
+	$table_vendeur = array();
+
+	//Récuperation des ID_item du vendeur (dont admins) connecté
+	$sql1 = "SELECT * FROM item";
+	$result1 = mysqli_query($db_handle, $sql1);
+
+	if (mysqli_num_rows($result1) != 0) 
+	{
+		$i=0; $j=0;
+		$temp = array();
+		while ($data = mysqli_fetch_assoc($result1)) 
+		{
+			$ID_item[$i] = $data['ID_item'];
+			$i++;
+		
+			$i_temp = 0;
+			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+			$i_temp++;
+			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+
+			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
+			$j++;
+		}
+	}	
+
+	//Récuperation de la première photo de chaque item du vendeur
+	for($a=0; $a < count($ID_item); $a++)
+	{
+		$sqlp = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$req = mysqli_query($db_handle, $sqlp);
+		
+		if (mysqli_num_rows($req) != 0) 
+		{
+			$data = mysqli_fetch_assoc($req);
+			$photo = $data['Nom_photo'];
+			$table_photo["$ID_item[$a]"]= $photo; //array de photo dans tableau associatif
+		}
+	}
+
+	//Récuperation des ID_item du vendeur (dont admins) connecté
+	$sql2 = "SELECT * FROM vendeur";
+	$result2 = mysqli_query($db_handle, $sql2);
+
+	if (mysqli_num_rows($result2) != 0) 
+	{
+		$i=0; $j=0;
+		$temp = array();
+		while ($data = mysqli_fetch_assoc($result2)) 
+		{
+			$ID_vendeur[$i] = $data['ID'];
+			$i++;
+		
+			$i_temp = 0;
+			$temp[$i_temp] = $ID_vendeur[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+			$i_temp++;
+			$temp[$i_temp] = $data['Pseudo']; // i_temp = 1
+
+			$table_vendeur["$ID_vendeur[$j]"] = $temp; // Tableau associatif
+			$j++;
+		}
+	}	
 ?>
 
 <!DOCTYPE html> 
@@ -109,7 +182,30 @@
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 								<br><h2 class="text-center">Liste items</h2><br>
-							</div>				
+								<?php
+									if(count($ID_item)==0)	
+									{?>
+										<div class="panel-body row border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
+											echo '<p class = "text-center">Aucun item.</p>';?>
+										</div><?php
+									}
+									else
+									{						
+										for ($i = 0 ; $i<count($ID_item); $i++)
+										{?>
+											<div class="panel-body row border" style="width: 80%; margin: 0 auto; margin-bottom: 5px; padding: 2px;">
+												<div class="col-lg-3 col-md-3 col-sm-12"><?php 
+													echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"].'" height = 50 width = 50 >';?>
+												</div>
+												<div class="col-lg-9 col-md-9 col-sm-12"><?php 
+													echo "ID de l'item : ".$table_item["$ID_item[$i]"][0]."<br>";
+													echo "Nom de l'item : ".$table_item["$ID_item[$i]"][1];?>
+												</div>
+											</div> <?php
+										}
+									}
+								?>
+							</div>		
 				        </div>
 				    </div>
 				    <div class="panel" style="display: none;" id="panel_gv_admin">
@@ -138,6 +234,24 @@
 									</div>
 						    	<div class="col-lg-4 col-md-4 col-sm-12" style="padding: 1em;">
 						    		<h4 class="text-center">Liste vendeurs</h4>
+						    		<?php
+									if(count($ID_vendeur)==0)	
+									{?>
+										<div class="panel-body row border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
+											echo '<p class = "text-center">Aucun vendeur.</p>';?>
+										</div><?php
+									}
+									else
+									{						
+										for ($i = 0 ; $i<count($ID_vendeur); $i++)
+										{?>
+											<div class="panel-body row border" style="width: 80%; margin: 0 auto; margin-bottom: 5px; padding: 2px;"><?php 
+													echo "ID du vendeur : ".$table_vendeur["$ID_vendeur[$i]"][0]."<br>";
+													echo "Pseudo du vendeur : ".$table_vendeur["$ID_vendeur[$i]"][1];?>
+											</div> <?php
+										}
+									}
+								?>
 						    	</div>			
 						    </div>	
 				        </div>
