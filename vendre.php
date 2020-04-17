@@ -28,66 +28,57 @@
 	$nom_item = array();
 	$ID_item = array();
 
-		$sql = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
-		$result = mysqli_query($db_handle, $sql);
+	//Récuperation des ID_item du vendeur (dont admins) connecté
+	$sql = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
+	$result = mysqli_query($db_handle, $sql);
 
-		if (mysqli_num_rows($result) == 0) {
-			//Livre inexistant
-			echo "Erreur, cet item n'est pas disponible. <br>";
-		} 
-		else {
-			$i=0;
-			while ($data = mysqli_fetch_assoc($result)) 
-			{
-				$ID_item[$i] = $data['ID_item'];
-				$i++;
-			}
-			
-		}
+	if (mysqli_num_rows($result) != 0) 
+	{
+		$i=0;
+		while ($data = mysqli_fetch_assoc($result)) 
+		{
+			$ID_item[$i] = $data['ID_item'];
+			$i++;
+		}	
+	}
 
 	//recuperation pour mes ventes
-	for($a=0; $a < count($ID_item); $a++){
-		$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' "; //retrouver les ID_items issu de ID_item[]
-		$result1 = mysqli_query($db_handle, $sql1);
+	$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' "; //retrouver les ID_items issu de ID_item[]
+	$result1 = mysqli_query($db_handle, $sql1);
 
-			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
-			}
-			else {
-				$i=0;
-				$temp = array();
-				while ($data = mysqli_fetch_assoc($result1) ) 
-				{
-					$i_temp = 0;
-					$temp[$i_temp] = $ID_item[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
-					$i_temp++;
-					$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
-					$i_temp++;
-					$table_item["$ID_item[$a]"] = $temp; // Tableau associatif
-				}
-				
-			}
+	if (mysqli_num_rows($result1) != 0) 
+	{
+		$i=0;
+		$temp = array();
+		while ($data = mysqli_fetch_assoc($result1) ) 
+		{
+			$i_temp = 0;
+			$temp[$i_temp] = $ID_item[$i]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+			$i_temp++;
+			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
 
-		}	
+			$table_item["$ID_item[$i]"] = $temp; // Tableau associatif
+			$i++;
+		}
+	}	
 
-		for($a=0; $a < count($ID_item); $a++){
+	for($a=0; $a < count($ID_item); $a++)
+	{
 		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
 		$result1 = mysqli_query($db_handle, $sql1);
-			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
-			} 
-			else {
-				$v = 0;
-				$temp =array();
-				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
-				{
-					$temp[$v] = $data['Nom_photo'];
-					$v++;
-				}
-				$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
-				
+		
+		if (mysqli_num_rows($result1) != 0) 
+		{
+			$v = 0;
+			$temp =array();
+			while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
+			{
+				$temp[$v] = $data['Nom_photo'];
+				$v++;
 			}
+			$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
 		}
+	}
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
@@ -419,19 +410,34 @@
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 								<br><h2 class="text-center">Mes ventes</h2><br>
+								<?php
+									if(count($ID_item)==0)	
+										echo '<p>Vous ne vendez rien ! <br> Commencez à vendre <a href="vendre.php">ici</a></p>';
 
-							<?php
-							
-							for ($i = 0 ; $i<count($ID_item); $i++){ 
-								for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
-									echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
-								}
-								//traitement de la table item:
-								echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
-								echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
-							}
+									else
+									{						
+										for ($i = 0 ; $i<count($ID_item); $i++)
+										{ 
+											for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++)
+											{
+												echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
+											}
+											//traitement de la table item:
+											echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
+											echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
+										}
+										echo "valeur dans table <br> ";
+										echo $table_item["75"][1]."<br>";
+										echo $table_item["76"][1]."<br>";
+										echo $table_item["77"][1]."<br>";
+										echo $table_item["78"][1]."<br>";
+										echo "valeur dans ID_tiem[] <br>";
+										echo $ID_item[0]."<br>";
+										echo $ID_item[1]."<br>";
+										echo $ID_item[2]."<br>";
+										echo $ID_item[3]."<br>";
 
-
+									}
 								?>
 							</div>				
 				        </div>
