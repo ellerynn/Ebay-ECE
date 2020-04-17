@@ -1,6 +1,7 @@
 <?php
 	include("const.php");
 	// On prolonge la session
+	
 	session_start();
 
 	// On teste si la variable de session existe et contient une valeur
@@ -18,15 +19,18 @@
 	  exit();
 	}
 
+	include("modification_donnees.php");
+
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
 
 	//Déclaration de variable général
-	$nom = "Vide";
-	$prenom = "Vide";
-	$email = "Vide";
-	$statutNom = "Vide";
+	$nom = "";
+	$prenom = "";
+	$email = "";
+	$statutNom = "";
+	$mdp = "";
 
 	if ($statut == 1){$statutNom = "Administrateur";}
 	if ($statut == 2){$statutNom = "Vendeur";}
@@ -38,10 +42,11 @@
 		$result = mysqli_query($db_handle, $sql);
 		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
 			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
-			{ 	//On connait déjà le mot de passe (dans session)
+			{
 				$nom = $data['Nom'];
 				$prenom = $data['Prenom'];
 				$email = $data['Email']; //Même si on connait déjà celui de Adm et Ach, si c'est un vendeur au moins on aura récup son email si utile
+				$mdp = $data['Mot_de_passe'];
 			}
 		}
 
@@ -106,7 +111,6 @@
 				$solde = $data['Solde'];
 			}
 		}
-
 	}//End 
 	else{
 		echo "Database not found";
@@ -186,115 +190,229 @@
 				<div class="panel-body">
 				<!--- Afficher donnée : --->
 				<?php
-					echo "<div>";
-						echo "<h3>Information Générale</h3>";
-						echo "<table>";
-							echo "<tr>";
-								echo "<td>"; echo "Statut : "; echo "</td>";
-								echo "<td>"; echo $statutNom; echo "</td>";
-							echo "</tr>";
-							echo "<tr>";
-								echo "<td>"; echo "Nom : "; echo "</td>";
-								echo "<td>"; echo $nom; echo "</td>";
-							echo "</tr>";
-							echo "<tr>";
-								echo "<td>"; echo "Prenom : "; echo "</td>";
-								echo "<td>"; echo $prenom; echo "</td>";
-							echo "</tr>";
-							echo "<tr>";
-								echo "<td>"; echo "Email : "; echo "</td>";
-								echo "<td>"; echo $email; echo "</td>";
-							echo "</tr>";
-							echo "<tr>";
-								echo "<td>"; echo "Mot de passe : "; echo "</td>";
-								echo "<td>"; echo $psw; echo "</td>";
-							echo "</tr>";
-						echo "</table>";
-					echo "</div>";
+					echo   '<div>
+							<h3>Information Générale</h3>
+							<table>
+									<tr>
+										<td> Statut : </td>
+										<td> '.$statutNom.'</td>
+									</tr>
+									<tr>
+										<td>Nom : </td>
+										<td>'.$nom.'</td>
+									</tr>
+									<tr>
+										<td>Prenom : </td>
+										<td>'.$prenom.'</td>
+									</tr>
+									<tr>
+										<td>Email : </td>
+										<td>'.$email.'</td>
+									</tr>
+									<tr>
+										<td>Mot de passe : </td>
+										<td>'.$mdp.'</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td><input type="checkbox" name="general" value="Modifier" style="margin-right: 5px;margin-left: 10px;" id="general" onclick="montrer()">Modifier mes informations générales</td>
+									</tr>
+							</table>
 
-						//Cas vendeur:
-						if ($statut == 2){
-							echo "<div>";
-								echo "<h4>Information Vendeur</h4>";
-								echo "<table>";
-									echo "<tr>";
-										echo "<td>"; echo '<img src = "images_web/'.$photo_vendeur.'" height = "200" width = "200">'; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Pseudo : "; echo "</td>";
-										echo "<td>"; echo $pseudo; echo "</td>";
-									echo "</tr>";
-								echo "</table>";
-								echo "Je ne sais pas où mettre cette image dans le css en background avec php dans je l'affiche là pour l'instant";
-								echo '<img src = "images_web/'.$fond_vendeur.'">';
-							echo "</div>";
+									<form method = "post" action = "">
+										<div class="form-group" style="display: none;" id="infoGeneral">
+										<input class="form-control" style="width: 100%" type="text" name="nomGen" placeholder="Nom">
+										<input class="form-control" style="width: 100%" type="text" name="prenomGen" placeholder="Prenom">
+										<input class="form-control" style="width: 100%" type="text" name="emailGen" placeholder="Email">
+										<input class="form-control" style="width: 100%" type="password" name="mdpGen" placeholder="Mot de passe">
+										<input class="form-control" style="width:200px; margin: 0 auto" name="modifierGen" type="submit" value="Valider les modifications">
+									</form>
+							</div>
 
+		<script>
+			function montrer() 
+			{
+				// Get the checkbox
+				var checkBox = document.getElementById("general");
+				// Get the output text
+				var text = document.getElementById("infoGeneral");
+
+				// If the checkbox is checked, display the output text
+				if (checkBox.checked == true)
+					text.style.display = "block";
+				else 
+					text.style.display = "none";
+			}
+		</script>';
+
+					//Cas vendeur:
+					if ($statut == 2){
+						echo 	'<div>
+									<h4>Information Vendeur</h4>
+									<img src = "images_web/'.$photo_vendeur.'" height = "200" width = "200">
+									<p>Pseudo :'.$pseudo.'</p>
+									<p>Je ne sais pas où mettre cette image dans le css en background avec php dans je l affiche là pour l instant</p>
+									<img src = "images_web/'.$fond_vendeur.'">
+								</div>
+								
+								<input type="checkbox" name="vendeurI" value="Modifier" style="margin-right: 5px;margin-left: 10px;" id="genVendeur" onclick="montrerV()">Modifier mes informations vendeurs
+								<form method="post" action="" enctype="multipart/form-data">
+									<div class="form-group" style="display: none;" id="infoVendeur">
+									<table><tr><td>
+									Modifier votre photo de profil:</td>
+									<td><input type="file" name="filephoto[]" id="file" multiple></td>
+									<td><input class="form-control" style="width:200px; margin: 0 auto" name="buttonmodifierphotoprofil" type="submit" value="Valider les modifications"></td></tr>
+									<tr><td>Modifier votre image de fond:</td>
+									<td><input type="file" name="filephotofond[]" id="file" multiple>
+									<td><input class="form-control" style="width:200px; margin: 0 auto" name="buttonmodifierimagefond" type="submit" value="Valider les modifications"></td></tr></table>
+								</form>
+
+	<script>
+		function montrerV() 
+		{
+			// Get the checkbox
+			var checkBox = document.getElementById("genVendeur");
+			// Get the output text
+			var text = document.getElementById("infoVendeur");
+
+			// If the checkbox is checked, display the output text
+			if (checkBox.checked == true)
+				text.style.display = "block";
+			else 
+				text.style.display = "none";
+		}
+	</script>';
 						}
 
 						//Cas acheteur
 						if($statut == 3){
-							echo "<div>";
-								echo "<h4>Information Acheteur</h4>";
-								echo "<div>";
-									echo "<h5>Les coordonnées de livraison</h5>";
-									echo "<table>";
-									echo "<tr>";
-										echo "<td>"; echo "Adresse ligne 1 : "; echo "</td>";
-										echo "<td>"; echo $adresse_ligne1; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Adresse ligne 2 : "; echo "</td>";
-										echo "<td>"; echo $adresse_ligne2; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Ville : "; echo "</td>";
-										echo "<td>"; echo $ville; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Code postal : "; echo "</td>";
-										echo "<td>"; echo $code_postal; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Pays : "; echo "</td>";
-										echo "<td>"; echo $pays; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Téléphone : "; echo "</td>";
-										echo "<td>"; echo $telephone; echo "</td>";
-									echo "</tr>";
-									echo "</table>";
-								echo "</div>";
+							echo '<div>
+									<h4>Information Acheteur</h4>
+										<div>
+											<h5>Les coordonnées de livraison</h5>
+											<table>
+												<tr>
+													<td>Adresse ligne 1 : </td>
+													<td>'.$adresse_ligne1.'</td>
+												</tr>
+												<tr>
+													<td>Adresse ligne 2 : </td>
+													<td>'.$adresse_ligne2.'</td>
+												</tr>
+												<tr>
+													<td>Ville : </td>
+													<td>'.$ville.'</td>
+												</tr>
+												<tr>
+													<td>Code postal</td>
+													<td>'.$code_postal.'</td>
+												</tr>
+												<tr>		
+													<td>Pays : </td>
+													<td>'.$pays.'</td>
+												</tr>
+												<tr>
+													<td>Téléphone : </td>
+													<td>'.$telephone.'</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td><input type="checkbox" name="infoAcheteurCoords" value="Modifier" style="margin-right: 5px;margin-left: 10px;" id="genAchC" onclick="montrerAC()">Modifier mes informations générales</td>
+												</tr>
+											</table>
+										</div>
 
-								echo "<div>";
-									echo "<h5>Les coordonnées de bancaire</h5>";
-									echo "<table>";
-									echo "<tr>";
-										echo "<td>"; echo "Type de votre carte : "; echo "</td>";
-										echo "<td>"; echo $type_carte; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Numero de votre carte : "; echo "</td>";
-										echo "<td>"; echo $numero_carte; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Nom du titulaire : "; echo "</td>";
-										echo "<td>"; echo $nom_carte; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Date d'expiration : "; echo "</td>";
-										echo "<td>"; echo $date_exp_carte; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Code de sécurité : "; echo "</td>";
-										echo "<td>"; echo $code_securite; echo "</td>";
-									echo "</tr>";
-									echo "<tr>";
-										echo "<td>"; echo "Le solde : "; echo "</td>";
-										echo "<td>"; echo $solde; echo "</td>";
-									echo "</tr>";
-									echo "</table>";
-								echo "</div>";
-							echo "</div>";
+										<form method = "post" action = "">
+											<div class="form-group" style="display: none;" id="infoAcheteurCoords">
+												<input class="form-control" style="width: 100%" type="text" name="adresseUn" placeholder="Adresse ligne 1" required>
+												<input class="form-control" style="width: 100%" type="text" name="adresseDeux" placeholder="Adresse ligne 2" required>
+												<input class="form-control" style="width: 100%" type="text" name="ville" placeholder="Ville" required>
+												<input class="form-control" style="width: 100%" type="number" name="codePostal" placeholder="Code postal" required>
+												<input class="form-control" style="width: 100%" type="text" name="pays" placeholder="Pays" required>
+												<input class="form-control" style="width: 100%" type="number" name="telephone" placeholder="Téléphone" required>
+
+												<input class="form-control" style="width:200px; margin: 0 auto" name="bontonaddcoords" type="submit" value="Valider les modifications" required>
+											</div>
+									</form>
+	<script>
+		function montrerAC() 
+		{
+			// Get the checkbox
+			var checkBox = document.getElementById("genAchC");
+			// Get the output text
+			var text = document.getElementById("infoAcheteurCoords");
+
+			// If the checkbox is checked, display the output text
+			if (checkBox.checked == true)
+				text.style.display = "block";
+			else 
+				text.style.display = "none";
+		}
+	</script>';
+
+								echo    '<div>
+											<h5>Les coordonnées de bancaire</h5>
+												<table>
+													<tr>
+														<td>Type de votre carte : </td>
+														<td>'.$type_carte.'</td>
+													</tr>
+													<tr>
+														<td>Numero de votre carte : </td>
+														<td>'.$numero_carte.'</td>
+													</tr>
+													<tr>
+														<td>Nom du titulaire : </td>
+														<td>'.$nom_carte.'</td>
+													</tr>
+													<tr>';
+												echo    "<td>Date d'expiration : </td>";
+												echo 	'<td>'.$date_exp_carte.'</td>
+													</tr>
+													<tr>
+														<td>Code de sécurité :</td>
+														<td>'.$code_securite.'</td>
+													</tr>
+													<tr>
+														<td>Le solde : </td>
+														<td>'.$solde.'</td>
+													</tr>
+													<tr>
+														<td></td>
+														<td><input type="checkbox" name="infoAcheteurCarte" value="Modifier" style="margin-right: 5px;margin-left: 10px;" id="genAchCarte" onclick="montrerACa()">Modifier mes informations générales</td>
+													</tr>
+												</table>
+										</div> 
+										<form method = "post" action = "">
+											<div class="form-group" style="display: none;" id="infoAcheteurCarte">
+												<p>Type de carte:</p>
+												<select  name = "typecarte">
+													<option value ="VISA">VISA</option>
+													<option value ="MASTERCARD">MASTERCARD</option>
+													<option value ="AMERICAN EXPRESS">AMERICAN EXPRESS</option>
+												</select>
+												<input class="form-control" style="width: 100%" type="number" name="numero_carte" placeholder="Numéro de la carte" required>
+												<input class="form-control" style="width: 100%" type="text" name="titulaire_carte" placeholder="Titulaire" required>
+												<input class="form-control" style="width: 100%" type="date" name="date_exp_carte" placeholder="expiration" required>
+												<input class="form-control" style="width: 100%" type="password" name="mdpasse" placeholder="Code de sécurité" required>
+													<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutcarte" type="submit" value="Valider les modifications" required>
+											</div>
+										</form>
+								</div>
+	<script>
+		function montrerACa() 
+		{
+			// Get the checkbox
+			var checkBox = document.getElementById("genAchCarte");
+			// Get the output text
+			var text = document.getElementById("infoAcheteurCarte");
+			// If the checkbox is checked, display the output text
+			if (checkBox.checked == true)
+				text.style.display = "block";
+			else 
+				text.style.display = "none";
+		}
+	</script>';
 
 						}
 					
