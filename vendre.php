@@ -17,8 +17,54 @@
 	  	header('Location: connexion.php');
 	  	exit();
 	}
-
+	    
+	//identifier votre BDD
+    $database = "ebay ece paris";
+    $db_handle = mysqli_connect('localhost', 'root', '');
+    $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
+
+	$table_item = array();
+	$table_photo = array();
+	$nom_item = array();
+	$ID_item = array();
+
+	//Récuperation des ID_item du vendeur (dont admins) connecté
+	$sql = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
+	$result = mysqli_query($db_handle, $sql);
+
+	if (mysqli_num_rows($result) != 0) 
+	{
+		$i=0; $j=0;
+		$temp = array();
+		while ($data = mysqli_fetch_assoc($result)) 
+		{
+			$ID_item[$i] = $data['ID_item'];
+			$i++;
+		
+			$i_temp = 0;
+			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+			$i_temp++;
+			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+
+			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
+			$j++;
+		}
+	}	
+
+	//Récuperation de la première photo de chaque item du vendeur
+	for($a=0; $a < count($ID_item); $a++)
+	{
+		$sqlp = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$req = mysqli_query($db_handle, $sqlp);
+		
+		if (mysqli_num_rows($req) != 0) 
+		{
+			$data = mysqli_fetch_assoc($req);
+			$photo = $data['Nom_photo'];
+			$table_photo["$ID_item[$a]"]= $photo; //array de photo dans tableau associatif
+		}
+	}
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
@@ -96,11 +142,7 @@
 		if ($erreur == "") 
 		{
 		 	$type_vente_choisi = $vente1." ". $vente2;
-		    //identifier votre BDD
-		    $database = "ebay ece paris";
 
-		    $db_handle = mysqli_connect('localhost', 'root', '');
-		    $db_found = mysqli_select_db($db_handle, $database);
 		    ///BDD
 	        if ($db_found) 
 	        {
@@ -354,6 +396,29 @@
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 								<br><h2 class="text-center">Mes ventes</h2><br>
+								<?php
+									if(count($ID_item)==0)	
+									{?>
+										<div class="panel-body row border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
+											echo '<p class = "text-center">Vous ne vendez rien ! Commencez à vendre <a href="vendre.php">ici</a></p>';?>
+										</div><?php
+									}
+									else
+									{						
+										for ($i = 0 ; $i<count($ID_item); $i++)
+										{?>
+											<div class="panel-body row border" style="width: 80%; margin: 0 auto; margin-bottom: 5px; padding: 2px;">
+												<div class="col-lg-3 col-md-3 col-sm-12"><?php 
+													echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"].'" height = 50 width = 50 >';?>
+												</div>
+												<div class="col-lg-9 col-md-9 col-sm-12"><?php 
+													echo "ID de l'item : ".$table_item["$ID_item[$i]"][0]."<br>";
+													echo "Nom de l'item : ".$table_item["$ID_item[$i]"][1];?>
+												</div>
+											</div> <?php
+										}
+									}
+								?>
 							</div>				
 				        </div>
 				    </div>

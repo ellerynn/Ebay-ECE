@@ -7,7 +7,7 @@
 	//
 	session_start();
 	
-	$ID_temporaire_item = 75 ;
+	$ID_temporaire_item = 81 ;
 	$ID_temporaire_acheteur = 29 ;
 	$votre_prix = isset($_POST["votre_prix"])? $_POST["votre_prix"] : "";
 	$votre_prix_offre = isset($_POST["votre_prix_offre"])? $_POST["votre_prix_offre"] : "";
