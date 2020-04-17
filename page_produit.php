@@ -7,7 +7,7 @@
 	//
 	session_start();
 	
-	$ID_temporaire_item = 80 ;
+	$ID_temporaire_item = 75 ;
 	$ID_temporaire_acheteur = 29 ;
 	$votre_prix = isset($_POST["votre_prix"])? $_POST["votre_prix"] : "";
 	$votre_prix_offre = isset($_POST["votre_prix_offre"])? $_POST["votre_prix_offre"] : "";
@@ -18,7 +18,7 @@
 	if ($db_found) 
 	{	
 		
-
+		//PARTIE AFFICHAGE
 		//Récuperation donnee table item
 		$sql = "SELECT * FROM item WHERE ID_item LIKE '$ID_temporaire_item'";
 		$result = mysqli_query($db_handle, $sql);
@@ -95,45 +95,55 @@
 			}
 			
 		}
+		//FIN DE LA PARTIE AFFICHAGE DE l'ITEM
 	    
-	    //SI l'acheteur clique sur un bouton d'achat
+	    //Recuperation ligne si acheteur a déjà mis l'item dans son panier (car l'user n'a pas le droit de faire 2 types d'achat sur un même item)
+    	$sqlVerif = "SELECT * FROM panier WHERE ID LIKE $ID_temporaire_acheteur AND ID_item LIKE $ID_temporaire_item";
+    	$resultVerif = mysqli_query($db_handle, $sqlVerif);
+    	//recupération du type d'achat que l'acheteur avait voulu pour cet article si l'article exsite dans son panier
+    	$type_achat = "";
+    	if (mysqli_num_rows($resultVerif) != 0)
+	    	while ($data = mysqli_fetch_assoc($resultVerif)) 
+	        {
+	            $type_achat =$data['ID_type_vente'];
+	        }
+
+	    //SI l'acheteur clique sur un bouton d'achat de toute façon si il a déjà mis cet objet dans son panier ça ne va pas add l'item car les clés primaires son ID de l'acheteur et l'ID de l'item.
 	    if(isset($_POST["buttonachat"])){
 	    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'achat_immediat');";
 	    	$result = mysqli_query($db_handle, $sql);
 	    }
-	    //SI l'acheteur clique sur un bouton d'enchere
+	    //PARTIE ENCHERE
 	    if(isset($_POST["buttonenchere"]) && $votre_prix > $Prixactuelle){
-	    	//insert dans la table ENCHERIR
-	    	$sql = "INSERT INTO encherir (ID_enchere, ID_acheteur, ID_item, Prix_acheteur) VALUES ('$ID_enchere', '$ID_temporaire_acheteur', '$ID_temporaire_item', '$votre_prix');";
-	    	$result = mysqli_query($db_handle, $sql);
-	    	//insert dans la table PANIER
-	    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'enchere');";
-	    	$result2 = mysqli_query($db_handle, $sql2);
-	    	
-	    	$sql4 = "SELECT Prix_premier FROM liste_enchere WHERE ID_item LIKE '$ID_temporaire_item'";
-			$result4 = mysqli_query($db_handle, $sql4);
-			$dat="";
-			while ($data = mysqli_fetch_assoc($result4)) 
-            {
-                $dat =$data['Prix_premier'];
-            }
-            //update dans la table VENDEUR
-	    	$sql3 = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$dat' WHERE ID_item = $ID_temporaire_item;";
-			$result3 = mysqli_query($db_handle, $sql3);
+	    	///PREMIERE ENCHERE
+	    	if (mysqli_num_rows($resultVerif) == 0) { // Si cet item n'existe pas dans le panier de l'acheteur
+	    	//feu vert dans insert dans la table ENCHERIR car l'item n'a pas été dans le panier avec un autre type
+		    	$sql = "INSERT INTO encherir (ID_enchere, ID_acheteur, ID_item, Prix_acheteur) VALUES ('$ID_enchere', '$ID_temporaire_acheteur', '$ID_temporaire_item', '$votre_prix');";
+		    	$result = mysqli_query($db_handle, $sql);
+		    	//insert dans la table PANIER vu qu'il n'existe pas dans le panier d'après mysqli_num_rows($resultVerif) == 0
+		    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'enchere');";
+		    	$result = mysqli_query($db_handle, $sql);
+		    	//MAJ de la liste_enchere
+		    	$sql = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
+				$result = mysqli_query($db_handle, $sql);
+	    	}elseif($type_achat == "enchere"){ //si l'article existe, vérification si l'acheteur avait enchéri
+	    		//Update des prix dans liste_enchere
+		    	$sql3 = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
+				$result3 = mysqli_query($db_handle, $sql3);
+				
+				//update dans la table encherir
+				$sql6 = "UPDATE encherir SET Prix_acheteur = '$votre_prix' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_enchere = '$ID_enchere';";
+				$result6 = mysqli_query($db_handle, $sql6);
 
-			$sql6 = "UPDATE encherir SET Prix_acheteur = '$votre_prix' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_enchere = '$ID_enchere';";
-			$result6 = mysqli_query($db_handle, $sql6);
-
-	    	$ok=0;		//variable test pour blindage saisit enchere inferieur
+		    	$ok=0;		//variable test pour blindage saisit enchere inferieur
+	    	}
 	    	//reaffecter la nouvelle valeur de prix premier
 	    	$sql5 = "SELECT Prix_premier FROM liste_enchere WHERE ID_item LIKE '$ID_temporaire_item'";
 			$result5 = mysqli_query($db_handle, $sql5);
-			$dat="";
 			while ($data = mysqli_fetch_assoc($result5)) 
             {
-                $dat =$data['Prix_premier'];
+                $Prixactuelle =$data['Prix_premier'];
             }
-	    	$Prixactuelle = $dat;
 	    	
 	    }
 	    if(isset($_POST["buttonenchere"]) && $votre_prix <= $Prixactuelle && $votre_prix != "" && $votre_prix <= $Prixsecond)
@@ -141,13 +151,14 @@
 	    	//variable quon va reutiliser dans la partie html pour afficher juste en bas da laffichage du prix quil faut saisir un montant superieur
 	    	$ok=1;
 	    }
+	    //PARTIE OFFRE
 
-	    //Recupération du prix du vendeur si une offre a été faite par l'acheteur sur cette item: (ICI normalement tenta >= 1)
-	    //$prix = 
+	    $tenta = "";
+		$stat = "";
+		//Partie Un, s'il avait déjà effectué un Offre !
+    	//Recupération du prix du vendeur si une offre a été faite par l'acheteur sur cette item: (ICI normalement tenta >= 1
 	    $sql = "SELECT * from meilleur_offre WHERE ID_item = $ID_temporaire_item AND ID_acheteur LIKE '$ID_temporaire_acheteur' AND ID_vendeur LIKE '$ID_vendeur'";
 	    $result = mysqli_query($db_handle, $sql);
-	    $tenta = "";
-	    $stat = "";
 	    if (mysqli_num_rows($result) != 0){
 			while ($data = mysqli_fetch_assoc($result) ) 
 			{
@@ -157,37 +168,38 @@
 			}
 			
 		}
-
 	    //SI l'acheteur clique sur un bouton Faire le demande pour meilleur offre
 	    if(isset($_POST["buttonoffre"]) && $votre_prix_offre < $prix){
 
-	    	//Partie première offre, la première fois :
-	    	//insert dans la table ENCHERIR
-	    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
-	    	$result = mysqli_query($db_handle, $sql);
-	    	//insert dans la table PANIER
-	    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
-	    	$result2 = mysqli_query($db_handle, $sql2);
-	    	//variable test pour blindage saisit enchere inferieur
-	    	$ok1=2;
-
-	    	//Partie Deuxième ou nième <= 5 offre : 
-	    	if ($tenta < 5 && $stat == 1){
-	    		//L'user a entré un nouveau prix :
-	    		$tenta++;
-	    		$sql3 = "UPDATE meilleur_offre SET Prix_acheteur = '$votre_prix_offre' , Statut = '2', Tentative = '$tenta' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_vendeur = '$ID_vendeur' AND ID_item = '$ID_temporaire_item';";
-				$result3 = mysqli_query($db_handle, $sql3);
-	    	}
+	    	//Première offre, la première fois :
+	    	$resultVerif = mysqli_query($db_handle, $sqlVerif);
+	    	//Indique que l'item n'a jamais été dans son panier donc l'user peut faire une offre et le mettre dans son panier
+	    	if (mysqli_num_rows($resultVerif) == 0) 
+            {
+	            //insert dans la table ENCHERIR
+		    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
+		    	$result = mysqli_query($db_handle, $sql);
+		    	//insert dans la table PANIER
+		    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
+		    	$result2 = mysqli_query($db_handle, $sql2);
+		    	//variable test pour blindage saisit enchere inferieur
+		    	$ok1=2;
+            }elseif($type_achat == "offre"){ //
+		    	//Partie Deuxième ou nième <= 5 offre et que c'est son tour: 
+		    	if ($tenta < 5 && $stat == 1){
+		    		//L'user a entré un nouveau prix :
+		    		$tenta++;
+		    		$sql3 = "UPDATE meilleur_offre SET Prix_acheteur = '$votre_prix_offre' , Statut = '2', Tentative = '$tenta' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_vendeur = '$ID_vendeur' AND ID_item = '$ID_temporaire_item';";
+					$result3 = mysqli_query($db_handle, $sql3);
+		    	}
+		    }
 	    	
 	    }
 	    if(isset($_POST["buttonoffre"]) && $votre_prix_offre >= $prix && $votre_prix_offre != "" )
 	    {
 	    	//variable quon va reutiliser dans la partie html pour afficher juste en bas da laffichage du prix quil faut saisir un montant superieur
 	    	$ok1=1;
-	    }
-	    
-	    
-	 }
+	    }	 }
 	 else 
 	 {
 	      echo "Database not found";
@@ -287,7 +299,7 @@
 
 				echo $ID_vendeur."<br>";
 				echo '<form action="" method="post">';
-				if ($ID_type_vente == "achat_immediat " || $ID_type_vente == "achat_immediat enchere" || $ID_type_vente == "achat_immediat meilleur_offre")
+				if ($ID_type_vente == "achat_immediat " || $ID_type_vente == "achat_immediat enchere" || $ID_type_vente == "achat_immediat offre")
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="'.$ID_type_vente.'">';
 				echo "$ID_type_vente";
 				//enchere formulaire

@@ -118,7 +118,7 @@
 				//s'il ne s'agit que d'un enchère Sinon le prix reste en prix par défaut: 
 				if (strlen($type_vente_choisi) == 8)
 					$prix = $prixdepart;
-							
+
 		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filenamevideo');";
 		        $result = mysqli_query($db_handle, $sql);
 		        //Normalement c'est ajouté , mtn vérifions et extraction de l'ID: 
@@ -163,11 +163,12 @@
 	        }
 	        else 
 	            echo "Database not found";
+	        
+	        //fermer la connexion
+	    	mysqli_close($db_handle); 
 	    }   
 	    else 
 	    	echo "Erreur : <br>$erreur";
-	    //fermer la connexion
-	    mysqli_close($db_handle); 
 	}  
 ?>
 
