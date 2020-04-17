@@ -17,6 +17,100 @@
 	  header('Location: connexion.php');
 	  exit();
 	}
+
+	$database = "ebay ece paris";
+	$db_handle = mysqli_connect('localhost', 'root', '');
+	$db_found = mysqli_select_db($db_handle, $database);
+
+	//Déclaration de variable général
+	$nom = "Vide";
+	$prenom = "Vide";
+	$email = "Vide";
+	$statutNom = "Vide";
+
+	if ($statut == 1){$statutNom = "Administrateur";}
+	if ($statut == 2){$statutNom = "Vendeur";}
+	if ($statut == 3){$statutNom = "Acheteur";}
+
+	if ($db_found) {
+		//récuperation données de la table personne (identique pour tout les statuts)
+		$sql = "SELECT * FROM personne WHERE ID = '$id';";
+		$result = mysqli_query($db_handle, $sql);
+		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
+			{ 	//On connait déjà le mot de passe (dans session)
+				$nom = $data['Nom'];
+				$prenom = $data['Prenom'];
+				$email = $data['Email']; //Même si on connait déjà celui de Adm et Ach, si c'est un vendeur au moins on aura récup son email si utile
+			}
+		}
+
+		//récuperation données de la table vendeur (pas besoin de vérifier si c'est un vendeur, si c'est pas un vendeur : 0 ligne trouvé)
+		$sql = "SELECT * FROM vendeur WHERE ID = '$id';";
+		$result = mysqli_query($db_handle, $sql);
+		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
+			{ 	
+				$pseudo = $data['Pseudo'];
+				$photo_vendeur = $data['ID_photo'];
+				$fond_vendeur = $data['ID_image_fond'];
+			}
+		}
+
+		//Déclaration de varaibles spécial vendeur
+		$pseudo = "Vide";
+		$photo_vendeur = "Vide";
+		$fond_vendeur = "Vide";
+
+		$sql = "SELECT * FROM vendeur WHERE ID = '$id';";
+		$result = mysqli_query($db_handle, $sql);
+		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
+			{ 	
+				$pseudo = $data['Pseudo'];
+				$photo_vendeur = $data['ID_photo'];
+				$fond_vendeur = $data['ID_image_fond'];
+			}
+		}
+
+		//Déclaration de variables spécials acheteur 
+		$adresse_ligne1 = "Vide";
+		$adresse_ligne2 = "Vide";
+		$ville = "Vide";
+		$code_postal = "Vide";
+		$pays = "Vide";
+		$telephone = "Vide";
+		$type_carte = "Vide";
+		$numero_carte = "Vide";
+		$nom_carte = "Vide";
+		$date_exp_carte = "Vide";
+		$code_securite = "Vide";
+		$solde = "Vide";
+
+		$sql = "SELECT * FROM acheteur WHERE ID = '$id';";
+		$result = mysqli_query($db_handle, $sql);
+		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
+			{ 	
+				$adresse_ligne1 = $data['Adresse_ligne1'];
+				$adresse_ligne2 = $data['Adresse_ligne2'];
+				$ville = $data['Ville'];
+				$code_postal = $data['Code_postal'];
+				$pays = $data['Pays'];
+				$telephone = $data['Telephone'];
+				$type_carte = $data['Type_carte'];
+				$numero_carte = $data['Numero_carte'];
+				$nom_carte = $data['Nom_carte'];
+				$date_exp_carte = $data['Date_exp_carte'];
+				$code_securite = $data['Code_securite'];
+				$solde = $data['Solde'];
+			}
+		}
+
+	}//End 
+	else{
+		echo "Database not found";
+	}
 ?>
 
 <!DOCTYPE html> 
@@ -90,7 +184,124 @@
 				   	<br><h2 class="text-center">Mes informations</h2><br>
 				</div>
 				<div class="panel-body">
-						
+				<!--- Afficher donnée : --->
+				<?php
+					echo "<div>";
+						echo "<h3>Information Générale</h3>";
+						echo "<table>";
+							echo "<tr>";
+								echo "<td>"; echo "Statut : "; echo "</td>";
+								echo "<td>"; echo $statutNom; echo "</td>";
+							echo "</tr>";
+							echo "<tr>";
+								echo "<td>"; echo "Nom : "; echo "</td>";
+								echo "<td>"; echo $nom; echo "</td>";
+							echo "</tr>";
+							echo "<tr>";
+								echo "<td>"; echo "Prenom : "; echo "</td>";
+								echo "<td>"; echo $prenom; echo "</td>";
+							echo "</tr>";
+							echo "<tr>";
+								echo "<td>"; echo "Email : "; echo "</td>";
+								echo "<td>"; echo $email; echo "</td>";
+							echo "</tr>";
+							echo "<tr>";
+								echo "<td>"; echo "Mot de passe : "; echo "</td>";
+								echo "<td>"; echo $psw; echo "</td>";
+							echo "</tr>";
+						echo "</table>";
+					echo "</div>";
+
+						//Cas vendeur:
+						if ($statut == 2){
+							echo "<div>";
+								echo "<h4>Information Vendeur</h4>";
+								echo "<table>";
+									echo "<tr>";
+										echo "<td>"; echo '<img src = "images_web/'.$photo_vendeur.'" height = "200" width = "200">'; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Pseudo : "; echo "</td>";
+										echo "<td>"; echo $pseudo; echo "</td>";
+									echo "</tr>";
+								echo "</table>";
+								echo "Je ne sais pas où mettre cette image dans le css en background avec php dans je l'affiche là pour l'instant";
+								echo '<img src = "images_web/'.$fond_vendeur.'">';
+							echo "</div>";
+
+						}
+
+						//Cas acheteur
+						if($statut == 3){
+							echo "<div>";
+								echo "<h4>Information Acheteur</h4>";
+								echo "<div>";
+									echo "<h5>Les coordonnées de livraison</h5>";
+									echo "<table>";
+									echo "<tr>";
+										echo "<td>"; echo "Adresse ligne 1 : "; echo "</td>";
+										echo "<td>"; echo $adresse_ligne1; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Adresse ligne 2 : "; echo "</td>";
+										echo "<td>"; echo $adresse_ligne2; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Ville : "; echo "</td>";
+										echo "<td>"; echo $ville; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Code postal : "; echo "</td>";
+										echo "<td>"; echo $code_postal; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Pays : "; echo "</td>";
+										echo "<td>"; echo $pays; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Téléphone : "; echo "</td>";
+										echo "<td>"; echo $telephone; echo "</td>";
+									echo "</tr>";
+									echo "</table>";
+								echo "</div>";
+
+								echo "<div>";
+									echo "<h5>Les coordonnées de bancaire</h5>";
+									echo "<table>";
+									echo "<tr>";
+										echo "<td>"; echo "Type de votre carte : "; echo "</td>";
+										echo "<td>"; echo $type_carte; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Numero de votre carte : "; echo "</td>";
+										echo "<td>"; echo $numero_carte; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Nom du titulaire : "; echo "</td>";
+										echo "<td>"; echo $nom_carte; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Date d'expiration : "; echo "</td>";
+										echo "<td>"; echo $date_exp_carte; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Code de sécurité : "; echo "</td>";
+										echo "<td>"; echo $code_securite; echo "</td>";
+									echo "</tr>";
+									echo "<tr>";
+										echo "<td>"; echo "Le solde : "; echo "</td>";
+										echo "<td>"; echo $solde; echo "</td>";
+									echo "</tr>";
+									echo "</table>";
+								echo "</div>";
+							echo "</div>";
+
+						}
+					
+				?>
+
+				<!--- Afficher donnée : --->
+
 		        </div>
 		    </div>
 		</div> 
