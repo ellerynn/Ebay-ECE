@@ -17,8 +17,77 @@
 	  	header('Location: connexion.php');
 	  	exit();
 	}
-
+	    //identifier votre BDD
+    $database = "ebay ece paris";
+    $db_handle = mysqli_connect('localhost', 'root', '');
+    $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
+
+	$table_item = array();
+	$table_photo = array();
+	$nom_item = array();
+	$ID_item = array();
+
+		$sql = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
+		$result = mysqli_query($db_handle, $sql);
+
+		if (mysqli_num_rows($result) == 0) {
+			//Livre inexistant
+			echo "Erreur, cet item n'est pas disponible. <br>";
+		} 
+		else {
+			$i=0;
+			while ($data = mysqli_fetch_assoc($result)) 
+			{
+				$ID_item[$i] = $data['ID_item'];
+				$i++;
+			}
+			
+		}
+
+	//recuperation pour mes ventes
+	for($a=0; $a < count($ID_item); $a++){
+		$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' "; //retrouver les ID_items issu de ID_item[]
+		$result1 = mysqli_query($db_handle, $sql1);
+
+			if (mysqli_num_rows($result1) == 0) {
+				echo "Erreur, cet item n'est pas disponible. <br>";
+			}
+			else {
+				$i=0;
+				$temp = array();
+				while ($data = mysqli_fetch_assoc($result1) ) 
+				{
+					$i_temp = 0;
+					$temp[$i_temp] = $ID_item[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$i_temp++;
+					$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+					$i_temp++;
+					$table_item["$ID_item[$a]"] = $temp; // Tableau associatif
+				}
+				
+			}
+
+		}	
+
+		for($a=0; $a < count($ID_item); $a++){
+		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$result1 = mysqli_query($db_handle, $sql1);
+			if (mysqli_num_rows($result1) == 0) {
+				echo "Erreur, cet item n'est pas disponible. <br>";
+			} 
+			else {
+				$v = 0;
+				$temp =array();
+				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
+				{
+					$temp[$v] = $data['Nom_photo'];
+					$v++;
+				}
+				$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
+				
+			}
+		}
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
@@ -96,11 +165,7 @@
 		if ($erreur == "") 
 		{
 		 	$type_vente_choisi = $vente1." ". $vente2;
-		    //identifier votre BDD
-		    $database = "ebay ece paris";
 
-		    $db_handle = mysqli_connect('localhost', 'root', '');
-		    $db_found = mysqli_select_db($db_handle, $database);
 		    ///BDD
 	        if ($db_found) 
 	        {
@@ -354,6 +419,20 @@
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 								<br><h2 class="text-center">Mes ventes</h2><br>
+
+							<?php
+							
+							for ($i = 0 ; $i<count($ID_item); $i++){ 
+								for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
+									echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
+								}
+								//traitement de la table item:
+								echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
+								echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
+							}
+
+
+								?>
 							</div>				
 				        </div>
 				    </div>

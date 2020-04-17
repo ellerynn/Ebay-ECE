@@ -23,23 +23,21 @@
 	$vente2 = isset($_POST["vente2"])? $_POST["vente2"] : "";
 
 	$filenamevideo = "";
-	
 	$erreur = "";
+	$database = "ebay ece paris";				        
 
-	if ($id == "") { 
-	 	$erreur .= "Champ ID de l'article vide. <br>"; }
- 	 
-	if ($erreur == "") 
-	{
+	if ($id == "")
+	 	$erreur .= "Champ ID de l'article vide. <br>";
 
-	    //identifier votre BDD
-	    $database = "ebay ece paris";
-
-	    $db_handle = mysqli_connect('localhost', 'root', '');
-	    $db_found = mysqli_select_db($db_handle, $database);
-	
-	    if (isset($_POST["buttonsupprimer"])) 
-	    {
+	if (isset($_POST["buttonsupprimer"])) 
+    {
+    	if ($erreur == "") 
+		{
+		    //identifier votre BDD
+		    $database = "ebay ece paris";
+		    $db_handle = mysqli_connect('localhost', 'root', '');
+		    $db_found = mysqli_select_db($db_handle, $database);
+			
 			///BDD
 	        if ($db_found) 
 	        {
@@ -53,7 +51,7 @@
 					if ($idv != "") 
 						$sql .= " AND ID_vendeur LIKE '%$idv%'";	
 				}
-				
+					
 				$dat = "";
                 while ($data = mysqli_fetch_assoc($result)) 
                 {
@@ -78,7 +76,7 @@
 
 					$sqlphoto = "SELECT * FROM photo WHERE ID_item LIKE '$id'";
 	                $resultphoto = mysqli_query($db_handle, $sqlphoto);
-	                
+		                
 	                while ($data = mysqli_fetch_assoc($resultphoto) ) 
 					{
 						$id = $data['ID_item'];
@@ -107,14 +105,15 @@
 					$sql = "DELETE FROM panier WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql);
 				}
-	        }
-	        else 
-	            echo "Database not found";
+			}
+		    else 
+		        echo "Database not found";
+	        
+	        //fermer la connexion
+	    	mysqli_close($db_handle); 
 	    }   
-	    
-	    //fermer la connexion
-	    mysqli_close($db_handle);
+	    else 
+	    	echo "Erreur : <br>$erreur";
 	}  
-	else 
-	   echo "Erreur : <br>$erreur";
+?>
 ?>
