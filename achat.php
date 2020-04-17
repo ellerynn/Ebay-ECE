@@ -17,6 +17,110 @@
 	  header('Location: connexion.php');
 	  exit();
 	}
+
+	$database = "ebay ece paris";
+	$db_handle = mysqli_connect('localhost', 'root', '');
+	$db_found = mysqli_select_db($db_handle, $database);
+	//Déclaration de variable
+	$table_item = array();
+	$table_photo = array();
+	$table_vendeur = array();
+	$table_enchere = array();
+	if ($db_found){
+		//Récupération des données de la table item
+		$sql = "SELECT * FROM item"; // récupération de tout les items
+		$result = mysqli_query($db_handle,$sql);
+		if (mysqli_num_rows($result) != 0){
+			$temp = array();
+			$i = 0;
+			while ($data = mysqli_fetch_assoc($result) ) 
+			{
+				$i_temp = 0;
+				$temp[$i_temp] = $data['ID_item']; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+				$i_temp++;
+				$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+				$i_temp++;
+				$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2
+				$i_temp++;
+				$temp[$i_temp] = $data['ID_type_vente']; // i_temp = 3
+				$i_temp++;
+				$temp[$i_temp] = $data['Description']; // i_temp = 4
+				$i_temp++;
+				$temp[$i_temp] = $data['Categorie']; // i_temp = 5
+				$i_temp++;
+				$temp[$i_temp] = $data['Prix']; // i_temp = 6
+				$i_temp++;
+				$temp[$i_temp] = $data['Video']; // i_temp = 7
+
+				$table_item["$i"] = $temp; //$i comme clée, car sinon on peut plus retrouver l'ID_item
+				$i++;
+				/* les id items sont stocké comme ça :
+				echo $table_item["0"][0];
+				echo $table_item["1"][0];
+				echo $table_item["2"][0];
+				echo $table_item["3"][0];
+				echo $table_item["5"][0];
+				echo $table_item["5"][0];
+				echo $table_item["6"][0];
+				*/
+			}
+		}
+		//Récupération de la table photo pour chaque items
+		for ($i = 0 ; $i < count($table_item); $i++){
+			$sql = "SELECT * FROM photo WHERE ID_item = ".$table_item[$i][0];  //récupération des photos d'un item donnée
+			$result = mysqli_query($db_handle,$sql);
+			if (mysqli_num_rows($result) != 0){
+				$v = 0;
+				$temp = array();	
+				while ($data = mysqli_fetch_assoc($result) ) //extraction de toute les photos d'un item donnée
+				{
+					$temp[$v] = $data['Nom_photo'];
+					$v++;
+				}
+				$var = $table_item[$i][0]; // Il semblerait que php ne veut pas $table_photo[$table_item[$i][0]]
+				$table_photo["$var"]= $temp;   //clée ID_item car on sait qu'il est stocké dans $table_item[$i][0]
+			}
+		}
+		//Récupération de la table vendeur (le pseudo du vendeur de l'item)
+		for ($i = 0 ; $i < count($table_item); $i++){
+			$sql = "SELECT Pseudo FROM vendeur WHERE ID = ".$table_item[$i][2]; //emplacement où se trouve l'id vendeur
+			$result = mysqli_query($db_handle,$sql);
+			if (mysqli_num_rows($result) != 0){
+				while ($data = mysqli_fetch_assoc($result) ) //extraction de toute les photos d'un item donnée
+				{
+					$var = $table_item[$i][0];
+					$table_vendeur["$var"] = $data['Pseudo'];
+				}
+			}
+		}
+		//Récupération de la table enchère
+		for ($i = 0 ; $i < count($table_item); $i++){
+			$sql = "SELECT * FROM liste_enchere WHERE ID_item = ".$table_item[$i][0]; //emplacement où se trouve l'id vendeur
+			$result = mysqli_query($db_handle,$sql);
+			if (mysqli_num_rows($result) != 0){
+				$temp = array();
+				while ($data = mysqli_fetch_assoc($result) ) //extraction de toute les photos d'un item donnée
+				{
+					$i_temp = 0;
+					$temp[$i_temp] = $data['Date_debut']; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$i_temp++;
+					$temp[$i_temp] = $data['Heure_debut']; // i_temp = 1
+					$i_temp++;
+					$temp[$i_temp] = $data['Date_fin']; // i_temp = 2
+					$i_temp++;
+					$temp[$i_temp] = $data['Heure_fin']; // i_temp = 3
+					$i_temp++;
+					$temp[$i_temp] = $data['Prix_premier']; // i_temp = 4
+				}
+				$var = $table_item[$i][0];
+				$table_enchere["$var"] = $temp;
+			}
+		}
+	}//END
+	else{
+		echo "Database not found";
+	}
+
 ?>
 
 <!DOCTYPE html> 
@@ -87,6 +191,15 @@
 					<p></p>
 			        <div class="list-group">
 			          	<button type="button" class="list-group-item btn" id="bac1">Achat</button>
+				    	<!--DEBUT Ajout de code 1-->
+			          	<button type="button" class="list-group-item btn" id="bac3">Ferraille ou Trésor</button>
+			          	<button type="button" class="list-group-item btn" id="bac4">Bon pour le musée</button>
+			          	<button type="button" class="list-group-item btn" id="bac5">Accessoire VIP</button>
+
+			          	<button type="button" class="list-group-item btn" id="bac6">Achat immédiat</button>
+			          	<button type="button" class="list-group-item btn" id="bac7">Meilleur offre</button>
+			          	<button type="button" class="list-group-item btn" id="bac8">Enchère</button>
+			        	<!--FIN Ajout de code 1-->
 			        	<button type="button" class="list-group-item btn" id="bac2">Messages</button>
 			        </div>	
 			    </div>
@@ -95,9 +208,265 @@
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Acheter</h2><br>
 					    </div>
-					    <div class="panel-body">					
+					    <div class="panel-body">
 				        </div>
 				    </div>
+
+				    <!--DEBUT Ajout de code 2-->
+				    <div class="panel" style="display: none;" id="panel_ferraille_tresor">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Ferraille ou Trésor</h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo '<td>Photo</td>';
+					    				echo '<td>Nom</td>';
+					    				echo '<td>Vendeur</td>';
+					    				echo '<td>Achat immédiat</td>';
+					    				echo '<td>Meilleur offre</td>';
+					    				echo '<td>Enchère</td>';
+					    				//echo "<td>Prix (€)</td>";
+					    			echo '</tr>';
+
+					    		for ($i= 0; $i < count($table_item); $i++)
+					    		{ //pour chaque item
+					    			if ($table_item[$i][5] == "Farraille_tresor")
+					    			{
+					    				echo '<tr>';
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+											echo '<td>'.$table_item[$i][1].'</td>'; //Nom de l'item
+											echo '<td>'.$table_vendeur["$var"].'</td>'; //Vendeur de l'item
+											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo '<td>oui</td>'; //Achat immédiat
+											else
+												echo '<td>non</td>';
+											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo '<td>oui</td>'; //Meilleur offre
+											else
+												echo '<td>non</td>'; 
+											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+												echo '<td>oui</td>'; //Enchere
+											else
+												echo '<td>non</td>'; 
+											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+										echo '<tr>';
+					    			}
+
+					    		}
+					    		echo '</table>';
+					    	?>
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_bon_musee">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Bon pour le musée</h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo "<td>Photo</td>";
+					    				echo "<td>Nom</td>";
+					    				echo "<td>Vendeur</td>";
+					    				echo "<td>Achat immédiat</td>";
+					    				echo "<td>Meilleur offre</td>";
+					    				echo "<td>Enchère</td>";
+					    				//echo "<td>Prix (€)</td>";
+					    			echo "</tr>";
+
+					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+					    			if ($table_item[$i][5] == "Musee"){
+					    				echo "<tr>";
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+
+											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo "<td>oui</td>"; //Achat immédiat
+											else
+												echo "<td>non</td>";
+											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo "<td>oui</td>"; //Meilleur offre
+											else
+												echo "<td>non</td>"; 
+											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+												echo "<td>oui</td>"; //Enchere
+											else
+												echo "<td>non</td>"; 
+											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+										echo "<tr>";
+					    			}
+
+					    		}
+					    		echo "</table>";
+					    	?>
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_vip">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Accessoire VIP</h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo "<td>Photo</td>";
+					    				echo "<td>Nom</td>";
+					    				echo "<td>Vendeur</td>";
+					    				echo "<td>Achat immédiat</td>";
+					    				echo "<td>Meilleur offre</td>";
+					    				echo "<td>Enchère</td>";
+					    				//echo "<td>Prix (€)</td>";
+					    			echo "</tr>";
+
+					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+					    			if ($table_item[$i][5] == "VIP"){
+					    				echo "<tr>";
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+
+											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo "<td>oui</td>"; //Achat immédiat
+											else
+												echo "<td>non</td>";
+											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+												echo "<td>oui</td>"; //Meilleur offre
+											else
+												echo "<td>non</td>"; 
+											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+												echo "<td>oui</td>"; //Enchere
+											else
+												echo "<td>non</td>"; 
+											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+										echo "<tr>";
+					    			}
+
+					    		}
+					    		echo "</table>";
+					    	?>
+				        </div>
+				    </div>
+				   	<!-- rangement par catégorie de vente -->
+				    <div class="panel" style="display: none;" id="panel_achat_im">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Achat immédiat</h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo "<td>Photo</td>";
+					    				echo "<td>Nom</td>";
+					    				echo "<td>Vendeur</td>";
+					    				echo "<td>Prix (€)</td>";
+					    			echo "</tr>";
+
+					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+					    			if ((strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 )){
+					    				echo "<tr>";
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+											echo "<td>".$table_item[$i][6]."</td>"; //Prix
+										echo "<tr>";
+					    			}
+
+					    		}
+					    		echo "</table>";
+					    	?>					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_offre">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Meilleur offre</h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo "<td>Photo</td>";
+					    				echo "<td>Nom</td>";
+					    				echo "<td>Vendeur</td>";
+					    				echo "<td>Prix (€)</td>";
+					    			echo "</tr>";
+
+					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+					    			if ((strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) ){
+					    				echo "<tr>";
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+											echo "<td>".$table_item[$i][6]."</td>"; //Prix
+										echo "<tr>";
+					    			}
+
+					    		}
+					    		echo "</table>";
+					    	?>					
+				        </div>
+				    </div>
+				    <div class="panel" style="display: none;" id="panel_enchere">
+					    <div class="panel-heading">
+					    	<br><h2 class="text-center">Enchère </h2><br>
+					    </div>
+					    <div class="panel-body">
+					    	<?php
+					    		echo '<table class = "table">';
+					    			echo '<tr>';
+					    				echo "<td>Photo</td>";
+					    				echo "<td>Nom</td>";
+					    				echo "<td>Vendeur</td>";
+					    				echo "<td>Début</td>";
+					    				echo "<td>Fin</td>";
+					    				echo "<td>Prix actuelle (€)</td>";
+					    			echo "</tr>";
+
+					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+					    			if ((strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 )){
+					    				echo "<tr>";
+					    				//on affiche tout les données des items de catégorie ferraille 
+					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+										//}
+											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+											echo "<td>".$table_enchere["$var"][0]." à ".$table_enchere["$var"][1]."</td>";
+											echo "<td>".$table_enchere["$var"][2]." à ".$table_enchere["$var"][3]."</td>";
+											echo "<td>".$table_enchere["$var"][4]."</td>"; //Prix
+										echo "<tr>";
+					    			}
+
+					    		}
+					    		echo "</table>";
+					    	?>					
+				        </div>
+				    </div>
+				    <!--FIN Ajout de code 2-->
+
 				    <div class="panel" style="display: none;" id="panel_mes_acheteur">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>
@@ -167,16 +536,98 @@
 		<script type="text/javascript">
 			var panel_achat = document.getElementById("panel_achat");
 			var panel_mes = document.getElementById("panel_mes_acheteur");
-					
+			//<!--DEBUT Ajout de code 3-->
+			var panel_ferraille = document.getElementById("panel_ferraille_tresor");
+			var panel_bon = document.getElementById("panel_bon_musee");
+			var panel_vip = document.getElementById("panel_vip");
+
+			var panel_achat_im = document.getElementById("panel_achat_im");
+			var panel_offre = document.getElementById("panel_offre");
+			var panel_enchere = document.getElementById("panel_enchere");
+			//<!--FIN Ajout de code 3-->
 			document.getElementById("bac1").onclick = function() {
 				panel_achat.style.display ="block";
 				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
 			}
-
 			document.getElementById("bac2").onclick = function() {
 				panel_achat.style.display ="none";
 				panel_mes.style.display ="block";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
 			}
+			//<!--DEBUT Ajout de code 4-->
+			document.getElementById("bac3").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "block";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
+			}
+			document.getElementById("bac4").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "block";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
+			}
+			document.getElementById("bac5").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "block";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
+			}
+			document.getElementById("bac6").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "block";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "none";
+			}
+			document.getElementById("bac7").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "block";
+				panel_enchere.style.display = "none";
+			}
+			document.getElementById("bac8").onclick = function() {
+				panel_achat.style.display ="none";
+				panel_mes.style.display ="none";
+				panel_ferraille.style.display = "none";
+				panel_bon.style.display = "none";
+				panel_vip.style.display = "none";
+				panel_achat_im.style.display = "none";
+				panel_offre.style.display = "none";
+				panel_enchere.style.display = "block";
+			}
+			//<!--DEBUT Ajout de code 4-->
+
 		</script>		
 	</body> 
 </html> 
