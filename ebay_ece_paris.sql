@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  ven. 17 avr. 2020 à 08:35
+-- Généré le :  ven. 17 avr. 2020 à 17:00
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.3.12
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `Adresse_ligne1` varchar(255) DEFAULT NULL,
   `Adresse_ligne2` varchar(255) DEFAULT NULL,
   `Ville` varchar(255) DEFAULT NULL,
-  `Code_Postal` int(11) DEFAULT NULL,
+  `Code_postal` int(11) DEFAULT NULL,
   `Pays` varchar(255) DEFAULT NULL,
   `Telephone` int(10) DEFAULT NULL,
   `Type_carte` varchar(255) DEFAULT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 -- Déchargement des données de la table `acheteur`
 --
 
-INSERT INTO `acheteur` (`ID`, `Adresse_ligne1`, `Adresse_ligne2`, `Ville`, `Code_Postal`, `Pays`, `Telephone`, `Type_carte`, `Numero_carte`, `Nom_carte`, `Date_exp_carte`, `Code_securite`, `Solde`) VALUES
+INSERT INTO `acheteur` (`ID`, `Adresse_ligne1`, `Adresse_ligne2`, `Ville`, `Code_postal`, `Pays`, `Telephone`, `Type_carte`, `Numero_carte`, `Nom_carte`, `Date_exp_carte`, `Code_securite`, `Solde`) VALUES
 (30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -67,14 +67,6 @@ CREATE TABLE IF NOT EXISTS `encherir` (
   `Prix_acheteur` int(255) DEFAULT NULL,
   PRIMARY KEY (`ID_enchere`,`ID_acheteur`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Déchargement des données de la table `encherir`
---
-
-INSERT INTO `encherir` (`ID_enchere`, `ID_acheteur`, `ID_item`, `Prix_acheteur`) VALUES
-(5, 30, 77, 590),
-(5, 29, 77, 580);
 
 -- --------------------------------------------------------
 
@@ -93,18 +85,20 @@ CREATE TABLE IF NOT EXISTS `item` (
   `Prix` int(11) DEFAULT NULL,
   `Video` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID_item`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `item`
 --
 
 INSERT INTO `item` (`ID_item`, `Nom_item`, `ID_vendeur`, `ID_type_vente`, `Description`, `Categorie`, `Prix`, `Video`) VALUES
-(75, 'Ipad Pro', 12, 'achat_immediat ', 'Voici le nouvel ipad Pro que Sutharsan a achetÃ©', 'VIP', 1090, ''),
-(76, 'Meuble', 12, ' offre', 'voici un meuble', 'Farraille_tresor', 200, ''),
-(77, 'tableau', 12, ' enchere', 'voici un tableau', 'Musee', 500, ''),
-(78, 'Duplicata Ipad Pro', 12, ' offre', 'Exemple', 'VIP', 1090, ''),
-(79, 'tablette', 2, 'achat_immediat ', 'zdzzdzzzzzzz', 'Farraille_tresor', 10000, '');
+(86, 'Monnaie antique', 5, ' enchere', 'Monnaie romaine\r\nMÃ©tal : Or\r\nAnnÃ©e : 147-175\r\nValeur faciale : Aureus\r\nPersonnage principal : Faustina II\r\nPoids : 7.29 gr', 'Musee', 50, ''),
+(85, 'Fila Disruptor II', 5, ' offre', 'Marque Fila', 'VIP', 60, ''),
+(82, 'Ipad Pro', 4, 'achat_immediat ', 'Ipad Pro neuf', 'VIP', 1090, ''),
+(83, 'Tableau abstrait', 4, ' enchere', 'Que voyez-vous ?', 'Musee', 100, ''),
+(84, 'Sneaker Dior', 5, 'achat_immediat offre', 'Type : tissu\r\nMarque : Dior', 'VIP', 890, ''),
+(87, 'Album Euros', 5, 'achat_immediat enchere', 'Album Euro 30 piÃ¨ces de 2 euros', 'Farraille_tresor', 300, ''),
+(88, 'Lampe Harry Potter', 5, ' offre', 'Lampe Harry Potter ', 'Farraille_tresor', 50, '');
 
 -- --------------------------------------------------------
 
@@ -125,14 +119,16 @@ CREATE TABLE IF NOT EXISTS `liste_enchere` (
   `Prix` int(11) NOT NULL,
   `Fin` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID_enchere`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `liste_enchere`
 --
 
 INSERT INTO `liste_enchere` (`ID_enchere`, `ID_item`, `Date_debut`, `Heure_debut`, `Date_fin`, `Heure_fin`, `Prix_premier`, `Prix_second`, `Prix`, `Fin`) VALUES
-(5, 77, '2020-04-15', '11:25:00', '2020-04-19', '19:50:00', 590, 580, 500, 0);
+(7, 83, '1212-12-12', '12:12:00', '1313-12-13', '13:13:00', 100, NULL, 100, 0),
+(8, 86, '1313-12-13', '12:12:00', '1414-12-14', '14:14:00', 50, NULL, 50, 0),
+(9, 87, '1414-12-14', '12:12:00', '1515-12-15', '13:13:00', 60, NULL, 60, 0);
 
 -- --------------------------------------------------------
 
@@ -152,15 +148,6 @@ CREATE TABLE IF NOT EXISTS `meilleur_offre` (
   PRIMARY KEY (`ID_acheteur`,`ID_vendeur`,`ID_item`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Déchargement des données de la table `meilleur_offre`
---
-
-INSERT INTO `meilleur_offre` (`ID_acheteur`, `ID_vendeur`, `ID_item`, `Prix_acheteur`, `Prix_vendeur`, `Tentative`, `Statut`) VALUES
-(30, 12, 76, 199, 160, 5, 1),
-(29, 12, 76, 100, 120, 1, 1),
-(29, 12, 78, 1000, 1090, 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -174,19 +161,6 @@ CREATE TABLE IF NOT EXISTS `panier` (
   `ID_type_vente` varchar(255) NOT NULL,
   PRIMARY KEY (`ID_item`,`ID`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Déchargement des données de la table `panier`
---
-
-INSERT INTO `panier` (`ID`, `ID_item`, `ID_type_vente`) VALUES
-(29, 75, 'achat_immediat'),
-(30, 77, 'enchere'),
-(29, 77, 'enchere'),
-(30, 76, 'offre'),
-(29, 76, 'offre'),
-(29, 78, 'offre'),
-(29, 79, 'achat_immediat');
 
 -- --------------------------------------------------------
 
@@ -203,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `Statut` int(11) DEFAULT NULL,
   `Mot_de_passe` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
@@ -237,13 +211,16 @@ CREATE TABLE IF NOT EXISTS `photo` (
 --
 
 INSERT INTO `photo` (`Nom_photo`, `ID_item`, `Direction`) VALUES
-('ipad.jpg', 75, NULL),
-('ipad_2.jpg', 75, NULL),
-('meuble1.jpg', 76, NULL),
-('tableau.jpg', 77, NULL),
-('ipad.jpg', 78, NULL),
-('ipad_2.jpg', 78, NULL),
-('a.jpg', 79, NULL);
+('fila2.jpg', 85, NULL),
+('fila.jpg', 85, NULL),
+('dior.jpg', 84, NULL),
+('tableau.jpg', 83, NULL),
+('ipad_2.jpg', 82, NULL),
+('ipad.jpg', 82, NULL),
+('monnaieRomaine.jpg', 86, NULL),
+('monnaieRomaine2.jpg', 86, NULL),
+('albumEuro.jpg', 87, NULL),
+('LampeHarryPotter.jpg', 88, NULL);
 
 -- --------------------------------------------------------
 
@@ -265,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `vendeur` (
 --
 
 INSERT INTO `vendeur` (`ID`, `Pseudo`, `ID_photo`, `ID_image_fond`) VALUES
-(4, 'Pat', NULL, NULL),
+(4, 'Pat', 'photo_defaut.jpg', 'default_fond.jpg'),
 (5, 'gil', NULL, NULL);
 COMMIT;
 
