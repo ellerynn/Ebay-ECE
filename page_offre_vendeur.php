@@ -1,36 +1,5 @@
 <?php
-	// On prolonge la session
-	session_start();
-	$ID_temporaire_vendeur = 12;
-	$contre_offre = isset($_POST["contre_offre"])? $_POST["contre_offre"] : "";
-	$database = "ebay ece paris";
-	$db_handle = mysqli_connect('localhost', 'root', '');
-	$db_found = mysqli_select_db($db_handle, $database);
-	if ($db_found) 
-	{
-	    $sql = "SELECT * FROM meilleur_offre WHERE ID_vendeur LIKE '$ID_temporaire_vendeur'";
-		$result = mysqli_query($db_handle, $sql);
-
-		$nom_item ="";
-		$ID_vendeur = "";
-		$ID_type_vente = "";
-		$description = "";
-		$categorie = "";
-		$prix = "";
-		$video = "";
-
-		$table_item = array();
-		$table_photo = array();
-		$buttonrefuser = array();
-		$buttonaccepter = array();
-		$buttonsoumettre = array();
-
-		$ID_acheteur =array();
-		$ID_item = array();
-		$Prix_acheteur = array();
-		$Prix_vendeur = array();
-		$Tentative = array();
-		$Statut = array();
+	
 
 		if (mysqli_num_rows($result) == 0) {
 				//Livre inexistant
@@ -128,7 +97,7 @@
 				header('Location: http://localhost/Ebay-ECE/page_offre_vendeur.php');
 			}
 		}
-	}
+	
 	else
 	{
 		echo "Database not found";
