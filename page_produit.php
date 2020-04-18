@@ -1,14 +1,32 @@
 <?php
 	// On prolonge la session
-	//LA PARTIE SESSION QUI DIRIGE VERS LA PAGE CONNEXION EST MISE EN COMMENTAIRE EN ATENDANT L'INCORPORATION DE CE FICHIER DANS LE SITE
 	//LE DESIGN EST A REVOIR
 	//LES MESSAGES D'ERREURS SONT POTENTIELLEMENT A REVOIR
-	//A TESTE POUR UN OBJET AVEC 2 TYPE D'ACHATS (pas encore vérifier ni avoir pensé à le faire encore)
-	//
-	session_start();
 	
-	$ID_temporaire_item = 81 ;
-	$ID_temporaire_acheteur = 29 ;
+	//sur cette page l'acheteur peut voir en détail l'item en question 
+	//Les photos, le nom, La catégorie d'objet, Le vendeur, Le prix si on peut acheter en achat immédiat ou faire un offre, 
+	//La description accompagné d'une vidéo si le vendeur en a ajouté
+	//Si une enchère est possible avec cet item, le prix actuelle de l'enchère est affiché également
+	//C'est sur cette page également que l'acheteur peut mettre dans son panier avec des boutons 
+
+	session_start();
+	if(isset($_SESSION['Item_clique']))
+	{
+		$item_clique = $_SESSION['itemClick'];
+		$login = $_SESSION['login'];
+		$psw = $_SESSION['psw'];
+		$statut = $_SESSION['Statut'];
+		$id = $_SESSION['ID'];
+	}
+	else
+	{
+	  header('Location: achat.php');
+	  exit();
+	}
+
+	$ID_temporaire_item = $item_clique;
+	$ID_temporaire_acheteur = $id ;
+
 	$votre_prix = isset($_POST["votre_prix"])? $_POST["votre_prix"] : "";
 	$votre_prix_offre = isset($_POST["votre_prix_offre"])? $_POST["votre_prix_offre"] : "";
 	$database = "ebay ece paris";
@@ -78,8 +96,7 @@
 		$Heure_fin ="";
 		$Prixactuelle = "";
 		$Prixsecond = "";
-		$ok="";
-		$ok1="";
+		$fin = "";
 
 
 		if (mysqli_num_rows($result) != 0){
@@ -92,8 +109,8 @@
 				$Heure_fin = $data['Heure_fin'];
 				$Prixactuelle = $data['Prix_premier'];
 				$Prixsecond = $data['Prix_second'];
+				$fin = $data['Fin'];
 			}
-			
 		}
 		//FIN DE LA PARTIE AFFICHAGE DE l'ITEM
 	    
@@ -109,97 +126,131 @@
 	        }
 
 	    //SI l'acheteur clique sur un bouton d'achat de toute façon si il a déjà mis cet objet dans son panier ça ne va pas add l'item car les clés primaires son ID de l'acheteur et l'ID de l'item.
+	    $erreurAchat = "";
 	    if(isset($_POST["buttonachat"])){
-	    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'achat_immediat');";
-	    	$result = mysqli_query($db_handle, $sql);
+	    	if (mysqli_num_rows($resultVerif) != 0 && $type_achat != "achat_immediat"){
+	    		$erreurAchat .= "Erreur, vous ne pouvez pas faire 2 type d'achat pour un même objet<br>";
+	    	}else{
+				$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'achat_immediat');";
+		    	$result = mysqli_query($db_handle, $sql);
+		    	$erreurAchat .= "Ajouter ave succès dans votre panier.<br>";
+	    	}
 	    }
 	    //PARTIE ENCHERE
-	    if(isset($_POST["buttonenchere"]) && $votre_prix > $Prixactuelle){
+	    $erreurEnchere = "";
+	    if(isset($_POST["buttonenchere"])){
 	    	///PREMIERE ENCHERE
-	    	if (mysqli_num_rows($resultVerif) == 0) { // Si cet item n'existe pas dans le panier de l'acheteur
-	    	//feu vert dans insert dans la table ENCHERIR car l'item n'a pas été dans le panier avec un autre type
-		    	$sql = "INSERT INTO encherir (ID_enchere, ID_acheteur, ID_item, Prix_acheteur) VALUES ('$ID_enchere', '$ID_temporaire_acheteur', '$ID_temporaire_item', '$votre_prix');";
-		    	$result = mysqli_query($db_handle, $sql);
-		    	//insert dans la table PANIER vu qu'il n'existe pas dans le panier d'après mysqli_num_rows($resultVerif) == 0
-		    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'enchere');";
-		    	$result = mysqli_query($db_handle, $sql);
-		    	//MAJ de la liste_enchere
-		    	$sql = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
-				$result = mysqli_query($db_handle, $sql);
-	    	}elseif($type_achat == "enchere"){ //si l'article existe, vérification si l'acheteur avait enchéri
-	    		//Update des prix dans liste_enchere
-		    	$sql3 = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
-				$result3 = mysqli_query($db_handle, $sql3);
-				
-				//update dans la table encherir
-				$sql6 = "UPDATE encherir SET Prix_acheteur = '$votre_prix' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_enchere = '$ID_enchere';";
-				$result6 = mysqli_query($db_handle, $sql6);
-
-		    	$ok=0;		//variable test pour blindage saisit enchere inferieur
+	    	if (mysqli_num_rows($resultVerif) != 0 && $type_achat != "enchere"){
+	    		$erreurEnchere .= "Erreur, vous ne pouvez pas faire 2 type d'achat pour un même objet<br>";
 	    	}
-	    	//reaffecter la nouvelle valeur de prix premier
-	    	$sql5 = "SELECT Prix_premier FROM liste_enchere WHERE ID_item LIKE '$ID_temporaire_item'";
-			$result5 = mysqli_query($db_handle, $sql5);
-			while ($data = mysqli_fetch_assoc($result5)) 
-            {
-                $Prixactuelle =$data['Prix_premier'];
-            }
-	    	
-	    }
-	    if(isset($_POST["buttonenchere"]) && $votre_prix <= $Prixactuelle && $votre_prix != "" && $votre_prix <= $Prixsecond)
-	    {
-	    	//variable quon va reutiliser dans la partie html pour afficher juste en bas da laffichage du prix quil faut saisir un montant superieur
-	    	$ok=1;
+	    	if ($votre_prix > $Prixactuelle){
+	    		if ($fin != 1){ //Si l'enchère n'est pas fini
+			    	if (mysqli_num_rows($resultVerif) == 0) { // Si cet item n'existe pas dans le panier de l'acheteur
+			    	//feu vert dans insert dans la table ENCHERIR car l'item n'a pas été dans le panier avec un autre type
+				    	$sql = "INSERT INTO encherir (ID_enchere, ID_acheteur, ID_item, Prix_acheteur) VALUES ('$ID_enchere', '$ID_temporaire_acheteur', '$ID_temporaire_item', '$votre_prix');";
+				    	$result = mysqli_query($db_handle, $sql);
+				    	//insert dans la table PANIER vu qu'il n'existe pas dans le panier d'après mysqli_num_rows($resultVerif) == 0
+				    	$sql = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'enchere');";
+				    	$result = mysqli_query($db_handle, $sql);
+				    	//MAJ de la liste_enchere
+				    	$sql = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
+						$result = mysqli_query($db_handle, $sql);
+		    			$erreurEnchere .= "Votre montant a été pris en compte.<br>";
+
+			    	}
+			    	elseif($type_achat == "enchere"){ //si l'article existe, vérification si l'acheteur avait enchéri
+			    		//Update des prix dans liste_enchere
+				    	$sql3 = "UPDATE liste_enchere SET Prix_premier = '$votre_prix' , Prix_second = '$Prixactuelle' WHERE ID_item = $ID_temporaire_item;";
+						$result3 = mysqli_query($db_handle, $sql3);
+						
+						//update dans la table encherir
+						$sql6 = "UPDATE encherir SET Prix_acheteur = '$votre_prix' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_enchere = '$ID_enchere';";
+						$result6 = mysqli_query($db_handle, $sql6);
+		    			$erreurEnchere .= "Votre montant a été pris en compte.<br>";
+			    	}
+			    	//reaffecter la nouvelle valeur de prix premier
+			    	$sql5 = "SELECT Prix_premier FROM liste_enchere WHERE ID_item LIKE '$ID_temporaire_item'";
+					$result5 = mysqli_query($db_handle, $sql5);
+					while ($data = mysqli_fetch_assoc($result5)) 
+		            {
+		                $Prixactuelle =$data['Prix_premier'];
+		            }
+		        }else
+		        	$erreurEnchere .= "Nous sommes navrés de vous annoncer que l'enchere est déjà terminée.<br>";
+	        }else
+	        {	
+	        	if ($fin != 1)
+	        		$erreurEnchere .= "Erreur, vous ne pouvez pas mettre un prix inferieur au prix actuel.<br>";
+	        	else
+	        		$erreurEnchere .= "Nous sommes navrés de vous annoncer que l'enchere est déjà terminée.<br>";
+	        }
+		    	
 	    }
 	    //PARTIE OFFRE
 
 	    $tenta = "";
 		$stat = "";
+		$prix_client = "";
 		//Partie Un, s'il avait déjà effectué un Offre !
     	//Recupération du prix du vendeur si une offre a été faite par l'acheteur sur cette item: (ICI normalement tenta >= 1
 	    $sql = "SELECT * from meilleur_offre WHERE ID_item = $ID_temporaire_item AND ID_acheteur LIKE '$ID_temporaire_acheteur' AND ID_vendeur LIKE '$ID_vendeur'";
 	    $result = mysqli_query($db_handle, $sql);
 	    if (mysqli_num_rows($result) != 0){
-			while ($data = mysqli_fetch_assoc($result) ) 
+			while ($data = mysqli_fetch_assoc($result)) 
 			{
 				$prix = $data['Prix_vendeur'];
+				$prix_client = $data['Prix_acheteur'];
 				$tenta = $data['Tentative'];
 				$stat = $data['Statut'];
 			}
 			
 		}
 	    //SI l'acheteur clique sur un bouton Faire le demande pour meilleur offre
-	    if(isset($_POST["buttonoffre"]) && $votre_prix_offre < $prix){
+	    $erreurOffre = "";
+	    if(isset($_POST["buttonoffre"])){
+	    	if (mysqli_num_rows($resultVerif) != 0 && $type_achat != "offre"){
+	    		$erreurOffre .= "Erreur, vous ne pouvez pas faire 2 type d'achat pour un même objet<br>";
+	    	}
 
-	    	//Première offre, la première fois :
-	    	$resultVerif = mysqli_query($db_handle, $sqlVerif);
+	    	if ($votre_prix_offre < $prix)
+	    	{
 	    	//Indique que l'item n'a jamais été dans son panier donc l'user peut faire une offre et le mettre dans son panier
-	    	if (mysqli_num_rows($resultVerif) == 0) 
-            {
-	            //insert dans la table ENCHERIR
-		    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
-		    	$result = mysqli_query($db_handle, $sql);
-		    	//insert dans la table PANIER
-		    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
-		    	$result2 = mysqli_query($db_handle, $sql2);
-		    	//variable test pour blindage saisit enchere inferieur
-		    	$ok1=2;
-            }elseif($type_achat == "offre"){ //
-		    	//Partie Deuxième ou nième <= 5 offre et que c'est son tour: 
-		    	if ($tenta < 5 && $stat == 1){
-		    		//L'user a entré un nouveau prix :
-		    		$tenta++;
-		    		$sql3 = "UPDATE meilleur_offre SET Prix_acheteur = '$votre_prix_offre' , Statut = '2', Tentative = '$tenta' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_vendeur = '$ID_vendeur' AND ID_item = '$ID_temporaire_item';";
-					$result3 = mysqli_query($db_handle, $sql3);
-		    	}
-		    }
-	    	
+		    	if (mysqli_num_rows($resultVerif) == 0)
+	            {
+		            //insert dans la table ENCHERIR
+			    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
+			    	$result = mysqli_query($db_handle, $sql);
+			    	//insert dans la table PANIER
+			    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
+			    	$result2 = mysqli_query($db_handle, $sql2);
+			    	//variable test pour blindage saisit enchere inferieur
+			    	$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre.<br>";
+
+	            }elseif($type_achat == "offre"){ //on vérifie si l'objet dans le panier est un achat en offre
+			    	//Partie Deuxième ou nième <= 5 offre et que c'est son tour: 
+			    	if ($tenta < 5 && $stat == 1){
+			    		//L'user a entré un nouveau prix :
+			    		$tenta++;
+			    		$sql3 = "UPDATE meilleur_offre SET Prix_acheteur = '$votre_prix_offre' , Statut = '2', Tentative = '$tenta' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_vendeur = '$ID_vendeur' AND ID_item = '$ID_temporaire_item';";
+						$result3 = mysqli_query($db_handle, $sql3);
+			    	}
+			    	if ($tenta == 5 && $stat == 1)
+			    		$erreurOffre .= "Vous ne pouvez plus faire de tentative, le vendeur vous a répondu, Accecptez ou refusez dans le panier.<br>";
+			    	if($tenta == 5 && $stat == 2)
+						$erreurOffre .= "Vous avez atteint le nombre limite de demande, vous ne pouvez plus faire de demande ! Attendez la réponse du vendeur.<br>";
+			    	if ($stat == 2 && $tenta != 5) //si tenta = 5 c'est le msg au dessus
+			    		$erreurOffre .= "Patientez, la demande d'offre précédente n'a pas encore eu de réponse de la part du vendeur. Votre précédente offre est de ".$prix_client." euros <br>";
+			    	if ($stat == 3)
+						$erreurOffre .= "Le vendeur a accepté pour votre offre au prix de ".$prix_client." euros. Veuillez vous dirigez au panier pour régler.<br>";
+					if ($stat == 4)
+						$erreurOffre .="Nous sommes navrés de vous annoncer que le produit a été vendu à un autre client.<br>";
+
+			    }
+			}else{
+				$erreurOffre .= "Erreur, vous ne pouvez pas mettre un prix supérieur au prix actuel.<br>";
+			}
 	    }
-	    if(isset($_POST["buttonoffre"]) && $votre_prix_offre >= $prix && $votre_prix_offre != "" )
-	    {
-	    	//variable quon va reutiliser dans la partie html pour afficher juste en bas da laffichage du prix quil faut saisir un montant superieur
-	    	$ok1=1;
-	    }	 }
+	}
 	 else 
 	 {
 	      echo "Database not found";
@@ -221,9 +272,9 @@
 	  // header('Location: http://localhost/Ebay-ece/connexion.php');
 	  // exit();
 	}
+
 	
 ?>
-
 <!DOCTYPE html> 
 <html> 
 	<head>  
@@ -296,47 +347,56 @@
             <?php
             	for ($i = 0 ; $i < count($nom_photo); $i++)
 					echo '<img src = "images_web/'.$nom_photo[$i].'" ><br>';
-
-				echo $ID_vendeur."<br>";
-				echo '<form action="" method="post">';
-				if ($ID_type_vente == "achat_immediat " || $ID_type_vente == "achat_immediat enchere" || $ID_type_vente == "achat_immediat offre")
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="'.$ID_type_vente.'">';
-				echo "$ID_type_vente";
-				//enchere formulaire
-				if ($ID_type_vente == " enchere" || $ID_type_vente == "achat_immediat enchere")
+				echo $nom_item."<br>";
+				echo "Catégorie : ".$categorie."<br>";
+				echo "Vendu par ".$ID_vendeur."<br>";
+				echo "Description : ".$description."<br>";
+				echo "vidéo :".$video."<br>";
+				echo "$ID_type_vente"."<br>";
+				if (strpos($ID_type_vente, "achat_immediat") !== FALSE || strpos($ID_type_vente, "offre") !== FALSE)
 				{
+					echo "Prix : ".$prix."<br>";
+				}	//Il s'affiche que quand c'est achat immédiat ou offre
+				echo $video."<br>"; // à caché si pas de vidéo
+
+				echo '<form action="" method="post">';
+				//Si l'objet peut être vendu en achat immediat
+				if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
+				{
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="Ajouter dans le panier" onclick="montrerErreur()"><br><br>';
+					if ($erreurAchat != ""){
+						echo $erreurAchat;
+						$erreurAchat = "";
+					}
+				}
+
+				//Si l'objet peut être vendu en enchère
+				//enchere formulaire
+				if (strpos($ID_type_vente, "enchere") !== FALSE)
+				{
+					echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
+					echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
 					echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';
 					echo '<p>Le prix actuel est de '.$Prixactuelle.', veuillez mettre un prix supérieur au prix actuel</p>';
-					if($ok==1){
-					echo '<p>Erreur, vous ne pouvez pas mettre un prix inferieur au prix actuel</p>'; $ok=0;}
+					if ($erreurEnchere != ""){
+						echo $erreurEnchere;
+						$erreurEnchere = "";
+					}
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
 				}
+				//Si l'objet peut être vendu en offre
 				//meilleur offre formulaire
-				if ($ID_type_vente == " offre" || $ID_type_vente == "achat_immediat offre")
+				if (strpos($ID_type_vente, "offre") !== FALSE)
 				{
 					echo '<td><input type="number" name="votre_prix_offre" placeholder="Votre offre"></td>';
-					echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous voulez négocier</p>';
-					if($ok1==1 ){
-					echo '<p>Erreur, vous ne pouvez pas mettre un prix supérieur au prix actuel</p>'; $ok1=0;}
-					if($ok1==2 && $tenta < 5){
-					echo "<p>Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre <br></p>"; $ok1=0;}
-					if($tenta >= 5 && $stat == 2){
-					echo "<p>Vous avez atteint le nombre limite de demande, vous ne pouvez plus faire de demande ! </p>"; }
-
+					echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';
+					if ($erreurOffre != ""){
+						echo $erreurOffre;
+						$erreurOffre = "";
+					}
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
 				}
 				echo "</form>";
-				echo $description."<br>";
-				echo $categorie."<br>";
-				echo $prix."<br>";
-				echo $video."<br>";
-
-				echo $ID_enchere."<br>";
-				echo $Date_debut."<br>";
-				echo $Heure_debut."<br>";
-				echo $Date_fin."<br>";
-				echo $Heure_fin."<br>";
-				echo $Prixactuelle."<br>";
             ?>
         </div>
 
