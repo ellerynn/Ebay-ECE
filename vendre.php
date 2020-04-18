@@ -1,5 +1,11 @@
 <?php
 	include("const.php");
+
+	//date_default_timezone_set('Europe/Paris');
+	//$today = getdate();
+	echo "<br><br><br><br><br><br><br>";
+	//print_r($today);
+
 	// On prolonge la session
 	session_start();
 
@@ -24,20 +30,21 @@
     $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
 
+	//Pour la partie suppression de ventes
 	$table_item = array();
 	$table_photo = array();
 	$nom_item = array();
 	$ID_item = array();
 
 	//Récuperation des ID_item du vendeur (dont admins) connecté
-	$sql = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
-	$result = mysqli_query($db_handle, $sql);
+	$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
+	$r1 = mysqli_query($db_handle, $sql1);
 
-	if (mysqli_num_rows($result) != 0) 
+	if (mysqli_num_rows($r1) != 0) 
 	{
 		$i=0; $j=0;
 		$temp = array();
-		while ($data = mysqli_fetch_assoc($result)) 
+		while ($data = mysqli_fetch_assoc($r1)) 
 		{
 			$ID_item[$i] = $data['ID_item'];
 			$i++;
@@ -55,12 +62,12 @@
 	//Récuperation de la première photo de chaque item du vendeur
 	for($a=0; $a < count($ID_item); $a++)
 	{
-		$sqlp = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
-		$req = mysqli_query($db_handle, $sqlp);
+		$sql2 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+		$r2 = mysqli_query($db_handle, $sql2);
 		
-		if (mysqli_num_rows($req) != 0) 
+		if (mysqli_num_rows($r2) != 0) 
 		{
-			$data = mysqli_fetch_assoc($req);
+			$data = mysqli_fetch_assoc($r2);
 			$photo = $data['Nom_photo'];
 			$table_photo["$ID_item[$a]"]= $photo; //array de photo dans tableau associatif
 		}
@@ -68,11 +75,7 @@
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
-	  	$datetime = date('Y-m-d');
-		echo $datetime;
-		echo date('H:i');
-
-		$nom = isset($_POST["nom"])? $_POST["nom"] : "";
+	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
 		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
 		$filevideo = isset($_POST["fileVideo"])? $_POST["fileVideo"] : "";
 		$description = isset($_POST["description"])? $_POST["description"]: "";
@@ -85,7 +88,7 @@
 		$datefin = isset($_POST["datefin"])? $_POST["datefin"] : "";
 		$heurefin = isset($_POST["heurefin"])? $_POST["heurefin"] : "";
 		$prixdepart = isset($_POST["prixdepart"])? $_POST["prixdepart"] : "";
-		
+
 		if ($nom == "")  
 			$erreur .= "Nom est vide. <br>"; 
 		
@@ -130,6 +133,63 @@
 		 		$erreur .= "Vous n'avez pas choisi une date de fin pour l'enchère du produit. <br>";
 		 	if ($heurefin == "")
 		 		$erreur .= "Vous n'avez pas choisi une heure de fin pour l'enchère du produit. <br>";
+		 	/*
+		 	//Blindage pour les dates des encheres
+		 	if($datedebut != "" && $datefin != "" && $heuredebut != "" && $heurefin != "")
+		 	{
+		 		//DATE DE DEBUT p.r TODAY
+		 		//Si l'année est plus petite : non 
+		 		if(YEAR($datedebut) < $today['year'])
+			 		$erreur .= "Année début non valide. <br>";
+		 		//Si l'année est égale mais le mois est plus petit : non
+		 		if(YEAR($datedebut) == $today['year'])
+		 		{ 
+		 			if(MONTH($datedebut) < $today['mon'])
+		 				$erreur .= "Mois début non valide. <br>";
+		 			//Si l'année est égale et le mois est égal mais le jour est plus petit : non
+		 			if(MONTH($datedebut) == $today['mon'])
+		 			{
+		 				if(DAY($datedebut) < $today['mday'])
+		 					$erreur .= "Jour début non valide. <br>";
+		 				
+		 				if(DAY($datedebut) == $today['mday'])
+				 		{ 
+				 			if(HOUR($heuredebut) < $today['hours'])
+				 				$erreur .= "Heure début non valide. <br>";
+				 			if(HOUR($heuredebut) == $today['hours'])
+				 			{
+				 				if(MINUTE($heuredebut) < $today['minutes'])
+				 					$erreur .= "Minute début non valide. <br>";
+				 			}
+				 		}
+		 			}
+		 		}
+
+		 		//DATE DE FIN p.r DATE DE DEBUT
+		 		if(YEAR($datefin) < YEAR($datedebut))
+			 		$erreur .= "Année fin non valide. <br>";
+		 		if(YEAR($datefin) == YEAR($datedebut))
+		 		{ 
+		 			if(MONTH($datefin) < MONTH($datedebut))
+		 				$erreur .= "Mois fin non valide. <br>";
+		 			if(MONTH($datefin) == MONTH($datedebut))
+		 			{
+		 				if(DAY($datefin) < DAY($datedebut))
+		 					$erreur .= "Jour fin non valide. <br>";
+
+		 				if(DAY($datefin) == DAY($datedebut))
+				 		{ 
+				 			if(HOUR($heurefin) < HOUR($heuredebut))
+				 				$erreur .= "Heure fin non valide. <br>";
+				 			if(HOUR($heurefin) == HOUR($heuredebut))
+				 			{
+				 				if(MINUTE($heurefin) < MINUTE($heuredebut))
+				 					$erreur .= "Minute fin non valide. <br>";
+				 			}
+				 		}
+		 			}
+		 		}
+		 	}*/
 		}
 		
 		if ($prixdepart == "" && $vente2 == "enchere") 
@@ -164,14 +224,14 @@
 		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filenamevideo');";
 		        $result = mysqli_query($db_handle, $sql);
 		        //Normalement c'est ajouté , mtn vérifions et extraction de l'ID: 
-		        $sql = "SELECT LAST_INSERT_ID(ID_item) FROM item ";
-		        $result = mysqli_query($db_handle, $sql);
+		        $sql3 = "SELECT LAST_INSERT_ID(ID_item) FROM item ";
+		        $r3 = mysqli_query($db_handle, $sql3);
 
 	        	$last_id_item = "";
-	           	if (mysqli_num_rows($result) != 0)
+	           	if (mysqli_num_rows($r3) != 0)
 	            {
 	                echo "Votre item a été ajouté avec succes";
-	                while ($data = mysqli_fetch_assoc($result)) 
+	                while ($data = mysqli_fetch_assoc($r3)) 
                     {
                         $last_id_item = $data['LAST_INSERT_ID(ID_item)'];
                     }
@@ -205,13 +265,125 @@
 	        }
 	        else 
 	            echo "Database not found";
-	        
-	        //fermer la connexion
-	    	mysqli_close($db_handle); 
 	    }   
 	    else 
 	    	echo "Erreur : <br>$erreur";
-	}  
+	}
+
+	//Pour la partie offres
+	$contre_offre = isset($_POST["contre_offre"])? $_POST["contre_offre"] : "";
+	$sql4 = "SELECT * FROM meilleur_offre WHERE ID_vendeur LIKE '$id'";
+	$r4 = mysqli_query($db_handle, $sql4);
+
+	$table_item_offre = array();
+	$table_photo_offre = array();
+	$refuser = array();
+	$accepter = array();
+	$soumettre = array();
+
+	$ID_a =array();
+	$ID_i = array();
+	$prix_a = array();
+	$prix_v = array();
+	$tentative = array();
+
+	if (mysqli_num_rows($r4) != 0)
+	{
+		$i = 0;
+		while ($data = mysqli_fetch_assoc($r4)) 
+		{
+			$ID_a[$i] = $data['ID_acheteur'];
+			$ID_v[$i] = $data['ID_vendeur'];
+			$ID_i[$i] = $data['ID_item'];
+			$prix_a[$i] = $data['Prix_acheteur'];
+			$prix_v[$i] = $data['Prix_vendeur'];
+			$tentative[$i] = $data['Tentative'];
+			$stat_offre[$i] = $data['Statut']; // = 1 (acheteur) / = 2 (vendeur) / = 3 (acceptée) / = 4 (perdue)
+			$i++;
+		}
+
+		for ($u = 0 ; $u < count($ID_i) ; $u++)
+		{ 
+			//nombre d'item (duplicata comprise)
+			$temp = array();
+			$sql5 = "SELECT * FROM item WHERE ID_item LIKE '$ID_i[$u]';"; //retrouver les ID_items issu de ID_item[]
+			$r5 = mysqli_query($db_handle, $sql5);
+
+			if (mysqli_num_rows($r5) != 0)
+			{
+				while ($data = mysqli_fetch_assoc($r5)) 
+				{
+					$i_temp = 0;
+					$temp[$i_temp] = $ID_i[$u]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$i_temp++;
+					$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_type_vente']; // i_temp = 3
+					$i_temp++;
+					$temp[$i_temp] = $data['Description']; // i_temp = 4
+					$i_temp++;
+					$temp[$i_temp] = $data['Categorie']; // i_temp = 5
+					$i_temp++;
+					$temp[$i_temp] = $data['Prix']; // i_temp = 6
+
+					$table_item_offre["$ID_i[$u]"] = $temp; // Tableau associatif
+				}
+			}
+
+			//Récuperation de la première photo de chaque item
+			for($a=0; $a < count($ID_i); $a++)
+			{
+				$sql = "SELECT * FROM photo WHERE ID_item LIKE '$ID_i[$a]' ";
+				$r = mysqli_query($db_handle, $sql);
+				
+				if (mysqli_num_rows($r) != 0) 
+				{
+					$data = mysqli_fetch_assoc($r);
+					$photo = $data['Nom_photo'];
+					$table_photo_offre["$ID_i[$a]"]= $photo; //array de photo dans tableau associatif
+				}
+			}
+		}
+	}
+	for ($a = 0 ; $a < count($ID_i) ; $a++)
+	{
+		$refuser[$a] = "refuser_".$a;
+		$accepter[$a] = "accepter_".$a;
+		$soumettre[$a] = "soumettre_".$a;
+	}
+	for ($a = 0 ; $a < count($ID_i) ; $a++)
+	{
+		if(isset($_POST["$refuser[$a]"]))
+		{
+			//A l'acheteur de répondre
+			$sql = "UPDATE meilleur_offre SET Statut = '1' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
+			$result = mysqli_query($db_handle, $sql);
+		}
+	}
+	for ($a = 0 ; $a < count($ID_i) ; $a++)
+	{
+		if(isset($_POST["$accepter[$a]"]))
+		{
+			//Offre acceptée pour l'acheteur
+			$sql7 = "UPDATE meilleur_offre SET Statut = '3' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
+			$r7 = mysqli_query($db_handle, $sql7);
+			$sql8 = "UPDATE meilleur_offre SET Statut = '4' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur != $ID_a[$a]";
+			$r8 = mysqli_query($db_handle, $sql8);
+		}
+	}
+
+	for ($a = 0 ; $a < count($ID_i) ; $a++)
+	{
+		if(isset($_POST["$soumettre[$a]"]))
+		{
+			$sql11 = "UPDATE meilleur_offre SET Statut = '6' , Prix_vendeur = $contre_offre WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
+			$r11 = mysqli_query($db_handle, $sql11);
+		}
+	}
+	//fermer la connexion
+	mysqli_close($db_handle); 
 ?>
 
 <!DOCTYPE html> 
@@ -433,7 +605,54 @@
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Offres</h2><br>
 					    </div>
-					    <div class="panel-body">					
+					    <div class="panel-body"> <?php
+				    		if(count($ID_i)==0)	
+								{?>
+									<div class="panel-body border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
+										echo '<p class = "text-center">Vous ne vendez rien ! Commencez à vendre <a href="vendre.php">ici</a></p>';?>
+									</div><?php
+								}
+							else
+				            { 
+				            	for ($i = 0 ; $i<count($ID_a); $i++)
+				            	{
+				            		if($stat_offre[$i] == 2)
+			            			{
+			            				echo "Un acheteur vous a fait une proposition : <br>";?>
+										<div class="panel-body row border" style="margin-bottom: 1em; padding: 2px;">
+											<div class="col-lg-3 col-md-3 col-sm-12"><?php 
+												echo '<img src = "images_web/'.$table_photo_offre["$ID_i[$i]"].'" height = 100 width = 100 >';?>
+											</div>
+											<div class="col-lg-9 col-md-9 col-sm-12"><?php 
+												echo "Item n°".$ID_i[$i]." : ".$table_item_offre["$ID_i[$i]"][1].".<br>";
+												echo "Offre proposée : ".$prix_a[$i]."€<br>";
+												echo "Votre prix: ".$prix_v[$i]."€<br>";
+												echo $tentative[$i]."e tentative. <br>";?>
+											</div>
+										</div>
+										<?php 
+												echo '<form action="" method="post">
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-12">
+															<input class="btn" name="'.$refuser[$i].'" type="submit" value="Refuser la proposition">
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-12">
+															<input class="btn" name="'.$accepter[$i].'" type="submit" value="Accepter la proposition">
+														</div>
+														<div class="row col-lg-6 col-md-6 col-sm-12">
+															<div class="col-lg-4 col-md-4 col-sm-12">
+																<input class="form-control" style="width:120px;" type="text" name="contre_offre" placeholder="Contre-offre">
+															</div>
+															<div class="col-lg-3 col-md-3 col-sm-12">
+																<input class="btn" name="'.$soumettre[$i].'" type="submit" value="Soumettre">
+															</div>
+															<div class="col-lg-6 col-md-6 col-sm-12"></div>
+														</div>
+													</div>
+												</form>';
+									}
+								}
+							}?>     					
 				        </div>
 				    </div>
 			    </div>

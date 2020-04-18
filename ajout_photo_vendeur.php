@@ -1,12 +1,16 @@
 <?php
-
-	$ID_VENDEUR_TEMPORAIRE = "4";
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   
+    // FICHIER INUTILE, MÊME CODE DANS modification.php  
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
+	$ID_VENDEUR_TEMPORAIRE = $id;
 	//FAUDRA VERIFIER QUI VEND AVEC LA CONNEXION AVANT D'AJOUTER à LA BDD L'item
 
 	 $filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
 	 $filephotofond = isset($_POST["filephotofond"])? $_POST["filephotofond"] : "";
-
-
 
 	$erreur ="";
 
@@ -19,8 +23,10 @@
 
    if (isset($_POST["buttonmodifierphotoprofil"])) 
    {
+   		echo "<br><br><br>";
    		//erreur condition pour image de profil 
 		if ($_FILES['filephoto']['name'][0] =="") {
+
 	 	 	$erreur .= "Aucune photo n'a été ajouté. <br>";
 	 	}
 	 	 
@@ -54,7 +60,7 @@
 
 	           if (isset($_POST["buttonmodifierimagefond"])) 
 	           {
-
+	           		echo "<br><br><br>";
 	           		//erreur condition pour image de fond 
 				 	if ($_FILES['filephotofond']['name'][0] =="") {
 				 	 	$erreur .= "Aucune image de fond n'a été ajouté. <br>";

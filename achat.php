@@ -116,11 +116,20 @@
 				$table_enchere["$var"] = $temp;
 			}
 		}
+
 	}//END
 	else{
 		echo "Database not found";
 	}
-
+	if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
+		$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
+		$result = mysqli_query($db_handle, $sql);	
+		if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
+			$_SESSION['itemClick'] = $_GET['idLien'];
+			header('Location: page_produit.php');
+			exit();
+		}
+	}
 ?>
 
 <!DOCTYPE html> 
@@ -229,7 +238,6 @@
 					    				echo '<td>Enchère</td>';
 					    				//echo "<td>Prix (€)</td>";
 					    			echo '</tr>';
-
 					    		for ($i= 0; $i < count($table_item); $i++)
 					    		{ //pour chaque item
 					    			if ($table_item[$i][5] == "Farraille_tresor")
@@ -240,7 +248,9 @@
 					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
-											echo '<td>'.$table_item[$i][1].'</td>'; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
 											echo '<td>'.$table_vendeur["$var"].'</td>'; //Vendeur de l'item
 											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
 												echo '<td>oui</td>'; //Achat immédiat
@@ -288,8 +298,9 @@
 					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
-
-											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
 											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
 											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
 												echo "<td>oui</td>"; //Achat immédiat
@@ -306,7 +317,6 @@
 											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
 										echo "<tr>";
 					    			}
-
 					    		}
 					    		echo "</table>";
 					    	?>
@@ -338,7 +348,10 @@
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
 
-											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
+
 											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
 											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
 												echo "<td>oui</td>"; //Achat immédiat
@@ -384,7 +397,9 @@
 					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
-											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
 											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
 											echo "<td>".$table_item[$i][6]."</td>"; //Prix
 										echo "<tr>";
@@ -417,7 +432,9 @@
 					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
-											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
 											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
 											echo "<td>".$table_item[$i][6]."</td>"; //Prix
 										echo "<tr>";
@@ -452,7 +469,9 @@
 					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
 											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
 										//}
-											echo "<td>".$table_item[$i][1]."</td>"; //Nom de l'item
+											echo '<td>
+													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+												 </td>'; //Nom de l'item
 											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
 											echo "<td>".$table_enchere["$var"][0]." à ".$table_enchere["$var"][1]."</td>";
 											echo "<td>".$table_enchere["$var"][2]." à ".$table_enchere["$var"][3]."</td>";
