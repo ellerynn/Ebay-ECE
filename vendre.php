@@ -1,5 +1,11 @@
 <?php
 	include("const.php");
+
+	//date_default_timezone_set('Europe/Paris');
+	//$today = getdate();
+	echo "<br><br><br><br><br><br><br>";
+	//print_r($today);
+
 	// On prolonge la session
 	session_start();
 
@@ -69,11 +75,7 @@
 
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
-	  	$datetime = date('Y-m-d');
-		echo $datetime;
-		echo date('H:i');
-
-		$nom = isset($_POST["nom"])? $_POST["nom"] : "";
+	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
 		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
 		$filevideo = isset($_POST["fileVideo"])? $_POST["fileVideo"] : "";
 		$description = isset($_POST["description"])? $_POST["description"]: "";
@@ -131,6 +133,63 @@
 		 		$erreur .= "Vous n'avez pas choisi une date de fin pour l'enchère du produit. <br>";
 		 	if ($heurefin == "")
 		 		$erreur .= "Vous n'avez pas choisi une heure de fin pour l'enchère du produit. <br>";
+		 	/*
+		 	//Blindage pour les dates des encheres
+		 	if($datedebut != "" && $datefin != "" && $heuredebut != "" && $heurefin != "")
+		 	{
+		 		//DATE DE DEBUT p.r TODAY
+		 		//Si l'année est plus petite : non 
+		 		if(YEAR($datedebut) < $today['year'])
+			 		$erreur .= "Année début non valide. <br>";
+		 		//Si l'année est égale mais le mois est plus petit : non
+		 		if(YEAR($datedebut) == $today['year'])
+		 		{ 
+		 			if(MONTH($datedebut) < $today['mon'])
+		 				$erreur .= "Mois début non valide. <br>";
+		 			//Si l'année est égale et le mois est égal mais le jour est plus petit : non
+		 			if(MONTH($datedebut) == $today['mon'])
+		 			{
+		 				if(DAY($datedebut) < $today['mday'])
+		 					$erreur .= "Jour début non valide. <br>";
+		 				
+		 				if(DAY($datedebut) == $today['mday'])
+				 		{ 
+				 			if(HOUR($heuredebut) < $today['hours'])
+				 				$erreur .= "Heure début non valide. <br>";
+				 			if(HOUR($heuredebut) == $today['hours'])
+				 			{
+				 				if(MINUTE($heuredebut) < $today['minutes'])
+				 					$erreur .= "Minute début non valide. <br>";
+				 			}
+				 		}
+		 			}
+		 		}
+
+		 		//DATE DE FIN p.r DATE DE DEBUT
+		 		if(YEAR($datefin) < YEAR($datedebut))
+			 		$erreur .= "Année fin non valide. <br>";
+		 		if(YEAR($datefin) == YEAR($datedebut))
+		 		{ 
+		 			if(MONTH($datefin) < MONTH($datedebut))
+		 				$erreur .= "Mois fin non valide. <br>";
+		 			if(MONTH($datefin) == MONTH($datedebut))
+		 			{
+		 				if(DAY($datefin) < DAY($datedebut))
+		 					$erreur .= "Jour fin non valide. <br>";
+
+		 				if(DAY($datefin) == DAY($datedebut))
+				 		{ 
+				 			if(HOUR($heurefin) < HOUR($heuredebut))
+				 				$erreur .= "Heure fin non valide. <br>";
+				 			if(HOUR($heurefin) == HOUR($heuredebut))
+				 			{
+				 				if(MINUTE($heurefin) < MINUTE($heuredebut))
+				 					$erreur .= "Minute fin non valide. <br>";
+				 			}
+				 		}
+		 			}
+		 		}
+		 	}*/
 		}
 		
 		if ($prixdepart == "" && $vente2 == "enchere") 
@@ -206,9 +265,6 @@
 	        }
 	        else 
 	            echo "Database not found";
-	        
-	        //fermer la connexion
-	    	mysqli_close($db_handle); 
 	    }   
 	    else 
 	    	echo "Erreur : <br>$erreur";
@@ -326,6 +382,8 @@
 			$r11 = mysqli_query($db_handle, $sql11);
 		}
 	}
+	//fermer la connexion
+	mysqli_close($db_handle); 
 ?>
 
 <!DOCTYPE html> 
