@@ -366,7 +366,7 @@
 		}?>    
 
 		<!--Créer un pied de page (footer)-->
-		<footer class="page-footer container-fluid" style="border-color: ">   
+		<footer class="page-footer container-fluid">   
 			<div class="container">    
 				<div class="row">       
 					<div class="col-lg-3 col-md-3 col-sm-12">	
@@ -445,7 +445,6 @@
 				if($_SESSION['Statut'] == ADMIN)
 				{?>
 					<script>
-						//Bloquer les liens onClick
 						document.getElementById("ades").onclick = function() {
 							var cache = document.getElementById("l3");
 							cache.style.display = "none";
