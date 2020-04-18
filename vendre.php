@@ -3,7 +3,6 @@
 
 	//date_default_timezone_set('Europe/Paris');
 	//$today = getdate();
-	echo "<br><br><br><br><br><br><br>";
 	//print_r($today);
 
 	// On prolonge la session
@@ -609,7 +608,7 @@
 				    		if(count($ID_i)==0)	
 								{?>
 									<div class="panel-body border" style="width: 80%; margin: 0 auto; padding-top: 10px;"><?php 
-										echo '<p class = "text-center">Vous ne vendez rien ! Commencez à vendre <a href="vendre.php">ici</a></p>';?>
+										echo '<p class = "text-center">Aucune offre...</p>';?>
 									</div><?php
 								}
 							else

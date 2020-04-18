@@ -219,10 +219,7 @@
 			    				echo '<tr>';
 			    				
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
-								//}
-									echo '<td>
-											<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$ID_i[$i].'">'.$table_item["$ID_i[$i]"][1].'</a>
-										 </td>'; //Nom de l'item
+									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
 										echo '<td>oui</td>'; //Achat immédiat
 									else
@@ -262,9 +259,7 @@
 			    				echo "<tr>";
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 								//}
-									echo '<td>
-											<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$ID_i[$i].'">'.$table_item["$ID_i[$i]"][1].'</a>
-										 </td>'; //Nom de l'item
+									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
 										echo "<td>oui</td>"; //Achat immédiat
 									else
@@ -305,9 +300,7 @@
 			    				//on affiche tout les données des items de catégorie ferraille 
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 								//}
-									echo '<td>
-											<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$ID_i[$i].'">'.$table_item["$ID_i[$i]"][1].'</a>
-										 </td>'; //Nom de l'item
+									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 
 									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
 										echo "<td>oui</td>"; //Achat immédiat
@@ -340,10 +333,8 @@
 			{?>
 				<div class="row">
 					<div class="col-lg-3 col-md-3 col-sm-12"> 
-						<div class="img-thumbnail" style="margin:0 auto; height: 250px;width:250px">
-							<a href="attente_image.jpg"> <?php
-								echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
-							</a>     
+						<div class="img-thumbnail" style="margin:0 auto; height: 250px;width:250px"> <?php
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
     				</div> <?php
@@ -352,10 +343,8 @@
 			if($c == 1 || $c == 2)
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12" style="width:100px"> 
-						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px">
-							<a href="attente_image.jpg"> <?php
-								echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
-							</a>     
+						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
     				</div> <?php
@@ -364,10 +353,8 @@
 			if($c == 3 || $i == count($ID_i))
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12"> 
-						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px">
-							<a href="attente_image.jpg"> <?php
-								echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
-							</a>     
+						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
+							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
     				</div> 
