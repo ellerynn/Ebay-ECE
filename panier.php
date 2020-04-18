@@ -3,7 +3,9 @@
 	// On prolonge la session
 	session_start();
 	$ID_temporaire_acheteur = 29;
-	$Dtae_fin_temporaire = "2020-04-19";
+	$Date_fin_temporaire = "2020-04-19";
+	$supprimer = array();
+	$supprimer2 = array();
 	//declaration achat immediat
 	$table_item = array();
 	$table_photo = array();
@@ -77,8 +79,6 @@
 		$result = mysqli_query($db_handle, $sql);
 
 		if (mysqli_num_rows($result) == 0) {
-			//Livre inexistant
-			echo "Erreur, cet item n'est pas disponible. <br>";
 		} 
 		else {
 			$i=0;
@@ -99,7 +99,6 @@
 		$result1 = mysqli_query($db_handle, $sql1);
 
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			}
 			else {
 				$i=0;
@@ -134,7 +133,6 @@
 		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
 		$result1 = mysqli_query($db_handle, $sql1);
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			} 
 			else {
 				$v = 0;
@@ -149,12 +147,12 @@
 			}
 		}
 
+
 		//PARTIE RECUPERATION ET AFFICHAGE MEILLEUR OFFRE
 		$sql1 = "SELECT * FROM panier WHERE ID LIKE '$ID_temporaire_acheteur' AND ID_type_vente LIKE 'offre'";
 		$result1 = mysqli_query($db_handle, $sql1);
 
 		if (mysqli_num_rows($result1) == 0) {
-			echo "Erreur, cet item n'est pas disponible. <br>";
 		} 
 		else {
 			$i=0;
@@ -175,7 +173,6 @@
 		$result1 = mysqli_query($db_handle, $sql1);
 
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			}
 			else {
 				$i=0;
@@ -210,7 +207,6 @@
 		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item2[$a]' ";
 		$result1 = mysqli_query($db_handle, $sql1);
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			} 
 			else {
 				$v = 0;
@@ -229,7 +225,6 @@
 		$result3 = mysqli_query($db_handle, $sql3);
 
 		if (mysqli_num_rows($result3) == 0) {
-			echo "Erreur, ce statut n'est pas disponible. <br>";
 		} 
 		else {
 			$i=0;
@@ -245,7 +240,6 @@
 		$result1 = mysqli_query($db_handle, $sql1);
 
 		if (mysqli_num_rows($result1) == 0) {
-			echo "Erreur, cet item n'est pas disponible. <br>";
 		} 
 		else {
 			$i=0;
@@ -266,7 +260,6 @@
 		$result1 = mysqli_query($db_handle, $sql1);
 
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			}
 			else {
 				$i=0;
@@ -301,7 +294,6 @@
 		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item3[$a]' ";
 		$result1 = mysqli_query($db_handle, $sql1);
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			} 
 			else {
 				$v = 0;
@@ -320,7 +312,6 @@
 		$result5 = mysqli_query($db_handle, $sql5);
 
 		if (mysqli_num_rows($result5) == 0) {
-			echo "Erreur, ce statut n'est pas disponible. <br>";
 		} 
 		else {
 			$i=0;
@@ -338,7 +329,6 @@
 		$result1 = mysqli_query($db_handle, $sql1);
 
 			if (mysqli_num_rows($result1) == 0) {
-				echo "Erreur, cet item n'est pas disponible. <br>";
 			}
 			else {
 				$i=0;
@@ -375,6 +365,8 @@
 	{
 		echo "Database not found";
 	}
+	//fermer la connexion
+	mysqli_close($db_handle); 
 ?>
 
 
@@ -384,6 +376,7 @@
 <!DOCTYPE html> 
 <html> 
 	<head>
+
 		<title>Ebay ECE</title>  
 		<meta charset="utf-8">  
 		
@@ -473,7 +466,23 @@
 				echo "Le catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
 				echo "Le Prix de l'item :".$table_item["$ID_item[$i]"][6]."<br>"; 
 				echo "La video de l'item :".$table_item["$ID_item[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-				$prix_tot_achat+=$table_item["$ID_item[$i]"][6];
+				$supprimer[$i] = "supprimer_".$i;
+				echo '<form action="" method="post">';
+				echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier'.$i.'">';
+				echo "<br>";
+				$prix_tot_achat2+=$table_item["$ID_item[$i]"][6];
+				
+				echo "</form>";
+				
+			}
+			for ($i = 0 ; $i<count($ID_item); $i++)
+			if (isset($_POST["$supprimer[$i]"])) 
+			{
+				$stock1 = $table_item["$ID_item[$i]"][0];
+				$stock2 = $table_item["$ID_item[$i]"][2];
+				$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'achat_immediat'";
+				$result = mysqli_query($db_handle, $sql);
+				$prix_tot_achat2-=$table_item["$ID_item[$i]"][6];
 			}
 
 
@@ -484,7 +493,6 @@
 				if($statut2[$i] == 3){
 					for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++){
 						echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
-
 					}
 					//traitement de la table item:
 					echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
@@ -526,16 +534,20 @@
 					$prix_tot_achat++;
 				}
 			}	 
+			$prix_tot_achat2+=$prix_tot_achat;
 
-			echo "Prix total svp: ".$prix_tot_achat."<br><br><br>";
+			echo "Prix total svp: ".$prix_tot_achat2."<br><br><br>";
 			echo '<a type="button" class="btn btn-secondary" href="ajout_carte.html">Passer au paiement</a>';
+			echo "<br>";
 
 			echo "Panier En Cours, achat non possible <br>";
+
+
 			//meilleur offre en cours
 			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				if($statut2[$i] == 1 || $statut2[$i] == 2){
+				if(($statut2[$i] == 1) && ($statut2[$i] != 4)){
 					for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++){
 						echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
 
@@ -548,7 +560,37 @@
 					echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
 					echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
 					echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-					$prix_tot_achat2+=$table_item2["$ID_item2[$i]"][6];
+					echo '<form action="" method="post">';
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="accepter_offre" type="submit" value="Accepter Offre">';
+					echo "<br>";
+					$supprimer2[$i] = "supprimer2_".$i;
+					echo '<form action="" method="post">';
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2[$i].'" type="submit" value="Supprimer l\'item du panier'.$i.'">';
+					echo "<br>";
+					echo "</form>";
+					if (isset($_POST["accepter_offre"])) 
+					{
+
+						$stock1 = $table_item2["$ID_item2[$i]"][0];
+						$stock2 = $table_item2["$ID_item2[$i]"][2];
+						$sql = "UPDATE meilleur_offre SET Statut = '3' WHERE ID_item = $stock1 AND ID_acheteur = $ID_temporaire_acheteur AND ID_vendeur = $stock2";
+						$result = mysqli_query($db_handle, $sql);
+						$prix_tot_achat2-=$table_item2["$ID_item2[$i]"][6];
+					}
+					else
+						$prix_tot_achat2+=$table_item2["$ID_item2[$i]"][6];
+					echo "</form>";
+				}
+				
+
+				for ($i = 0 ; $i<count($ID_item2); $i++)
+				if (isset($_POST["$supprimer2[$i]"])) 
+				{
+					$stock1 = $table_item2["$ID_item2[$i]"][0];
+					$stock2 = $table_item2["$ID_item2[$i]"][2];
+					$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'offre'";
+					$result = mysqli_query($db_handle, $sql);
+					$prix_tot_achat2-=$table_item2["$ID_item2[$i]"][6];
 				}
 			}	 
 
@@ -579,7 +621,7 @@
 					$prix_tot_achat2+=$Prix_acheteur[$i];
 				}
 
-				echo "Prix total en cours svp: ".$prix_tot_achat2."<br><br><br>";
+				echo "Prix total du panier en cours: ".$prix_tot_achat2."<br><br><br>";
 			}	 
 
 			?>
