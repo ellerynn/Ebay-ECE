@@ -10,7 +10,7 @@
 	//C'est sur cette page également que l'acheteur peut mettre dans son panier avec des boutons 
 
 	session_start();
-	if(isset($_SESSION['Item_clique']))
+	if(isset($_SESSION['itemClick']))
 	{
 		$item_clique = $_SESSION['itemClick'];
 		$login = $_SESSION['login'];
