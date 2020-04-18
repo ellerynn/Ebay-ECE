@@ -1,6 +1,5 @@
 <?php
 	// On prolonge la session
-	//LE DESIGN EST A REVOIR
 	//LES MESSAGES D'ERREURS SONT POTENTIELLEMENT A REVOIR
 	
 	//sur cette page l'acheteur peut voir en détail l'item en question 
@@ -34,8 +33,7 @@
 	$db_found = mysqli_select_db($db_handle, $database);
 
 	if ($db_found) 
-	{	
-		
+	{			
 		//PARTIE AFFICHAGE
 		//Récuperation donnee table item
 		$sql = "SELECT * FROM item WHERE ID_item LIKE '$ID_temporaire_item'";
@@ -255,51 +253,43 @@
 	 {
 	      echo "Database not found";
 	 } 
-	 
-
-	// On teste si la variable de session existe et contient une valeur
-	if(isset($_SESSION['login']))
-	{
-		
-		$login = $_SESSION['login'];
-		$psw = $_SESSION['psw'];
-		$statut = $_SESSION['Statut'];
-	}
-
-	else 
-	{
-	  // Si inexistante ou nulle, on redirige vers le formulaire de login
-	  // header('Location: http://localhost/Ebay-ece/connexion.php');
-	  // exit();
-	}
-
 	
 ?>
 <!DOCTYPE html> 
 <html> 
-	<head>  
-		<title>Vendre</title>  
+	<head>
+		<title>Ebay ECE</title>  
 		<meta charset="utf-8">  
 		
+		<!--Charger Bootstrap via CDN-->
 		<meta name="viewport" content="width=device-width, initial-scale=1">     
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">            
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+		<!--Inclure jQuery-->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>  
+		
+		<!--Charger le code JavaScript de Bootstrap-->
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>  
 
+		<!--7. Inclure des CSS personnalisés-->
 		<link rel="stylesheet" type="text/css" href="style.css"> 
 		
+		<!--Image de fond et JavaScript personnalisé-->
 		<script type="text/javascript">      
 			$(document).ready(function() {           
 				$('.header').height($(window).height()); 
 			}); 
 		</script> 
 
+		<!--Icones personnalisés-->
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
+
 	<body> 
-		<nav class="navbar navbar-expand-md fixed-top"> 
-			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
-				<span class="navbar-toggler-icon"></span>       
+		<!--Ajouter une barre de navigation-->
+		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
+				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
 			<form class="navbar-form inline-form">
@@ -311,79 +301,103 @@
 			</form>
 
 			<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
+				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
-						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
-						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
-						    <a class="nav-link dropdown-item" href="votre_compte.php" id="l1">Admin</a>
+						    <a class="nav-link dropdown-item" href="achat.php">Achat</a>
 					  	</div>
-					</li>  
+					</li>
 					<li class="nav-item dropdown">
-						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
-					  	<div class="dropdown-content border rounded" id="apop1">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
+					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="votre_compte.php">Mon compte</a>
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
 					  	</div>
-					  	<div class="dropdown-content border rounded" id="apop2">
-						    <a class="nav-link dropdown-item" href="connexion.php">Se connecter</a>
-					  	</div>
 					</li> 
 					<li class="nav-item">
-						<a class="nav-link" href="panier.php"><i class="fas fa-shopping-cart"></i></a>
+						<a class="nav-link" href="panier.php" id="panier"><i class="fas fa-shopping-cart"></i></a>
 					</li>    
 				</ul>      
 			</div> 
 		</nav>
-
 		<br><br><br><br>
 		
-		<div class="container-fluid features" id="con-insc">
-            <h1 class="text-center"><?php echo $nom_item."<br>"; ?></h1>
-            <?php
-            	for ($i = 0 ; $i < count($nom_photo); $i++)
-					echo '<img src = "images_web/'.$nom_photo[$i].'" ><br>';
-				echo $nom_item."<br>";
-				echo "Catégorie : ".$categorie."<br>";
-				echo "Vendu par ".$ID_vendeur."<br>";
-				echo "Description : ".$description."<br>";
-				echo "vidéo :".$video."<br>";
-				echo "$ID_type_vente"."<br>";
+		<div class="row">
+        	<div class="col-lg-4 col-md-4 col-sm-12">
+        		<div style="margin:2em; width: 350px; height: 350px;" id="carousel" class="carousel slide" data-ride="carousel">
+				 	<ul class="carousel-indicators">
+				 	<?php
+		            	for ($i = 0 ; $i < count($nom_photo); $i++)
+		            	{
+						    echo '<li data-target="#carousel" data-slide-to="'.$i.'"></li>';
+						}?>
+					</ul>
+					<div> 
+					<?php
+						for ($i = 0 ; $i < count($nom_photo); $i++)
+		            	{
+							    if ($i == 0)
+							    echo'
+								    <div class="carousel-item active">
+								      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+								    </div>';
+							    else
+							    echo'
+								    <div class="carousel-item">
+								      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+								    </div>'; 
+						}?>
+					</div>
+					<a class="carousel-control-prev" href="#carousel" data-slide="prev">
+					    <i style="color: black;"class="fas fa-chevron-left"></i>
+					</a>
+					<a class="carousel-control-next" href="#carousel" data-slide="next">
+					    <i style="color: black;"class="fas fa-chevron-right"></i>
+					</a>
+				</div>
+            	<?php					
+				if($video != 0)
+					echo "vidéo :".$video."<br>";?>
+			</div> <br>
+			<div style="padding:2em;" class="col-lg-8 col-md-8 col-sm-12">
+			<?php 
+				echo'<h1>'.$nom_item.'<br></h1>';
+				
+				if($categorie == "Farraille_tresor")
+					echo "Catégorie : Ferraille ou trésor. <br>";
+
+				if($categorie == "VIP")
+					echo "Catégorie : Accessoires VIP. <br>";
+
+				if($categorie == "Musee")
+					echo "Catégorie : Bon pour le Musée. <br>";
+
+				echo "Description de l'article : <br>".$description."<br>";
+				
 				if (strpos($ID_type_vente, "achat_immediat") !== FALSE || strpos($ID_type_vente, "offre") !== FALSE)
-				{
-					echo "Prix : ".$prix."<br>";
-				}	//Il s'affiche que quand c'est achat immédiat ou offre
-				echo $video."<br>"; // à caché si pas de vidéo
+					echo "Prix : ".$prix."€<br>";
+					//Il s'affiche que quand c'est achat immédiat ou offre
 
 				echo '<form action="" method="post">';
+				if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
+					echo "Achat immédiat possible. <br>";
 				//Si l'objet peut être vendu en achat immediat
 				if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
 				{
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="Ajouter dans le panier" onclick="montrerErreur()"><br><br>';
-					if ($erreurAchat != ""){
+					if ($erreurAchat != "")
+					{
 						echo $erreurAchat;
 						$erreurAchat = "";
 					}
 				}
 
-				//Si l'objet peut être vendu en enchère
-				//enchere formulaire
-				if (strpos($ID_type_vente, "enchere") !== FALSE)
-				{
-					echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
-					echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
-					echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';
-					echo '<p>Le prix actuel est de '.$Prixactuelle.', veuillez mettre un prix supérieur au prix actuel</p>';
-					if ($erreurEnchere != ""){
-						echo $erreurEnchere;
-						$erreurEnchere = "";
-					}
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
-				}
+				if (strpos($ID_type_vente, "offre") !== FALSE)
+					echo "Meilleure offre possible. <br>";
 				//Si l'objet peut être vendu en offre
 				//meilleur offre formulaire
 				if (strpos($ID_type_vente, "offre") !== FALSE)
@@ -396,53 +410,74 @@
 					}
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
 				}
-				echo "</form>";
-            ?>
-        </div>
+
+				if (strpos($ID_type_vente, "enchere") !== FALSE)
+					echo "Les enchères sont ouvertes ! <br>";
+
+				//Si l'objet peut être vendu en enchère
+				//enchere formulaire
+				if (strpos($ID_type_vente, "enchere") !== FALSE)
+				{
+					echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
+					echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
+					echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';
+					echo '<p>Le prix actuel est de '.$Prixactuelle.'€, veuillez saisir un montant supérieur.</p>';
+					
+					if ($erreurEnchere != "")
+					{
+						echo $erreurEnchere;
+						$erreurEnchere = "";
+					}
+					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
+				}
+				echo "</form><br><br><br><br>";
+	            ?>
+	    	</div>
+	    </div>        
 
         <br><br><br>
 
-		<footer class="page-footer">   
+		<footer class="page-footer container-fluid">   
 			<div class="container">    
 				<div class="row">       
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
 							<li>
-								<a href="#">Ferraille ou Trésor</a>
+								Ferraille ou Trésor
 							</li>    
 							<li>
-								<a href="#">Bon pour le Musée</a>
+								Bon pour le Musée
 							</li> 
 							<li>
-								<a href="#">Accessoires VIP</a>
+								Accessoires VIP
 							</li>               
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
-						<a href="achat.php" id="l3"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
+						<a href="achat.php" id="achat"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
 						<ul>  
 							<li>
-								<a href="#">Enchères</a>
+								<a href="#" id="enchere">Enchères</a>
 							</li>    
 							<li>
-								<a href="#">Achetez-le maintenant</a>
+								<a href="#" id="achetez">Achetez-le maintenant</a>
 							</li> 
 							<li>
-								<a href="#">Meilleure offre</a>
+								<a href="#" id="offre">Meilleure offre</a>
 							</li>               
 						</ul> 
 					</div>   
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="vendre.php" id="l2">Vendre</a> </h5>
+								<h5 class="text-uppercase font-weight-bold">Vendre</h5>
 							</li>    
 							<li>
 								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
 							</li>    
 							<li>
-								<h5 class="text-uppercase font-weight-bold"> <a href="admin.php" id="l1">Admin</a> </h5>
+								<h5 class="text-uppercase font-weight-bold">Admin </h5>
 							</li>            
 						</ul> 
 					</div> 
@@ -460,35 +495,5 @@
 				</div> 
 			</div>
 		</footer>
-
-		<?php
-			if(empty($_SESSION['login']) || empty($_SESSION['psw'])) 
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop2").classList.toggle("show");
-					}
-				</script> 
-			<?php exit();
-			}
-			else
-			{?>
-				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
-					document.getElementById("btnpop").onclick = function() {montrer()};
-
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-					function montrer() 
-					{
-						document.getElementById("apop1").classList.toggle("show");
-					}
-				</script> <?php
-				exit();
-			}?>
 	</body> 
 </html> 

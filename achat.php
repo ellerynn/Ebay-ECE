@@ -54,15 +54,6 @@
 
 				$table_item["$i"] = $temp; //$i comme clée, car sinon on peut plus retrouver l'ID_item
 				$i++;
-				/* les id items sont stocké comme ça :
-				echo $table_item["0"][0];
-				echo $table_item["1"][0];
-				echo $table_item["2"][0];
-				echo $table_item["3"][0];
-				echo $table_item["5"][0];
-				echo $table_item["5"][0];
-				echo $table_item["6"][0];
-				*/
 			}
 		}
 		//Récupération de la table photo pour chaque items
@@ -134,29 +125,39 @@
 
 <!DOCTYPE html> 
 <html> 
-	<head>  
-		<title>Achat</title>  
+	<head>
+		<title>Ebay ECE</title>  
 		<meta charset="utf-8">  
 		
+		<!--Charger Bootstrap via CDN-->
 		<meta name="viewport" content="width=device-width, initial-scale=1">     
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">            
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+		<!--Inclure jQuery-->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>  
+		
+		<!--Charger le code JavaScript de Bootstrap-->
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>  
 
+		<!--7. Inclure des CSS personnalisés-->
 		<link rel="stylesheet" type="text/css" href="style.css"> 
 		
+		<!--Image de fond et JavaScript personnalisé-->
 		<script type="text/javascript">      
 			$(document).ready(function() {           
 				$('.header').height($(window).height()); 
 			}); 
 		</script> 
 
+		<!--Icones personnalisés-->
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
+
 	<body> 
-		<nav class="navbar navbar-expand-md fixed-top"> 
-			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
-				<span class="navbar-toggler-icon"></span>       
+		<!--Ajouter une barre de navigation-->
+		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
+				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
 			<form class="navbar-form inline-form">
@@ -168,7 +169,7 @@
 			</form>
 
 			<div class="collapse navbar-collapse">     
-				<ul class="navbar-nav">          
+				<ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
@@ -177,7 +178,7 @@
 					  	<div class="dropdown-menu" id="menu-deroulant">
 						    <a class="nav-link dropdown-item" href="achat.php">Achat</a>
 					  	</div>
-					</li>  
+					</li>
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i></button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
@@ -186,10 +187,10 @@
 					  	</div>
 					</li> 
 					<li class="nav-item">
-						<a class="nav-link" href="panier.php"><i class="fas fa-shopping-cart"></i></a>
+						<a class="nav-link" href="panier.php" id="panier"><i class="fas fa-shopping-cart"></i></a>
 					</li>    
 				</ul>      
-			</div>  
+			</div> 
 		</nav>
 
 		<br><br><br>
@@ -199,294 +200,280 @@
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
 			        <div class="list-group">
-			          	<button type="button" class="list-group-item btn" id="bac1">Achat</button>
-				    	<!--DEBUT Ajout de code 1-->
-			          	<button type="button" class="list-group-item btn" id="bac3">Ferraille ou Trésor</button>
-			          	<button type="button" class="list-group-item btn" id="bac4">Bon pour le musée</button>
-			          	<button type="button" class="list-group-item btn" id="bac5">Accessoire VIP</button>
-
-			          	<button type="button" class="list-group-item btn" id="bac6">Achat immédiat</button>
-			          	<button type="button" class="list-group-item btn" id="bac7">Meilleur offre</button>
-			          	<button type="button" class="list-group-item btn" id="bac8">Enchère</button>
-			        	<!--FIN Ajout de code 1-->
-			        	<button type="button" class="list-group-item btn" id="bac2">Messages</button>
+			          	<button type="button" class="list-group-item btn" id="categories">Par catégories</button>
+			          	<button type="button" class="list-group-item btn" id="ventes">Par type de vente</button>
+						<button type="button" class="list-group-item btn" id="messages">Messages</button>			        	
 			        </div>	
 			    </div>
 			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; min-height: 400px;">
-			    	<div class="panel" id="panel_achat">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Acheter</h2><br>
+				    <div class="panel" style="display: block;" id="panel_categorie">
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Ferraille ou Trésor</h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo '<td>Photo</td>';
+						    				echo '<td>Nom</td>';
+						    				echo '<td>Vendeur</td>';
+						    				echo '<td>Achat immédiat</td>';
+						    				echo '<td>Meilleur offre</td>';
+						    				echo '<td>Enchère</td>';
+						    				//echo "<td>Prix (€)</td>";
+						    			echo '</tr>';
+						    		for ($i= 0; $i < count($table_item); $i++)
+						    		{ //pour chaque item
+						    			if ($table_item[$i][5] == "Farraille_tresor")
+						    			{
+						    				echo '<tr>';
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+												echo '<td>'.$table_vendeur["$var"].'</td>'; //Vendeur de l'item
+												if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo '<td>oui</td>'; //Achat immédiat
+												else
+													echo '<td>non</td>';
+												if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo '<td>oui</td>'; //Meilleur offre
+												else
+													echo '<td>non</td>'; 
+												if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+													echo '<td>oui</td>'; //Enchere
+												else
+													echo '<td>non</td>'; 
+												//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+											echo '<tr>';
+						    			}
+
+						    		}
+						    		echo '</table>';
+						    	?>
+					        </div>
 					    </div>
-					    <div class="panel-body">
-				        </div>
-				    </div>
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Bon pour le musée</h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo "<td>Photo</td>";
+						    				echo "<td>Nom</td>";
+						    				echo "<td>Vendeur</td>";
+						    				echo "<td>Achat immédiat</td>";
+						    				echo "<td>Meilleur offre</td>";
+						    				echo "<td>Enchère</td>";
+						    				//echo "<td>Prix (€)</td>";
+						    			echo "</tr>";
 
-				    <!--DEBUT Ajout de code 2-->
-				    <div class="panel" style="display: none;" id="panel_ferraille_tresor">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Ferraille ou Trésor</h2><br>
+						    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+						    			if ($table_item[$i][5] == "Musee"){
+						    				echo "<tr>";
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+												echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+												if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo "<td>oui</td>"; //Achat immédiat
+												else
+													echo "<td>non</td>";
+												if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo "<td>oui</td>"; //Meilleur offre
+												else
+													echo "<td>non</td>"; 
+												if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+													echo "<td>oui</td>"; //Enchere
+												else
+													echo "<td>non</td>"; 
+												//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+											echo "<tr>";
+						    			}
+						    		}
+						    		echo "</table>";
+						    	?>
+					        </div>
 					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo '<td>Photo</td>';
-					    				echo '<td>Nom</td>';
-					    				echo '<td>Vendeur</td>';
-					    				echo '<td>Achat immédiat</td>';
-					    				echo '<td>Meilleur offre</td>';
-					    				echo '<td>Enchère</td>';
-					    				//echo "<td>Prix (€)</td>";
-					    			echo '</tr>';
-					    		for ($i= 0; $i < count($table_item); $i++)
-					    		{ //pour chaque item
-					    			if ($table_item[$i][5] == "Farraille_tresor")
-					    			{
-					    				echo '<tr>';
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-											echo '<td>'.$table_vendeur["$var"].'</td>'; //Vendeur de l'item
-											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo '<td>oui</td>'; //Achat immédiat
-											else
-												echo '<td>non</td>';
-											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo '<td>oui</td>'; //Meilleur offre
-											else
-												echo '<td>non</td>'; 
-											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
-												echo '<td>oui</td>'; //Enchere
-											else
-												echo '<td>non</td>'; 
-											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
-										echo '<tr>';
-					    			}
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Accessoire VIP</h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo "<td>Photo</td>";
+						    				echo "<td>Nom</td>";
+						    				echo "<td>Vendeur</td>";
+						    				echo "<td>Achat immédiat</td>";
+						    				echo "<td>Meilleur offre</td>";
+						    				echo "<td>Enchère</td>";
+						    				//echo "<td>Prix (€)</td>";
+						    			echo "</tr>";
 
-					    		}
-					    		echo '</table>';
-					    	?>
-				        </div>
-				    </div>
-				    <div class="panel" style="display: none;" id="panel_bon_musee">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Bon pour le musée</h2><br>
+						    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+						    			if ($table_item[$i][5] == "VIP"){
+						    				echo "<tr>";
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+
+												echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+												if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo "<td>oui</td>"; //Achat immédiat
+												else
+													echo "<td>non</td>";
+												if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
+													echo "<td>oui</td>"; //Meilleur offre
+												else
+													echo "<td>non</td>"; 
+												if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
+													echo "<td>oui</td>"; //Enchere
+												else
+													echo "<td>non</td>"; 
+												//echo "<td>".$table_item[$i][6]."</td>"; //Prix
+											echo "<tr>";
+						    			}
+
+						    		}
+						    		echo "</table>";
+						    	?>
+					        </div>
 					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo "<td>Photo</td>";
-					    				echo "<td>Nom</td>";
-					    				echo "<td>Vendeur</td>";
-					    				echo "<td>Achat immédiat</td>";
-					    				echo "<td>Meilleur offre</td>";
-					    				echo "<td>Enchère</td>";
-					    				//echo "<td>Prix (€)</td>";
-					    			echo "</tr>";
+					</div>
 
-					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
-					    			if ($table_item[$i][5] == "Musee"){
-					    				echo "<tr>";
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
-											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo "<td>oui</td>"; //Achat immédiat
-											else
-												echo "<td>non</td>";
-											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo "<td>oui</td>"; //Meilleur offre
-											else
-												echo "<td>non</td>"; 
-											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
-												echo "<td>oui</td>"; //Enchere
-											else
-												echo "<td>non</td>"; 
-											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
-										echo "<tr>";
-					    			}
-					    		}
-					    		echo "</table>";
-					    	?>
-				        </div>
-				    </div>
-				    <div class="panel" style="display: none;" id="panel_vip">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Accessoire VIP</h2><br>
+					<div class="panel" style="display: none;" id="panel_vente">
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Achat immédiat</h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo "<td>Photo</td>";
+						    				echo "<td>Nom</td>";
+						    				echo "<td>Vendeur</td>";
+						    				echo "<td>Prix (€)</td>";
+						    			echo "</tr>";
+
+						    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+						    			if ((strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 )){
+						    				echo "<tr>";
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+												echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+												echo "<td>".$table_item[$i][6]."</td>"; //Prix
+											echo "<tr>";
+						    			}
+
+						    		}
+						    		echo "</table>";
+						    	?>					
+					        </div>
 					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo "<td>Photo</td>";
-					    				echo "<td>Nom</td>";
-					    				echo "<td>Vendeur</td>";
-					    				echo "<td>Achat immédiat</td>";
-					    				echo "<td>Meilleur offre</td>";
-					    				echo "<td>Enchère</td>";
-					    				//echo "<td>Prix (€)</td>";
-					    			echo "</tr>";
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Meilleur offre</h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo "<td>Photo</td>";
+						    				echo "<td>Nom</td>";
+						    				echo "<td>Vendeur</td>";
+						    				echo "<td>Prix (€)</td>";
+						    			echo "</tr>";
 
-					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
-					    			if ($table_item[$i][5] == "VIP"){
-					    				echo "<tr>";
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
+						    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+						    			if ((strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) ){
+						    				echo "<tr>";
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+												echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+												echo "<td>".$table_item[$i][6]."</td>"; //Prix
+											echo "<tr>";
+						    			}
 
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-
-											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
-											if ( (strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo "<td>oui</td>"; //Achat immédiat
-											else
-												echo "<td>non</td>";
-											if ( (strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) )
-												echo "<td>oui</td>"; //Meilleur offre
-											else
-												echo "<td>non</td>"; 
-											if ( (strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 ) )
-												echo "<td>oui</td>"; //Enchere
-											else
-												echo "<td>non</td>"; 
-											//echo "<td>".$table_item[$i][6]."</td>"; //Prix
-										echo "<tr>";
-					    			}
-
-					    		}
-					    		echo "</table>";
-					    	?>
-				        </div>
-				    </div>
-				   	<!-- rangement par catégorie de vente -->
-				    <div class="panel" style="display: none;" id="panel_achat_im">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Achat immédiat</h2><br>
+						    		}
+						    		echo "</table>";
+						    	?>					
+					        </div>
 					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo "<td>Photo</td>";
-					    				echo "<td>Nom</td>";
-					    				echo "<td>Vendeur</td>";
-					    				echo "<td>Prix (€)</td>";
-					    			echo "</tr>";
+					    <div class="panel">
+						    <div class="panel-heading">
+						    	<br><h2 class="text-center">Enchère </h2><br>
+						    </div>
+						    <div class="panel-body">
+						    	<?php
+						    		echo '<table class = "table">';
+						    			echo '<tr>';
+						    				echo "<td>Photo</td>";
+						    				echo "<td>Nom</td>";
+						    				echo "<td>Vendeur</td>";
+						    				echo "<td>Début</td>";
+						    				echo "<td>Fin</td>";
+						    				echo "<td>Prix actuelle (€)</td>";
+						    			echo "</tr>";
 
-					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
-					    			if ((strlen($table_item[$i][3]) == 15 ) || (strlen($table_item[$i][3]) == 22 ) || (strlen($table_item[$i][3]) == 20 )){
-					    				echo "<tr>";
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
-											echo "<td>".$table_item[$i][6]."</td>"; //Prix
-										echo "<tr>";
-					    			}
+						    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+						    			if ((strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 )){
+						    				echo "<tr>";
+						    				//on affiche tout les données des items de catégorie ferraille 
+						    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
+						    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
+												echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
+											//}
+												echo '<td>
+														<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
+													 </td>'; //Nom de l'item
+												echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
+												echo "<td>".$table_enchere["$var"][0]." à ".$table_enchere["$var"][1]."</td>";
+												echo "<td>".$table_enchere["$var"][2]." à ".$table_enchere["$var"][3]."</td>";
+												echo "<td>".$table_enchere["$var"][4]."</td>"; //Prix
+											echo "<tr>";
+						    			}
 
-					    		}
-					    		echo "</table>";
-					    	?>					
-				        </div>
-				    </div>
-				    <div class="panel" style="display: none;" id="panel_offre">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Meilleur offre</h2><br>
+						    		}
+						    		echo "</table>";
+						    	?>					
+					        </div>
 					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo "<td>Photo</td>";
-					    				echo "<td>Nom</td>";
-					    				echo "<td>Vendeur</td>";
-					    				echo "<td>Prix (€)</td>";
-					    			echo "</tr>";
+					</div>
 
-					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
-					    			if ((strlen($table_item[$i][3]) == 6 ) || (strlen($table_item[$i][3]) == 20 ) ){
-					    				echo "<tr>";
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
-											echo "<td>".$table_item[$i][6]."</td>"; //Prix
-										echo "<tr>";
-					    			}
-
-					    		}
-					    		echo "</table>";
-					    	?>					
-				        </div>
-				    </div>
-				    <div class="panel" style="display: none;" id="panel_enchere">
-					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Enchère </h2><br>
-					    </div>
-					    <div class="panel-body">
-					    	<?php
-					    		echo '<table class = "table">';
-					    			echo '<tr>';
-					    				echo "<td>Photo</td>";
-					    				echo "<td>Nom</td>";
-					    				echo "<td>Vendeur</td>";
-					    				echo "<td>Début</td>";
-					    				echo "<td>Fin</td>";
-					    				echo "<td>Prix actuelle (€)</td>";
-					    			echo "</tr>";
-
-					    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
-					    			if ((strlen($table_item[$i][3]) == 8 ) || (strlen($table_item[$i][3]) == 22 )){
-					    				echo "<tr>";
-					    				//on affiche tout les données des items de catégorie ferraille 
-					    				$var = $table_item[$i][0]; //on récuprère l'id de l'item puisque le tbx en bas, veux pas
-					    				//for ($u = 0 ; $u < count($table_photo[$var]); $u++){ //Si on veut afficher plusieurs image de l'item
-											echo '<td><img src = "images_web/'.$table_photo["$var"][0].'" height=100 width =100 ></td>';
-										//}
-											echo '<td>
-													<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item[$i][1].'</a>
-												 </td>'; //Nom de l'item
-											echo "<td>".$table_vendeur["$var"]."</td>"; //Vendeur de l'item
-											echo "<td>".$table_enchere["$var"][0]." à ".$table_enchere["$var"][1]."</td>";
-											echo "<td>".$table_enchere["$var"][2]." à ".$table_enchere["$var"][3]."</td>";
-											echo "<td>".$table_enchere["$var"][4]."</td>"; //Prix
-										echo "<tr>";
-					    			}
-
-					    		}
-					    		echo "</table>";
-					    	?>					
-				        </div>
-				    </div>
-				    <!--FIN Ajout de code 2-->
-
-				    <div class="panel" style="display: none;" id="panel_mes_acheteur">
+				    <div class="panel" style="display: none;" id="panel_messages">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>
 					    </div>
@@ -497,44 +484,49 @@
 			</div>
 		</div>
 		
-		<footer class="page-footer">   
+		<!--Créer un pied de page (footer)-->
+		<footer class="page-footer container-fluid">   
 			<div class="container">    
 				<div class="row">       
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
 							<li>
-								<a href="#">Ferraille ou Trésor</a>
+								Ferraille ou Trésor
 							</li>    
 							<li>
-								<a href="#">Bon pour le Musée</a>
+								Bon pour le Musée
 							</li> 
 							<li>
-								<a href="#">Accessoires VIP</a>
+								Accessoires VIP
 							</li>               
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
-						<a href="achat.php"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
+						<a href="achat.php" id="achat"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
 						<ul>  
 							<li>
-								<a href="#">Enchères</a>
+								<a href="#" id="enchere">Enchères</a>
 							</li>    
 							<li>
-								<a href="#">Achetez-le maintenant</a>
+								<a href="#" id="achetez">Achetez-le maintenant</a>
 							</li> 
 							<li>
-								<a href="#">Meilleure offre</a>
+								<a href="#" id="offre">Meilleure offre</a>
 							</li>               
 						</ul> 
 					</div>   
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
-							<li><h5 class="text-uppercase font-weight-bold">Vendre</h5></li>    
+							<li>
+								<h5 class="text-uppercase font-weight-bold">Vendre</h5>
+							</li>    
 							<li>
 								<h5 class="text-uppercase font-weight-bold"> <a href="votre_compte.php">Votre compte</a> </h5>
 							</li>    
-							<li><h5 class="text-uppercase font-weight-bold">Admin</h5></li>            
+							<li>
+								<h5 class="text-uppercase font-weight-bold">Admin </h5>
+							</li>            
 						</ul> 
 					</div> 
 
@@ -553,100 +545,27 @@
 		</footer>
 
 		<script type="text/javascript">
-			var panel_achat = document.getElementById("panel_achat");
-			var panel_mes = document.getElementById("panel_mes_acheteur");
-			//<!--DEBUT Ajout de code 3-->
-			var panel_ferraille = document.getElementById("panel_ferraille_tresor");
-			var panel_bon = document.getElementById("panel_bon_musee");
-			var panel_vip = document.getElementById("panel_vip");
+			var mes = document.getElementById("panel_messages");
+			var cat = document.getElementById("panel_categorie");
+			var ven = document.getElementById("panel_vente");
 
-			var panel_achat_im = document.getElementById("panel_achat_im");
-			var panel_offre = document.getElementById("panel_offre");
-			var panel_enchere = document.getElementById("panel_enchere");
-			//<!--FIN Ajout de code 3-->
-			document.getElementById("bac1").onclick = function() {
-				panel_achat.style.display ="block";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
+			document.getElementById("categories").onclick = function() {
+				cat.style.display = "block";
+				mes.style.display = "none";
+				ven.style.display = "none";
 			}
-			document.getElementById("bac2").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="block";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
-			}
-			//<!--DEBUT Ajout de code 4-->
-			document.getElementById("bac3").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "block";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
-			}
-			document.getElementById("bac4").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "block";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
-			}
-			document.getElementById("bac5").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "block";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
-			}
-			document.getElementById("bac6").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "block";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "none";
-			}
-			document.getElementById("bac7").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "block";
-				panel_enchere.style.display = "none";
-			}
-			document.getElementById("bac8").onclick = function() {
-				panel_achat.style.display ="none";
-				panel_mes.style.display ="none";
-				panel_ferraille.style.display = "none";
-				panel_bon.style.display = "none";
-				panel_vip.style.display = "none";
-				panel_achat_im.style.display = "none";
-				panel_offre.style.display = "none";
-				panel_enchere.style.display = "block";
-			}
-			//<!--DEBUT Ajout de code 4-->
 
+			document.getElementById("ventes").onclick = function() {
+				mes.style.display = "none";
+				ven.style.display = "block";
+				cat.style.display = "none";
+			}
+
+			document.getElementById("messages").onclick = function() {
+				mes.style.display = "block";
+				ven.style.display = "none";
+				cat.style.display = "none";
+			}
 		</script>		
 	</body> 
 </html> 
