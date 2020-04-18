@@ -1,10 +1,6 @@
 <?php
 	include("const.php");
 
-	//date_default_timezone_set('Europe/Paris');
-	//$today = getdate();
-	//print_r($today);
-
 	// On prolonge la session
 	session_start();
 
@@ -23,6 +19,33 @@
 	  	exit();
 	}
 	    
+	date_default_timezone_set('Europe/Paris');
+	$today = getdate();
+	$date_actuelle = "";
+	if (strlen($today["mon"]) != 2) //nombre en mois
+		$date_actuelle .=  $today["year"]."-0".$today["mon"]."-";
+	else
+		$date_actuelle .=  $today["year"]."-".$today["mon"]."-";
+	if(strlen($today["mday"]) !=2) //nombre en jour
+		$date_actuelle .= "0".$today["mday"];
+	else
+		$date_actuelle .= $today["mday"];
+
+	$heure_actuelle = "";
+	if (strlen($today["hours"]) != 2) //nombre H
+		$heure_actuelle .=  "0".$today["hours"].":";
+	else
+		$heure_actuelle .= $today["hours"].":";
+
+	if(strlen($today["minutes"]) !=2) //nombre M
+		$heure_actuelle .= "0".$today["minutes"].":";
+	else
+		$heure_actuelle .= $today["minutes"].":";
+	if(strlen($today["seconds"]) !=2) //nombre S
+		$heure_actuelle .= "0".$today["seconds"];
+	else
+		$heure_actuelle .= $today["seconds"];
+
 	//identifier votre BDD
     $database = "ebay ece paris";
     $db_handle = mysqli_connect('localhost', 'root', '');
@@ -132,63 +155,15 @@
 		 		$erreur .= "Vous n'avez pas choisi une date de fin pour l'enchère du produit. <br>";
 		 	if ($heurefin == "")
 		 		$erreur .= "Vous n'avez pas choisi une heure de fin pour l'enchère du produit. <br>";
-		 	/*
-		 	//Blindage pour les dates des encheres
-		 	if($datedebut != "" && $datefin != "" && $heuredebut != "" && $heurefin != "")
-		 	{
-		 		//DATE DE DEBUT p.r TODAY
-		 		//Si l'année est plus petite : non 
-		 		if(YEAR($datedebut) < $today['year'])
-			 		$erreur .= "Année début non valide. <br>";
-		 		//Si l'année est égale mais le mois est plus petit : non
-		 		if(YEAR($datedebut) == $today['year'])
-		 		{ 
-		 			if(MONTH($datedebut) < $today['mon'])
-		 				$erreur .= "Mois début non valide. <br>";
-		 			//Si l'année est égale et le mois est égal mais le jour est plus petit : non
-		 			if(MONTH($datedebut) == $today['mon'])
-		 			{
-		 				if(DAY($datedebut) < $today['mday'])
-		 					$erreur .= "Jour début non valide. <br>";
-		 				
-		 				if(DAY($datedebut) == $today['mday'])
-				 		{ 
-				 			if(HOUR($heuredebut) < $today['hours'])
-				 				$erreur .= "Heure début non valide. <br>";
-				 			if(HOUR($heuredebut) == $today['hours'])
-				 			{
-				 				if(MINUTE($heuredebut) < $today['minutes'])
-				 					$erreur .= "Minute début non valide. <br>";
-				 			}
-				 		}
-		 			}
-		 		}
-
-		 		//DATE DE FIN p.r DATE DE DEBUT
-		 		if(YEAR($datefin) < YEAR($datedebut))
-			 		$erreur .= "Année fin non valide. <br>";
-		 		if(YEAR($datefin) == YEAR($datedebut))
-		 		{ 
-		 			if(MONTH($datefin) < MONTH($datedebut))
-		 				$erreur .= "Mois fin non valide. <br>";
-		 			if(MONTH($datefin) == MONTH($datedebut))
-		 			{
-		 				if(DAY($datefin) < DAY($datedebut))
-		 					$erreur .= "Jour fin non valide. <br>";
-
-		 				if(DAY($datefin) == DAY($datedebut))
-				 		{ 
-				 			if(HOUR($heurefin) < HOUR($heuredebut))
-				 				$erreur .= "Heure fin non valide. <br>";
-				 			if(HOUR($heurefin) == HOUR($heuredebut))
-				 			{
-				 				if(MINUTE($heurefin) < MINUTE($heuredebut))
-				 					$erreur .= "Minute fin non valide. <br>";
-				 			}
-				 		}
-		 			}
-		 		}
-		 	}*/
+		 	if ($datedebut != "" && $datedebut < $date_actuelle)//date de début inférieur à ajd
+		 		$erreur .= "La date de début ne doit pas être dans le passé. <br>";
+		 	if ($datefin != "" && ($datefin < $date_actuelle || $datefin < $datedebut)) //date de fin inf à ajd ou de déb
+		 			$erreur .= "La date de fin ne doit pas être dans le passé. <br>";
+		 	//les heures :
+		 	if ($datedebut == $date_actuelle && $heuredebut != "" && $heuredebut < $heure_actuelle) //H déb inf à actuelle
+		 		$erreur.= "Heure de début ne peut pas être dans le passé.<br>.";
+		 	if ($datedebut == $datefin && $heurefin != "" && $heuredebut != "" && $heurefin <= $heuredebut)
+		 		$erreur .= "Heure de fin ne peut pas se terminer avant l'heure de début. <br>.";
 		}
 		
 		if ($prixdepart == "" && $vente2 == "enchere") 
