@@ -2,7 +2,22 @@
 	include("const.php");
 	// On prolonge la session
 	session_start();
-	$ID_temporaire_acheteur = 29;
+	// On teste si la variable de session existe et contient une valeur
+	if(isset($_SESSION['login']))
+	{
+		$login = $_SESSION['login'];
+		$psw = $_SESSION['psw'];
+		$statut = $_SESSION['Statut'];
+		$id = $_SESSION['ID'];
+	}
+	else
+	{
+	  // Si inexistante ou nulle, on redirige vers le panier
+	  header('Location: connexion.php');
+	  exit();
+	}
+
+	$ID_temporaire_acheteur = $id;
 	$Date_fin_temporaire = "2020-04-19";
 	$supprimer = array();
 	$supprimer2 = array();
@@ -365,8 +380,7 @@
 	{
 		echo "Database not found";
 	}
-	//fermer la connexion
-	mysqli_close($db_handle); 
+	//fermer la connexion 
 ?>
 
 
@@ -537,7 +551,8 @@
 			$prix_tot_achat2+=$prix_tot_achat;
 
 			echo "Prix total svp: ".$prix_tot_achat2."<br><br><br>";
-			echo '<a type="button" class="btn btn-secondary" href="ajout_carte.html">Passer au paiement</a>';
+			$_SESSION["prix_total"] = $prix_tot_achat2;
+			echo '<a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a>';
 			echo "<br>";
 
 			echo "Panier En Cours, achat non possible <br>";
@@ -620,10 +635,9 @@
 
 					$prix_tot_achat2+=$Prix_acheteur[$i];
 				}
-
 				echo "Prix total du panier en cours: ".$prix_tot_achat2."<br><br><br>";
 			}	 
-
+			mysqli_close($db_handle);
 			?>
 		</div>
 
