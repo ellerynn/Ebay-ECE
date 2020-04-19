@@ -35,7 +35,7 @@
                       
                       if (mysqli_num_rows($result) == 0 ) {
                         //Livre inexistant
-                        echo "Erreur, ce vendeur n'existe pas. <br>";
+                        $erreur.= "Erreur, ce vendeur n'existe pas. <br>";
                       }
                       else {
                               $sql = "DELETE FROM personne";
@@ -61,6 +61,7 @@
    {
       echo "Erreur : $erreur";
    }
+   header('Location: admin.php?idErreur='.$erreur);
 ?>
  
 

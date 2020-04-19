@@ -17,7 +17,7 @@
 	if (isset($_POST["buttonsupprimer"])) 
 	{
 	  	if ($id == "") 
-	 	$erreur .= "Champ ID de l'article vide. <br>";
+	 	$erreur .= "Le champ ID de l'article est vide. <br>";
 	 	 
 		if ($erreur == "") 
 		{
@@ -38,7 +38,7 @@
 					$sql .= " WHERE ID_item LIKE '%$id%'";
 							
 				if (mysqli_num_rows($result) == 0 ) 
-					echo "Erreur, cet item n'existe pas. <br>";
+					$erreur = "Erreur, cet item n'existe pas. <br>";
 
 				else 
 				{
@@ -91,4 +91,7 @@
 	
 	else 
 	   	echo "Erreur : <br>$erreur";	   
+	   
+   header('Location: admin.php?idErreur='.$erreur);
+
 ?>

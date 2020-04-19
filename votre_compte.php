@@ -218,7 +218,7 @@
 						<div class="form-group" style="display: none;" id="infoGeneral">
 							<input class="form-control" style="width: 100%" type="text" name="nomGen" placeholder="Nom">
 							<input class="form-control" style="width: 100%" type="text" name="prenomGen" placeholder="Prenom">
-							<input class="form-control" style="width: 100%" type="text" name="emailGen" placeholder="Email">
+							<input class="form-control" style="width: 100%" type="email" name="emailGen" placeholder="Email">
 							<input class="form-control" style="width: 100%" type="password" name="mdpGen" placeholder="Mot de passe">
 							<input class="form-control" style="width:200px; margin: 0 auto" name="modifierGen" type="submit" value="Valider les modifications">
 						</div>
@@ -317,7 +317,7 @@
 								<input class="form-control" style="width: 100%" type="text" name="ville" placeholder="Ville">
 								<input class="form-control" style="width: 100%" type="number" name="codePostal" placeholder="Code postal">
 								<input class="form-control" style="width: 100%" type="text" name="pays" placeholder="Pays">
-								<input class="form-control" style="width: 100%" type="number" name="telephone" placeholder="Téléphone">
+								<input class="form-control" style="width: 100%" type="text" pattern="\d+" minlength="10" maxlength="10" name="telephone" placeholder="Téléphone">
 
 								<input class="form-control" style="width:200px; margin: 0 auto" name="bontonaddcoords" type="submit" value="Valider les modifications" required>
 							</div>
@@ -367,10 +367,10 @@
 								<option value ="MASTERCARD">MASTERCARD</option>
 								<option value ="AMERICAN EXPRESS">AMERICAN EXPRESS</option>
 								</select>
-								<input class="form-control" style="width: 100%" type="number" name="numero_carte" placeholder="Numéro de la carte">
+								<input class="form-control" style="width: 100%" type="text" pattern="\d+" minlength="8"  maxlength="19" name="numero_carte" placeholder="Numéro de la carte">
 								<input class="form-control" style="width: 100%" type="text" name="titulaire_carte" placeholder="Titulaire">
 								<input class="form-control" style="width: 100%" type="date" name="date_exp_carte" placeholder="expiration">
-								<input class="form-control" style="width: 100%" type="password" name="mdpasse" placeholder="Code de sécurité">
+								<input class="form-control" style="width: 100%" type="password" pattern = "\d+" minlength = "4" maxlength="4" name="mdpasse" placeholder="Code de sécurité">
 								<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutcarte" type="submit" value="Valider les modifications">
 							</div>
 						</form>

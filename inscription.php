@@ -161,7 +161,7 @@
                             <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="prenom" placeholder="Prénom" required="true"></td>
                         </tr>
                         <tr>
-                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="text" name="login" placeholder="Mail" required="true"></td>
+                            <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="email" name="login" placeholder="Mail" required="true"></td>
                         </tr>
                         <tr>
                             <td><input class="form-control" style="margin-bottom: 10px; width:500px; border-top: 0; border-right: 0; border-left: 0;" type="password" name="psw" placeholder="Mot de passe" required="true"></td>

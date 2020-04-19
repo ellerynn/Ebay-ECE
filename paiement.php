@@ -252,9 +252,25 @@
 				$erreurPaiement .= "Code invalide.<br>";
 
 		}//Si bouton payer
+
+		$erreurDonnees = "true";
+		if (isset($_POST["boutonPaiement"]))
+		{	
+			if ($adresse_ligne1 != "" && $type_carte != "")
+			{
+				$erreurDonnees = "false";
+			}
+			else
+			{
+				$erreurPaiement .= "Des champs sont vides";
+				$erreurDonnees = "true";
+			}
+		}
 	}
 	else
 		echo "BDD non retrouvé";
+
+	
 ?>
 
 
@@ -332,11 +348,11 @@
 			</div> 
 		</nav>	
 <!--atchom-->
-
+<br><br><br>
+<input type="hidden" id="variableAPasser" value="<?php echo $erreurDonnees;?>"/>
 <?php
 echo '
-<br><br><br>
-<div id = "afficherfalse">
+<div id = "afficherfalse" style="display: block;">
 	<div class ="form-group" id ="infosCoords'.$infosCoords.'" style="display: none;">
 		<h5>Vos coordonnées de livraison</h5>
 		<table>
@@ -382,7 +398,7 @@ echo '
 			<input class="form-control" style="width: 100%" type="text" name="ville" placeholder="Ville" required>
 			<input class="form-control" style="width: 100%" type="number" name="codePostal" placeholder="Code postal" required>
 			<input class="form-control" style="width: 100%" type="text" name="pays" placeholder="Pays" required>
-			<input class="form-control" style="width: 100%" type="number" name="telephone" placeholder="Téléphone" required>
+			<input class="form-control" style="width: 100%" type="text" pattern="\d+" minlength="10" maxlength="10" name="telephone" placeholder="Téléphone" required>
 
 			<input class="form-control" style="width:200px; margin: 0 auto" name="bontonaddcoords" type="submit" value="Valider les modifications" required>
 		</div>
@@ -434,13 +450,15 @@ echo'<div class ="form-group" id ="infosCarte'.$infosCarte.'" style="display: no
 				<option value ="MASTERCARD">MASTERCARD</option>
 				<option value ="AMERICAN EXPRESS">AMERICAN EXPRESS</option>
 			</select>
-			<input class="form-control" style="width: 100%" type="number" name="numero_carte" placeholder="Numéro de la carte" required>
+			<input class="form-control" style="width: 100%" type="text" pattern="\d+" minlength="8" maxlength="19" name="numero_carte" placeholder="Numéro de la carte" required>
 			<input class="form-control" style="width: 100%" type="text" name="titulaire_carte" placeholder="Titulaire" required>
 			<input class="form-control" style="width: 100%" type="date" name="date_exp_carte" placeholder="expiration" required>
-			<input class="form-control" style="width: 100%" type="password" name="mdpasse" placeholder="Code de sécurité" required>
+			<input class="form-control" style="width: 100%" type="password" name="mdpasse" minlength = "4" maxlength = "4" pattern = "\d+"placeholder="Code de sécurité" required>
 				<input class="form-control" style="width:200px; margin: 0 auto" name="boutonajoutcarte" type="submit" value="Valider les modifications" required>
 		</div>
-		<input class="form-control" style="width:200px; margin: 0 auto" name="boutonPaiement" id="passerPaiement"type="submit" value="Payer">
+	</form>
+	<form method = "post" action = "">
+	<input class="form-control" style="width:200px; margin: 0 auto" name="boutonPaiement" id="passerPaiement"type="submit" value="Payer" >
 	</form>
 	<?php ///Faire ça quand des données ne sont pas saisie
 		if ($erreurPaiement != "")
@@ -451,11 +469,11 @@ echo'<div class ="form-group" id ="infosCarte'.$infosCarte.'" style="display: no
 </div>
 <?php
 echo '
-<div id = "paiementfalse">';
+<div id = "paiementfalse" style="display: none;">';
 echo "<br><br><br><br><br>Prix total à payer : ".$prixTot;
 echo'
 <form method = "post" action = "">
-<input class="form-control" style="width: 100%" type="password" name="code" placeholder="Code de sécurité" required>
+<input class="form-control" style="width: 100%" type="password" minlength = "4" maxlength = "4" pattern = "\d+" name="code" placeholder="Code de sécurité" required>
 <input class="form-control" style="width:200px; margin: 0 auto" name="payer" type="submit" value="Valider" required>
 </form>';
 ?>
@@ -522,6 +540,15 @@ echo'
 			</div>
 		</footer>
 		<script type="text/javascript">
+			var variableRecuperee = document.getElementById("variableAPasser").value;
+			var a = document.getElementById("afficherfalse");
+			var b = document.getElementById("paiementfalse");
+
+			if (variableRecuperee == "false")
+			{
+				a.style.display = "none";
+				b.style.display = "block";
+			}
 			//Jquery
 			if($('#formulaireCoordsfalse').css('display') === 'none')
 			{
@@ -552,11 +579,8 @@ echo'
                		if($('#formulaireCartetrue').css('display') === 'none')
 						$('#formulaireCartetrue').css('display','block');
 				});
-				$("#passerPaiement").click(function(){
-						$('#afficherfalse').css('display','none');
-						$('#paiementfalse').css('display','block');
-				});
             });
+
 		</script>
 	</body> 
 </html> 

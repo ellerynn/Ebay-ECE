@@ -90,6 +90,13 @@
 			$j++;
 		}
 	}	
+	//transfert de valeurs : récepteur 
+	$erreurAjoutVendeur = "";
+	if (isset($_GET['idErreur']))
+	{ 
+		$erreurAjoutVendeur = $_GET['idErreur'];
+	}
+
 ?>
 
 <!DOCTYPE html> 
@@ -205,7 +212,13 @@
 										}
 									}
 								?>
-							</div>		
+							</div>	
+							<?php
+							if($erreurAjoutVendeur != "")
+					    	{
+					    		echo $erreurAjoutVendeur;
+					    	}	
+					    	?>
 				        </div>
 				    </div>
 				    <div class="panel" style="display: none;" id="panel_gv_admin">
@@ -227,7 +240,7 @@
 						    		<h4 class="text-center">Supprimer un vendeur</h4>
 									<form action="suppression_vendeur.php" method="post">
 										<div class="form-group">
-					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="text" name="id" placeholder="ID vendeur" required>
+					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="number" name="id" placeholder="ID vendeur" required>
 					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="text" name="pseudo" placeholder="Pseudo" required>
 					                    	<input class="form-control" style="width: 50%; margin: 0 auto" name="buttonsupprimervendeur" type="submit" value="Supprimer">
 										</div>
@@ -252,9 +265,15 @@
 										}
 									}
 								?>
-						    	</div>			
+						    	</div>		
 						    </div>	
 				        </div>
+				         <?php
+					    	if($erreurAjoutVendeur != "")
+					    	{
+					    		echo $erreurAjoutVendeur;
+					    	}
+				    	?>	
 				    </div>
 		        </div>
 		    </div>

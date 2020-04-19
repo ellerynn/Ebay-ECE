@@ -44,7 +44,7 @@
                         //regarder s'il y a de résultat
                               if (mysqli_num_rows($result) != 0) 
                               {
-                                    echo "Soit Le compte existe déjà, soit le pseudo existe déjà";
+                                    $erreur .= "Soit Le compte existe déjà, soit le pseudo existe déjà";
                                     //a mettre le lien de la page de connexion en php
                               } 
                               else 
@@ -80,6 +80,7 @@
    {
       echo "Erreur : $erreur";
    }
+   header('Location: admin.php?idErreur='.$erreur);
 ?>
  
 
