@@ -376,14 +376,7 @@
 		<nav class="navbar navbar-expand-md fixed-top"> 
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
 				<span class="navbar-toggler-icon"></span>       
-			</button>   
-
-			<form action="rechercher.php" class="navbar-form inline-form">
-				<div class="form-group">
-				  	<span style="color:white;"><i class="fas fa-search"></i></span>
-				   	<button class="btn btn-outline-secondary btn-sm" name = "chercher">Faire une recherche</button>
-				</div>
-			</form>
+			</button>  
 
 			<div class="collapse navbar-collapse">     
 				<ul class="navbar-nav">       

@@ -73,15 +73,6 @@
 					$table_photo["$ID_i[$a]"]= $photo; //array de photo dans tableau associatif
 				}
 			}
-			if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
-		$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
-		$result = mysqli_query($db_handle, $sql);	
-		if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
-			$_SESSION['itemClick'] = $_GET['idLien'];
-			header('Location: page_produit.php');
-			exit();
-		}
-	}
 		}
 	else
 		echo "pas de database";
