@@ -432,7 +432,7 @@
 			<?php 
 				echo'<h1>'.$nom_item.'<br></h1>';
 				
-				if($categorie == "Farraille_tresor")
+				if($categorie == "Ferraille_tresor")
 					echo "Catégorie : Ferraille ou trésor. <br>";
 
 				if($categorie == "VIP")
@@ -506,10 +506,12 @@
 	    	</div>
 	    </div>        
 	    <?php					
-				if($video != 0)
+				if($video != "" || $video != 0 )
+				{
                     echo '<div class="embed-responsive embed-responsive-4by3">';
                     echo '<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =450 	></iframe>';
                     echo '</div>';
+                }
                 ?>
         <br><br><br>
 

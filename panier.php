@@ -606,7 +606,7 @@
 			echo "<br>";
 
 //EN COURS
-			echo "--------------------------------En Attente--------------------------------------";
+			echo "--------------------------------En Attente--------------------------------------<br>";
 			//meilleur offre en cours
 			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
@@ -630,7 +630,6 @@
 						echo "Statut (pour savoir autour de qui) :".$statut2["$ID_item2[$i]"]."<br>";
 						echo "Votre offre demandé :".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
 						echo '<form action="" method="post">';
-
 						
 						$accepter_offre["$ID_item2[$i]"] = "accepter_offre_".$i;
 						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter l\'offre">';
@@ -640,10 +639,8 @@
 						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item du panier">';
 						echo "<br>";
 						echo "</form>";
-
 						$prix_tot_achat2+=$prix_acheteur_accepte["$ID_item2[$i]"];
 					}	
-
 			}	 
 			for ($i = 0 ; $i<count($ID_item2); $i++)
 			{ //on parcourt l'ensemble des items de type offre

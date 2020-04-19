@@ -123,7 +123,7 @@
 					$montant = $data['Solde'];
 					$expi = $data['Date_exp_carte'];
 				}
-				if ($expi <= $date_actuelle)
+				if ($expi >= $date_actuelle)
 				{
 					if ($montant >= $prixTot) //suffisant
 					{
@@ -394,7 +394,7 @@ echo '
   echo '<div class="form-group" style="display: none;" id="formulaireCoords'.$infosCoords.'">';
 	?>
 			<input class="form-control" style="width: 100%" type="text" name="adresseUn" placeholder="Adresse ligne 1" required>
-			<input class="form-control" style="width: 100%" type="text" name="adresseDeux" placeholder="Adresse ligne 2" required>
+			<input class="form-control" style="width: 100%" type="text" name="adresseDeux" placeholder="Adresse ligne 2">
 			<input class="form-control" style="width: 100%" type="text" name="ville" placeholder="Ville" required>
 			<input class="form-control" style="width: 100%" type="number" name="codePostal" placeholder="Code postal" required>
 			<input class="form-control" style="width: 100%" type="text" name="pays" placeholder="Pays" required>

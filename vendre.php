@@ -193,7 +193,8 @@
 	        	$last_id_item = "";
 	           	if (mysqli_num_rows($r3) != 0)
 	            {
-	                echo "Votre item a été ajouté avec succes";
+	                //echo "Votre item a été ajouté avec succes";
+					echo "<script type='text/javascript'>document.location.replace('vendre.php');</script>";
 	                while ($data = mysqli_fetch_assoc($r3)) 
                     {
                         $last_id_item = $data['LAST_INSERT_ID(ID_item)'];
@@ -213,15 +214,8 @@
 				//Ajout dans la liste d'enchere si enchere.
 				if (strlen($type_vente_choisi) == 8 || strlen($type_vente_choisi) == 22)
 				{
-					echo "je suis dedans";
 					$heuredebut .=":00";
 					$heurefin .=":00";
-					echo "$last_id_item"."<br>";
-					echo "$datedebut"."<br>";
-					echo "$heuredebut"."<br>";
-					echo "$datefin"."<br>";
-					echo "$heurefin"."<br>";
-					echo "$prixdepart"."<br>";
 					$sql = "INSERT INTO liste_enchere(ID_item, Date_debut, Heure_debut, Date_fin, Heure_fin, Prix_premier, Prix) VALUES ('$last_id_item', '$datedebut', '$heuredebut', '$datefin', '$heurefin', '$prixdepart','$prixdepart');";
 					$result = mysqli_query($db_handle, $sql);
 				}
@@ -341,7 +335,7 @@
 	{
 		if(isset($_POST["$soumettre[$a]"]))
 		{
-			$sql11 = "UPDATE meilleur_offre SET Statut = '6' , Prix_vendeur = $contre_offre WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
+			$sql11 = "UPDATE meilleur_offre SET Statut = '1' , Prix_vendeur = $contre_offre WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
 			$r11 = mysqli_query($db_handle, $sql11);
 		}
 	}

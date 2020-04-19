@@ -265,9 +265,7 @@
 			    				echo "<tr>";
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 									echo '<td>';
-									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
-								//}
-									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';
 									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else
@@ -311,9 +309,7 @@
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 								//}
 									echo '<td>';
-									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
-									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
-
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';
 									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else

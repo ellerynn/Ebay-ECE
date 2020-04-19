@@ -59,7 +59,9 @@
                 }
 
 				if (mysqli_num_rows($result) == 0 ||   $dat != $idv) 
-					echo "Erreur, cet item n'existe pas ou ne vous appartient pas. <br>";
+				{
+					//echo "Erreur, cet item n'existe pas ou ne vous appartient pas. <br>";
+				}
 
 				else 
 				{
@@ -72,7 +74,7 @@
 					$sql = "DELETE FROM item";
 					$sql .= " WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql);
-					echo "Suppression réussi ! . <br>";
+					//echo "Suppression réussi ! . <br>";
 
 					$sqlphoto = "SELECT * FROM photo WHERE ID_item LIKE '$id'";
 	                $resultphoto = mysqli_query($db_handle, $sqlphoto);
@@ -86,7 +88,7 @@
 					$sql2 = "DELETE FROM photo";
 					$sql2 .= " WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql2);
-					echo "Suppression des photos réussi ! . <br>";
+					//echo "Suppression des photos réussi ! . <br>";
 
 					///PARTIE MODIFIER ------
 					//Suppression des items dans la liste d'enchere
@@ -115,5 +117,5 @@
 	    else 
 	    	echo "Erreur : <br>$erreur";
 	}  
-?>
+	header('Location: vendre.php')
 ?>

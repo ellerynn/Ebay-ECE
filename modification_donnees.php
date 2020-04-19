@@ -76,7 +76,7 @@
 				 ///BDD
 	            if ($db_found) 
 	            {         
-					echo "La photo de profil a bien été modifié";
+					//echo "La photo de profil a bien été modifié";
             		$filename = $_FILES['filephoto']['name'][0];
                 	$sql = "UPDATE vendeur SET ID_photo = '$filename' WHERE ID = '$id';";
                 	$result = mysqli_query($db_handle, $sql);   	
@@ -112,7 +112,7 @@
           			$filename = $_FILES['filephotofond']['name'][0];
                 	$sql = "UPDATE vendeur SET ID_image_fond = '$filename' WHERE ID = '$id';";
                 	$result = mysqli_query($db_handle, $sql);
-                	echo "L'image de fond a bien été modifié.";
+                	//echo "L'image de fond a bien été modifié.";
              }
              else 
              {
@@ -137,18 +137,20 @@
 		$result = mysqli_query($db_handle, $sql);
     }
     if (isset($_POST["boutonajoutcarte"])) { //modification carte 
+    	echo "<br><br><br>JE SUIS DEDANSSSSSSSSS";
     	$typecarte = isset($_POST["typecarte"])? $_POST["typecarte"] : ""; 
 		$numero_carte = isset($_POST["numero_carte"])? $_POST["numero_carte"] : ""; 
 		$titulaire_carte = isset($_POST["titulaire_carte"])? $_POST["titulaire_carte"] : ""; 
 		$date_exp_carte = isset($_POST["date_exp_carte"])? $_POST["date_exp_carte"] : ""; 
 		$mdp = isset($_POST["mdpasse"])? $_POST["mdpasse"] : ""; 
-		/*
+		
 		echo "$typecarte<br>";
 		echo "$numero_carte<br>";
 		echo "$titulaire_carte<br>";
 		echo "$date_exp_carte<br>";
-		echo "$mdp<br>";*/
-		$sql = "UPDATE acheteur SET Type_carte = '$typecarte', Numero_carte = '$numero_carte', Nom_carte = '$titulaire_carte' , Date_exp_carte = '$date_exp_carte', Code_securite = '$mdp', Solde = '1500' WHERE ID = '$id';";
+		echo "$mdp<br>";
+		$solde = 1500;
+		$sql = "UPDATE acheteur SET Type_carte = '$typecarte', Numero_carte = '$numero_carte', Nom_carte = '$titulaire_carte' , Date_exp_carte = '$date_exp_carte', Code_securite = '$mdp', Solde = '$solde' WHERE ID = '$id';";
 		$result = mysqli_query($db_handle, $sql);
 	}
    ///FIN : si modification données Acheteurs:

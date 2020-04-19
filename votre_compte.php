@@ -180,11 +180,17 @@
 				</ul>      
 			</div> 
 		</nav>
+<br><br>
 
-		<?php if ($statut == VENDEUR)?>
-			<div class="container-fluid features" style="background-size: cover; background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?
-		else
-			echo'<div class="container-fluid features">';?>
+		<?php  if ($statut == VENDEUR)
+		echo '
+			<div class="container-fluid features" style="background-size: cover; background-image : url(\'images_web/'.$fond_vendeur.')>
+
+		else';
+
+			echo '<div class="container-fluid features">';
+		?>
+
 			<div class="panel">
 				<div class="panel-heading">
 				   	<br><h3 class="text-center">Mes informations</h3><br>
@@ -194,7 +200,7 @@
 						<table>
 							<tr><td><h5>Informations générales</h5></td></tr>
 							<tr>
-								<?php echo'<td>Statut :  '.$statutNom.'</td>'; ?>
+								<?php echo'<td>Statut :  '.$statutNom.'</td>'; ?> 
 							</tr>
 							<tr>
 								<?php echo'<td>Nom : '.$nom.'</td>'; ?>
@@ -345,7 +351,7 @@
 									<?php echo'<td>Nom du titulaire : '.$nom_carte.'</td>'; ?>
 								</tr>
 								<tr>
-									<?php echo'<td>Expire le'.$date_exp_carte.'</td>'; ?>
+									<?php echo'<td>Expire le : '.$date_exp_carte.'</td>'; ?>
 								</tr>
 								<tr>		
 									<?php echo'<td>Code de sécurité : '.$code_securite.'</td>'; ?>
