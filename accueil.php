@@ -218,17 +218,16 @@
 			    		for ($i= 0; $i < count($table_item); $i++)
 			    		{ //pour chaque item
 			    			$var = $ID_i[$i];
-			    			if ($table_item["$ID_i[$i]"][3] == "Farraille_tresor")
+			    			if ($table_item["$ID_i[$i]"][3] == "Ferraille_tresor")
 			    			{
 			    				echo '<tr>';
 			    				
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 									echo '<td>';
-									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
-									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  //Nom de l'item
 									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo '<td>oui</td>'; //Achat immédiat
-									else
+									else//Nom de l'item
 										echo '<td>non</td>';
 									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo '<td>oui</td>'; //Meilleur offre

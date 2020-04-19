@@ -50,7 +50,7 @@
                     //Si on trouve une correspondance : le compte existe deja
                     if (mysqli_num_rows($result) != 0) 
                     {
-                        echo "Le compte existe déjà. Veuillez vous connecter";
+                        //echo "Le compte existe déjà. Veuillez vous connecter";
                         header('Location: connexion.php');
                     } 
                     else 

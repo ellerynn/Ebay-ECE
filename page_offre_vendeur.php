@@ -183,7 +183,7 @@
 					for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
 						echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
 					}
-	            	echo "<br>Le ID de acheteur: ".$ID_acheteur[$i]."<br>";
+	            	echo "<br>L'ID de acheteur: ".$ID_acheteur[$i]."<br>";
 					echo "Le nom de l'item: ".$table_item["$ID_item[$i]"][1]."<br>";
 					
 					echo "Le ID de item: ".$ID_item[$i]."<br>";

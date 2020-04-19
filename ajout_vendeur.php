@@ -15,10 +15,10 @@
  	 echo "<br>";
  if ($pseudo == "") {
   $erreur .= "Pseudo est vide. <br>"; }
-   echo "<br>";
+  	 echo "<br>";
  if ($email == "") {
  $erreur .= "Email est vide. <br>"; }
-  echo "<br>";
+   	 echo "<br>";
 
 
 

@@ -515,12 +515,12 @@
 
 				echo "Le vendeur de l'item :".$table_item["$ID_item[$i]"][2]."<br>"; 
 				echo "La description de l'item :".$table_item["$ID_item[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-				echo "Le catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
+				echo "La catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
 				echo "Le Prix de l'item :".$table_item["$ID_item[$i]"][6]."<br>"; 
 				echo "La video de l'item :".$table_item["$ID_item[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 				$supprimer[$i] = "supprimer_".$i;
 				echo '<form action="" method="post">';
-				echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier'.$i.'">';
+				echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier">';
 				echo "<br>";
 				$prix_tot_achat2+=$table_item["$ID_item[$i]"][6];
 				echo "</form>";
@@ -556,7 +556,7 @@
 					echo "Le nom de l'item :".$table_item2["$ID_item2[$i]"][1]."<br>";
 					echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
 					echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
+					echo "La catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
 					echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
 					echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 					echo "Prix de l'offre : ".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
@@ -585,7 +585,7 @@
 					echo "Le nom de l'item :".$table_item3["$var"][1]."<br>";
 					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
 					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
+					echo "La catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
 					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
 					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 
@@ -606,8 +606,7 @@
 			echo "<br>";
 
 //EN COURS
-
-			echo "Panier En Cours, achat non possible <br>";
+			echo "--------------------------------En Attente--------------------------------------";
 			//meilleur offre en cours
 			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
@@ -625,7 +624,7 @@
 						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a><br>';
 						echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
 						echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-						echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
+						echo "La catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
 						echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
 						echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br>"; //Faudrait le lien mais là on a affiché que le nom
 						echo "Statut (pour savoir autour de qui) :".$statut2["$ID_item2[$i]"]."<br>";
@@ -634,11 +633,11 @@
 
 						
 						$accepter_offre["$ID_item2[$i]"] = "accepter_offre_".$i;
-						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter Offre">';
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter l\'offre">';
 						echo "<br>";
 
 						$supprimer2["$ID_item2[$i]"] = "supprimer2_".$i;
-						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item '.$ID_item2[$i].' du panier">';
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item du panier">';
 						echo "<br>";
 						echo "</form>";
 
@@ -699,7 +698,7 @@
 						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a><br>';
 					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
 					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
+					echo "La catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
 					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
 					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 					echo "La date de fin de l'enchere :".$table_item4["$var"][1]."<br>";
