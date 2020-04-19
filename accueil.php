@@ -188,13 +188,13 @@
 
 						<div class="carousel-inner">
 						    <div class="carousel-item active">
-						      	<img src="noir.png" alt="noir">
+						      	<img src="promo1.jpg" alt="1">
 						    </div>
 						    <div class="carousel-item">
-						      	<img src="rose.png" alt="rose">
+						      	<img src="promo2.jpg" alt="2">
 						    </div>
 						    <div class="carousel-item">
-						      	<img src="gris.png" alt="gris">
+						      	<img src="promo3.jpg" alt="3">
 						    </div>
 						</div>
 
