@@ -128,8 +128,6 @@
 		}
 
 	 	//vérification du type de la vidéo
-	 	if ($filevideo == "")
-	 	 	$erreur .="La vidéo choisi doit être en un lien url <br>";
 
 		if ($description == "")  
 		 	$erreur .= "La description est vide. <br>"; 
