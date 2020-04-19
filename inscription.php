@@ -115,14 +115,6 @@
                 <span class="navbar-toggler-icon"></span>       
             </button>   
 
-            <form class="navbar-form inline-form">
-                <div class="form-group">
-                    <span style="color:white;"><i class="fas fa-search"></i></span>
-                    <input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
-                    <button class="btn btn-outline-secondary btn-sm">Chercher</button>
-                </div>
-            </form>
-
             <div class="collapse navbar-collapse">     
                 <ul class="navbar-nav"> <!--navbar-nav — La classe de l'élément de liste <ul> qui contient les éléments de menu. Ces derniers sont notés avec nav-item et nav-link.-->          
                     <li class="nav-item">
