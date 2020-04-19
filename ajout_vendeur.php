@@ -61,7 +61,7 @@
                                     {
                                       $dat =$data['ID'];
                                     }
-                                    $sql = "INSERT INTO vendeur(ID,Pseudo, ID_photo, ID_image_fond) VALUES ('$dat','$pseudo', 'photo_defaut.jpg', 'default_fond.jpg' );";
+                                    $sql = "INSERT INTO vendeur(ID,Pseudo, ID_photo, ID_image_fond) VALUES ('$dat','$pseudo', 'photo_defaut.jpg', 'fond.jpg' );";
                                     $result = mysqli_query($db_handle, $sql);
                                    
                               }

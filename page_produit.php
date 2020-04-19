@@ -404,7 +404,7 @@
 						    echo '<li data-target="#carousel" data-slide-to="'.$i.'"></li>';
 						}?>
 					</ul>
-					<div> 
+				<div> 
 					<?php
 						for ($i = 0 ; $i < count($nom_photo); $i++)
 		            	{
@@ -419,7 +419,7 @@
 								      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
 								    </div>'; 
 						}?>
-					</div>
+				</div>
 					<a class="carousel-control-prev" href="#carousel" data-slide="prev">
 					    <i style="color: black;"class="fas fa-chevron-left"></i>
 					</a>
@@ -427,9 +427,6 @@
 					    <i style="color: black;"class="fas fa-chevron-right"></i>
 					</a>
 				</div>
-            	<?php					
-				if($video != 0)
-					echo "vidéo :".$video."<br>";?>
 			</div> <br>
 			<div style="padding:2em;" class="col-lg-8 col-md-8 col-sm-12">
 			<?php 
@@ -508,7 +505,12 @@
 	            ?>
 	    	</div>
 	    </div>        
-
+	    <?php					
+				if($video != 0)
+                    echo '<div class="embed-responsive embed-responsive-4by3">';
+                    echo '<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =450 	></iframe>';
+                    echo '</div>';
+                ?>
         <br><br><br>
 
 		<footer class="page-footer container-fluid">   
