@@ -127,10 +127,11 @@
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
-			<form action="rechercher.php" class="navbar-form inline-form">
+			<form style="display: none;" id="barre" action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
-				   	<button class="btn btn-outline-secondary btn-sm" name = "chercher">Faire une recherche</button>
+				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
+				   	<button name="chercher" class="btn btn-outline-secondary btn-sm">Chercher</button>
 				</div>
 			</form>
 
@@ -510,6 +511,9 @@
 							var cache = document.getElementById("l2");
 							cache.style.display = "none";
 						}
+
+						var recherche = document.getElementById("barre");
+						recherche.style.display = "block";
 						
 						document.getElementById("admin").onclick = function() {return false;}
 						document.getElementById("vendre").onclick = function() {return false;}
