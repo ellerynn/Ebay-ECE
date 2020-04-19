@@ -34,6 +34,60 @@
 
 	if ($db_found) 
 	{			
+		//traitement des données de la date actuelle
+		date_default_timezone_set('Europe/Paris');
+		$today = getdate();
+		$date_actuelle = "";
+		if (strlen($today["mon"]) != 2) //nombre en mois
+			$date_actuelle .=  $today["year"]."-0".$today["mon"]."-";
+		else
+			$date_actuelle .=  $today["year"]."-".$today["mon"]."-";
+		if(strlen($today["mday"]) !=2) //nombre en jour
+			$date_actuelle .= "0".$today["mday"];
+		else
+			$date_actuelle .= $today["mday"];
+
+		$heure_actuelle = "";
+		if (strlen($today["hours"]) != 2) //nombre H
+			$heure_actuelle .=  "0".$today["hours"].":";
+		else
+			$heure_actuelle .= $today["hours"].":";
+
+		if(strlen($today["minutes"]) !=2) //nombre M
+			$heure_actuelle .= "0".$today["minutes"].":";
+		else
+			$heure_actuelle .= $today["minutes"].":";
+		if(strlen($today["seconds"]) !=2) //nombre S
+			$heure_actuelle .= "0".$today["seconds"];
+		else
+			$heure_actuelle .= $today["seconds"];
+		//FIN traitement des données de la date actuelle
+
+		//On Vérifie si des enchère sont terminés (code identique dans panier.php)
+		//On récupère touuuut les enchères TOUUT pour vérifier leur date
+		//pas que acheteur
+		$sql = "SELECT * FROM liste_enchere";
+		$result = mysqli_query($db_handle,$sql);
+		if (mysqli_num_rows($result) != 0)
+		{
+			while ($data = mysqli_fetch_assoc($result)) 
+			{
+				$itemDateFin = $data['Date_fin'];
+				$itemHeureFin = $data['Heure_fin'];
+				$tempItem = $data['ID_item'];
+				if ($itemDateFin < $date_actuelle)
+				{
+					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+				}
+				if ($itemDateFin == $date_actuelle && $itemHeureFin <= $heure_actuelle)
+				{
+					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+				}
+			}
+		}
+		
 		//PARTIE AFFICHAGE
 		//Récuperation donnee table item
 		$sql = "SELECT * FROM item WHERE ID_item LIKE '$ID_temporaire_item'";
@@ -191,29 +245,37 @@
 		$prix_client = "";
 		//Partie Un, s'il avait déjà effectué un Offre !
     	//Recupération du prix du vendeur si une offre a été faite par l'acheteur sur cette item: (ICI normalement tenta >= 1
-	    $sql = "SELECT * from meilleur_offre WHERE ID_item = $ID_temporaire_item AND ID_acheteur LIKE '$ID_temporaire_acheteur' AND ID_vendeur LIKE '$ID_vendeur'";
-	    $result = mysqli_query($db_handle, $sql);
-	    if (mysqli_num_rows($result) != 0){
-			while ($data = mysqli_fetch_assoc($result)) 
+	    $sqlOffre = "SELECT * from meilleur_offre WHERE ID_item = $ID_temporaire_item AND ID_acheteur LIKE '$ID_temporaire_acheteur' AND ID_vendeur LIKE '$ID_vendeur'";
+	    $resultOffre = mysqli_query($db_handle, $sqlOffre);
+	    if (mysqli_num_rows($resultOffre) != 0) //il existe 
+	    {
+			while ($data = mysqli_fetch_assoc($resultOffre)) 
 			{
-				$prix = $data['Prix_vendeur'];
+				$prix_vendeur = $data['Prix_vendeur'];
 				$prix_client = $data['Prix_acheteur'];
 				$tenta = $data['Tentative'];
 				$stat = $data['Statut'];
 			}
 			
 		}
-	    //SI l'acheteur clique sur un bouton Faire le demande pour meilleur offre
+		//On regarde si l'item n'a pas déjà été accepté par quelqu'un avant de faire une première offre
+		$sqlVerifSatutItem = "SELECT * FROM meilleur_offre WHERE ID_item = $ID_temporaire_item AND Statut = 3";
+		$resultVerifStatutItem = mysqli_query($db_handle, $sqlVerifSatutItem);
+
 	    $erreurOffre = "";
-	    if(isset($_POST["buttonoffre"])){
-	    	if (mysqli_num_rows($resultVerif) != 0 && $type_achat != "offre"){
+	    if(isset($_POST["buttonoffre"]))
+	    {
+	    	if (mysqli_num_rows($resultVerif) != 0 && $type_achat != "offre")
+	    	{
 	    		$erreurOffre .= "Erreur, vous ne pouvez pas faire 2 type d'achat pour un même objet<br>";
 	    	}
+	    	if (mysqli_num_rows($resultVerifStatutItem) != 0)
+	    		$erreurOffre .= "Cet item a été accpeté pour quelqu'un.<br>";
 
-	    	if ($votre_prix_offre < $prix)
+	    	if ($votre_prix_offre < $prix && $votre_prix_offre != "")
 	    	{
 	    	//Indique que l'item n'a jamais été dans son panier donc l'user peut faire une offre et le mettre dans son panier
-		    	if (mysqli_num_rows($resultVerif) == 0)
+		    	if (mysqli_num_rows($resultVerif) == 0 && mysqli_num_rows($resultOffre) == 0 && mysqli_num_rows($resultVerifStatutItem) == 0) //Si pas fait de meilleur offre et que offre n'a pas été accepté pour qlq
 	            {
 		            //insert dans la table ENCHERIR
 			    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
@@ -222,7 +284,7 @@
 			    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
 			    	$result2 = mysqli_query($db_handle, $sql2);
 			    	//variable test pour blindage saisit enchere inferieur
-			    	$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre.<br>";
+			    	$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre ou supprimer. Cependant si vous ne voulez plus faire d'offre soyez sûr, car vous ne pourrez plus retenter.<br>";
 
 	            }elseif($type_achat == "offre"){ //on vérifie si l'objet dans le panier est un achat en offre
 			    	//Partie Deuxième ou nième <= 5 offre et que c'est son tour: 
@@ -231,21 +293,27 @@
 			    		$tenta++;
 			    		$sql3 = "UPDATE meilleur_offre SET Prix_acheteur = '$votre_prix_offre' , Statut = '2', Tentative = '$tenta' WHERE ID_acheteur = '$ID_temporaire_acheteur' AND ID_vendeur = '$ID_vendeur' AND ID_item = '$ID_temporaire_item';";
 						$result3 = mysqli_query($db_handle, $sql3);
+			    		$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre ou supprimer. Cependant si vous ne voulez plus faire d'offre soyez sûr, car vous ne pourrez plus retenter<br>";
+
 			    	}
-			    	if ($tenta == 5 && $stat == 1)
+			    	if ($tenta == 5 && $stat == 1) //statut 1 = tour du client
 			    		$erreurOffre .= "Vous ne pouvez plus faire de tentative, le vendeur vous a répondu, Accecptez ou refusez dans le panier.<br>";
-			    	if($tenta == 5 && $stat == 2)
+			    	if($tenta == 5 && $stat == 2) //statut 2 = tour du vendeur
 						$erreurOffre .= "Vous avez atteint le nombre limite de demande, vous ne pouvez plus faire de demande ! Attendez la réponse du vendeur.<br>";
 			    	if ($stat == 2 && $tenta != 5) //si tenta = 5 c'est le msg au dessus
 			    		$erreurOffre .= "Patientez, la demande d'offre précédente n'a pas encore eu de réponse de la part du vendeur. Votre précédente offre est de ".$prix_client." euros <br>";
-			    	if ($stat == 3)
+			    	if ($stat == 3) //statut 3 = c'bon plus bsn 
 						$erreurOffre .= "Le vendeur a accepté pour votre offre au prix de ".$prix_client." euros. Veuillez vous dirigez au panier pour régler.<br>";
-					if ($stat == 4)
+					if ($stat == 4) //statut 4 = le produit a déjà été accepté pour quelqu'un d'autre
 						$erreurOffre .="Nous sommes navrés de vous annoncer que le produit a été vendu à un autre client.<br>";
-
+			    }
+			    if (mysqli_num_rows($resultVerif) == 0 && mysqli_num_rows($resultOffre) != 0)
+			    {
+			    	if ($stat == 5) //L'acheteur a supprimé
+						$erreurOffre .="Vous avez déjà tenté votre chance.<br>";
 			    }
 			}else{
-				$erreurOffre .= "Erreur, vous ne pouvez pas mettre un prix supérieur au prix actuel.<br>";
+				$erreurOffre .= "Erreur, vous ne pouvez pas mettre un prix vide ou supérieur/égal au prix actuel.<br>";
 			}
 	    }
 	}
@@ -403,7 +471,12 @@
 				if (strpos($ID_type_vente, "offre") !== FALSE)
 				{
 					echo '<td><input type="number" name="votre_prix_offre" placeholder="Votre offre"></td>';
-					echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';
+					if (mysqli_num_rows($resultOffre) != 0)
+						echo '<p>Le prix actuel est de '.$prix_vendeur.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';
+					else 
+						echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';
+
+					
 					if ($erreurOffre != ""){
 						echo $erreurOffre;
 						$erreurOffre = "";
@@ -411,13 +484,14 @@
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
 				}
 
-				if (strpos($ID_type_vente, "enchere") !== FALSE)
-					echo "Les enchères sont ouvertes ! <br>";
-
 				//Si l'objet peut être vendu en enchère
 				//enchere formulaire
 				if (strpos($ID_type_vente, "enchere") !== FALSE)
 				{
+					if ($fin == 0)
+					echo "Les enchères sont ouvertes ! <br>";
+					else
+						echo "Les enchères sont fermées ! <br>";
 					echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
 					echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
 					echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';

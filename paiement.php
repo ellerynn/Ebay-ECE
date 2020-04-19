@@ -21,6 +21,36 @@
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
+
+	//traitement des données de la date actuelle
+		date_default_timezone_set('Europe/Paris');
+		$today = getdate();
+		$date_actuelle = "";
+		if (strlen($today["mon"]) != 2) //nombre en mois
+			$date_actuelle .=  $today["year"]."-0".$today["mon"]."-";
+		else
+			$date_actuelle .=  $today["year"]."-".$today["mon"]."-";
+		if(strlen($today["mday"]) !=2) //nombre en jour
+			$date_actuelle .= "0".$today["mday"];
+		else
+			$date_actuelle .= $today["mday"];
+
+		$heure_actuelle = "";
+		if (strlen($today["hours"]) != 2) //nombre H
+			$heure_actuelle .=  "0".$today["hours"].":";
+		else
+			$heure_actuelle .= $today["hours"].":";
+
+		if(strlen($today["minutes"]) !=2) //nombre M
+			$heure_actuelle .= "0".$today["minutes"].":";
+		else
+			$heure_actuelle .= $today["minutes"].":";
+		if(strlen($today["seconds"]) !=2) //nombre S
+			$heure_actuelle .= "0".$today["seconds"];
+		else
+			$heure_actuelle .= $today["seconds"];
+		//FIN traitement des données de la date actuelle
+
 	if ($db_handle)
 	{
 		//Coordonnées et carte
@@ -79,10 +109,10 @@
 			$infosCarte = "true";
 		}
 
-		$erreurDonnees = "";
 		$erreurPaiement = "";
 		if (isset($_POST["payer"])){
-			$solde = "";
+			$montant = "";
+			$expi = "";
 	  		$code_saisie = isset($_POST["code"])? $_POST["code"] : "";
 			$sql = "SELECT * From acheteur WHERE Code_securite = $code_saisie AND ID = $id";
 			$result = mysqli_query($db_handle, $sql);
@@ -90,101 +120,32 @@
 			{
 				while ($data = mysqli_fetch_assoc($result)) 
 				{
-					$solde = $data['Solde'];
+					$montant = $data['Solde'];
+					$expi = $data['Date_exp_carte'];
 				}
-				if ($solde >= $prixTot) //suffisant
+				if ($expi <= $date_actuelle)
 				{
-					//MODIFIER
-					$restant = $solde - $prixTot;
-					$sql = "UPDATE acheteur SET Solde = $restant WHERE ID = $id";
-					$result = mysqli_query($db_handle, $sql);
-					echo "<br><br><br>Payement réussi";
-					//videment du panier de ceux payer
-					//Achat immédiat
-					$sql = "SELECT * FROM panier WHERE ID = '$id' AND ID_type_vente = 'achat_immediat'";
-					$result = mysqli_query($db_handle, $sql);
-					if (mysqli_num_rows($result) != 0) 
+					if ($montant >= $prixTot) //suffisant
 					{
-						$temp_item = array();
-						$i = 0;
-						while ($data = mysqli_fetch_assoc($result)) 
+						//MODIFIER
+						$restant = $solde - $prixTot;
+						$sql = "UPDATE acheteur SET Solde = $restant WHERE ID = $id";
+						$result = mysqli_query($db_handle, $sql);
+						echo "<br><br><br>Payement réussi";
+						//videment du panier de ceux payer
+						//Achat immédiat
+						$sql = "SELECT * FROM panier WHERE ID = '$id' AND ID_type_vente = 'achat_immediat'";
+						$result = mysqli_query($db_handle, $sql);
+						if (mysqli_num_rows($result) != 0) 
 						{
-							$temp_item["$i"] = $data['ID_item'];
-							$i++;
-						}
-						for ($i = 0; $i<count($temp_item);$i++){// ON SUPPRIME TOUUUUUUUUT TOUUUUUT Acheter = Détruire
-							$sql = "DELETE FROM item WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql2 = "DELETE FROM photo WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql2);
-									
-							$sql = "DELETE FROM liste_enchere WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM encherir WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM meilleur_offre WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM panier WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-						}
-					}
-					//Offre terminé 
-					$sql = "SELECT * FROM meilleur_offre WHERE ID_acheteur = '$id' AND Statut = 3";
-					$result = mysqli_query($db_handle, $sql);
-					if (mysqli_num_rows($result) != 0) 
-					{
-						$temp_item = array();
-						$i=0;
-						while ($data = mysqli_fetch_assoc($result)) 
-						{
-							$temp_item["$i"] = $data['ID_item'];
-							$i++;
-						}
-						for ($i = 0; $i<count($temp_item);$i++)
-						{// ON SUPPRIME TOUUUUUUUUT TOUUUUUT Acheter = Détruire, TOUT les items offres, statut 3 pour lui
-							$sql = "DELETE FROM item WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql2 = "DELETE FROM photo WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql2);
-									
-							$sql = "DELETE FROM liste_enchere WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM encherir WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM meilleur_offre WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-
-							$sql = "DELETE FROM panier WHERE ID_item = $temp_item[$i]";
-							$result = mysqli_query($db_handle, $sql);
-						}
-					}
-					//Enchère terminé 
-					$sql = "SELECT * FROM liste_enchere WHERE Fin = 1"; // Parmi la liste d'enchere Terminer (=1)
-					$result = mysqli_query($db_handle, $sql);
-					if (mysqli_num_rows($result) != 0) 
-					{
-						$temp_prix = array();
-						$temp_item = array();
-						$i=0;
-						while ($data = mysqli_fetch_assoc($result))
-						{
-							$temp_prix[$i] = $data['Prix_premier'];
-							$temp_item[$i] = $data['ID_item'];
-							$i++;
-						}
-						for ($i = 0 ; $i < count($temp_prix) ; $i++) // on recupère les prix des gagnants
-						{//On cherche si ce prix correspond à une enchère fait pour ce acheteur
-							$sql = "SELECT * from encherir WHERE ID_acheteur = $id AND ID_item = $temp_item[$i] AND Prix_acheteur = $temp_prix[$i]";
-							$result = mysqli_query($db_handle, $sql);
-							if (mysqli_num_rows($result) != 0) // Si un item a été gagné par lui
-							{// DELETE TOUUUUUUUT en relation avec ce item car buy
+							$temp_item = array();
+							$i = 0;
+							while ($data = mysqli_fetch_assoc($result)) 
+							{
+								$temp_item["$i"] = $data['ID_item'];
+								$i++;
+							}
+							for ($i = 0; $i<count($temp_item);$i++){// ON SUPPRIME TOUUUUUUUUT TOUUUUUT Acheter = Détruire
 								$sql = "DELETE FROM item WHERE ID_item = $temp_item[$i]";
 								$result = mysqli_query($db_handle, $sql);
 
@@ -204,12 +165,91 @@
 								$result = mysqli_query($db_handle, $sql);
 							}
 						}
-					}
+						//Offre terminé 
+						$sql = "SELECT * FROM meilleur_offre WHERE ID_acheteur = '$id' AND Statut = 3";
+						$result = mysqli_query($db_handle, $sql);
+						if (mysqli_num_rows($result) != 0) 
+						{
+							$temp_item = array();
+							$i=0;
+							while ($data = mysqli_fetch_assoc($result)) 
+							{
+								$temp_item["$i"] = $data['ID_item'];
+								$i++;
+							}
+							for ($i = 0; $i<count($temp_item);$i++)
+							{// ON SUPPRIME TOUUUUUUUUT TOUUUUUT Acheter = Détruire, TOUT les items offres, statut 3 pour lui
+								$sql = "DELETE FROM item WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql);
 
-				} //solde >= PrixTot
+								$sql2 = "DELETE FROM photo WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql2);
+										
+								$sql = "DELETE FROM liste_enchere WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql);
+
+								$sql = "DELETE FROM encherir WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql);
+
+								$sql = "DELETE FROM meilleur_offre WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql);
+
+								$sql = "DELETE FROM panier WHERE ID_item = $temp_item[$i]";
+								$result = mysqli_query($db_handle, $sql);
+							}
+						}
+						//Enchère terminé 
+						$sql = "SELECT * FROM liste_enchere WHERE Fin = 1"; // Parmi la liste d'enchere Terminer (=1)
+						$result = mysqli_query($db_handle, $sql);
+						if (mysqli_num_rows($result) != 0) 
+						{
+							$temp_prix = array();
+							$temp_item = array();
+							$i=0;
+							while ($data = mysqli_fetch_assoc($result))
+							{
+								$temp_prix[$i] = $data['Prix_premier'];
+								$temp_item[$i] = $data['ID_item'];
+								$i++;
+							}
+							for ($i = 0 ; $i < count($temp_prix) ; $i++) // on recupère les prix des gagnants
+							{//On cherche si ce prix correspond à une enchère fait pour ce acheteur
+								$sql = "SELECT * from encherir WHERE ID_acheteur = $id AND ID_item = $temp_item[$i] AND Prix_acheteur = $temp_prix[$i]";
+								$result = mysqli_query($db_handle, $sql);
+								if (mysqli_num_rows($result) != 0) // Si un item a été gagné par lui
+								{// DELETE TOUUUUUUUT en relation avec ce item car buy
+									$sql = "DELETE FROM item WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql);
+
+									$sql2 = "DELETE FROM photo WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql2);
+											
+									$sql = "DELETE FROM liste_enchere WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql);
+
+									$sql = "DELETE FROM encherir WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql);
+
+									$sql = "DELETE FROM meilleur_offre WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql);
+
+									$sql = "DELETE FROM panier WHERE ID_item = $temp_item[$i]";
+									$result = mysqli_query($db_handle, $sql);
+								}
+							}
+						}
+						//Tout est bon redirection dans panier
+						echo "<script type='text/javascript'>document.location.replace('panier.php');</script>";
+					} //solde >= PrixTot
+					else
+						$erreurPaiement .= "Solde insuffissant, Paiement refusé.<br>";
+				}//expiration
+				else
+					$erreurPaiement .= "Carte expiré.<br>";
+
 			}// Si code de sécurité bon
 			else //Pas encore afficher
-				$erreurPaiement = "Solde insuffissant, Paiement refusé.<br>";
+				$erreurPaiement .= "Code invalide.<br>";
 
 		}//Si bouton payer
 	}
@@ -295,6 +335,7 @@
 
 <?php
 echo '
+<br><br><br>
 <div id = "afficherfalse">
 	<div class ="form-group" id ="infosCoords'.$infosCoords.'" style="display: none;">
 		<h5>Vos coordonnées de livraison</h5>
@@ -402,8 +443,9 @@ echo'<div class ="form-group" id ="infosCarte'.$infosCarte.'" style="display: no
 		<input class="form-control" style="width:200px; margin: 0 auto" name="boutonPaiement" id="passerPaiement"type="submit" value="Payer">
 	</form>
 	<?php ///Faire ça quand des données ne sont pas saisie
-		if($erreurDonnees != ""){
-			echo $erreurDonnees;
+		if ($erreurPaiement != "")
+		{
+			echo $erreurPaiement;
 		}
 	?>
 </div>
@@ -417,6 +459,7 @@ echo'
 <input class="form-control" style="width:200px; margin: 0 auto" name="payer" type="submit" value="Valider" required>
 </form>';
 ?>
+
 </div>
 <!--atchom-->
 		<!--Créer un pied de page (footer)-->
