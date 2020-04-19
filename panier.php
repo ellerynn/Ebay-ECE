@@ -75,6 +75,7 @@
 	$ID_item2 = array();
 	$statut2 = array();
 	$prix_acheteur_accepte = array();
+	$prix_vendeur = array();
 	//$ID_type_vente2 = array();
 
 	// declaration enchere
@@ -287,6 +288,7 @@
 				$dat = $data['ID_item'];
 				$statut2["$dat"] = $data['Statut']; // statue2 {ID_item => status }
 				$prix_acheteur_accepte["$dat"] = $data['Prix_acheteur']; // {ID_item => prix_acheteur}
+				$prix_vendeur["$dat"] = $data['Prix_vendeur'];
 				$i++;
 			}	
 		}
@@ -492,41 +494,58 @@
 				</ul>      
 			</div> 
 		</nav>	
-
+<br><br>
 		<div class="container-fluid features" id="con-insc">
 			<h1 class="text-center"> Votre panier</h1>
+            <div class="panel border" style="margin: 0 auto; width: 1000px; padding: 50px; margin-bottom: 1em;">
+
 			<?php
 			$prix_tot_achat = "0";
 			$prix_tot_achat2 = "0";
+
+			echo'
+			<table class = "table center">
+				<tr>
+					<td class = "text-center"><B>Panier immédiat<B></td>
+				</tr>
+
+			</table>
+
+				';
 			//achat immediat
-			echo "Panier Avec Achat possible <br>";
+			echo '
+			<table class="table">
+				<tr>
+					<td>Type d\'achat</td>
+					<td>Photo</td>
+					<td>Nom</td>
+					<td>Le vendeur</td>
+					<td>La catégorie</td>
+					<td>Le prix</td>
+					<td>Action</td>
+				</tr>
+			';
+
 			for ($i = 0 ; $i<count($ID_item); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				for ($u = 0 ; $u < count($table_photo["$ID_item[$i]"]); $u++){
-					echo '<img src = "images_web/'.$table_photo["$ID_item[$i]"][$u].'" height=100 width =100 ><br>';
-
-				}
-				//traitement de la table item:
-
-				echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
-				echo 'Le nom de l\'item :
-						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item["$ID_item[$i]"][0].'">'.$table_item["$ID_item[$i]"][1].'</a><br>';
-
-				echo "Le vendeur de l'item :".$table_item["$ID_item[$i]"][2]."<br>"; 
-				echo "La description de l'item :".$table_item["$ID_item[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-				echo "La catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
-				echo "Le Prix de l'item :".$table_item["$ID_item[$i]"][6]."<br>"; 
-				echo "La video de l'item :".$table_item["$ID_item[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 				$supprimer[$i] = "supprimer_".$i;
-				echo '<form action="" method="post">';
-				echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier">';
-				echo "<br>";
-				$prix_tot_achat2+=$table_item["$ID_item[$i]"][6];
-				echo "</form>";
-				
+		  echo '<tr>
+		  			<td>Achat immédiat</td>
+		  			<td><img src = "images_web/'.$table_photo["$ID_item[$i]"][0].'" height=100 width =100 ></td>
+		  			<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item["$ID_item[$i]"][0].'">'.$table_item["$ID_item[$i]"][1].'</a></td>
+		  			<td>'.$table_item["$ID_item[$i]"][2].'</td>
+		  			<td>'.$table_item["$ID_item[$i]"][5].'</td>
+		  			<td>'.$table_item["$ID_item[$i]"][6].'</td>
+		  			<td>
+		  				<form action="" method="post">
+		  					<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier">
+		  				</form>
+		  			</td>
+		  		</tr>
+		  ';
+				$prix_tot_achat+=$table_item["$ID_item[$i]"][6];
 			}
-
 			for ($i = 0 ; $i<count($ID_item); $i++)
 			if (isset($_POST["$supprimer[$i]"])) 
 			{
@@ -534,7 +553,7 @@
 				$stock2 = $table_item["$ID_item[$i]"][2];
 				$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'achat_immediat'";
 				$result = mysqli_query($db_handle, $sql);
-				$prix_tot_achat2-=$table_item["$ID_item[$i]"][6];
+				$prix_tot_achat-=$table_item["$ID_item[$i]"][6];
 
 				echo "<script type='text/javascript'>document.location.replace('panier.php');</script>";
 				exit();
@@ -546,24 +565,21 @@
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
 				if($statut2["$ID_item2[$i]"] == 3){ ///
-					for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++){
-						echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
-					}
-					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
-					echo 'Le nom de l\'item :
-						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a><br>';
-					echo "Le nom de l'item :".$table_item2["$ID_item2[$i]"][1]."<br>";
-					echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
-					echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "La catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
-					echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-					echo "Prix de l'offre : ".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
+			echo '
+				<tr>
+					<td>Offre conclu</td>
+					<td><img src = "images_web/'.$table_photo2["$ID_item2[$i]"][0].'" height=100 width =100 ></td>
+					<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a></td>
+					<td>'.$table_item2["$ID_item2[$i]"][2].'</td>
+					<td>'.$table_item2["$ID_item2[$i]"][5].'</td>
+					<td>'.$prix_acheteur_accepte["$ID_item2[$i]"].'</td>
+					<td>Aucune Modification possible</td>
+				</tr>
+			';
+					//traitement de la table item: 
 					$prix_tot_achat+=$prix_acheteur_accepte["$ID_item2[$i]"];
 				}
-			}	 
-
+			}	
 			//Enchere achat possible
 			for ($i = 0 ; $i< count($table_encherir); $i++)
 			{ //items enchéris par le client
@@ -572,73 +588,88 @@
 				$var = $table_encherir["$i"][0];
 				if($table_item4["$var"][5] == 1 && $table_item4["$var"][3] == $table_encherir["$i"][2])
 				{
+					$prixEnch = $table_item4["$var"][4]+1; // Second + 1
 
-					for ($u = 0 ; $u < count($table_photo3["$var"]); $u++)
-					{
-						echo '<img src = "images_web/'.$table_photo3["$var"][$u].'" height=100 width =100 ><br>';
+					echo '
+				<tr>
+					<td>Enchère gagnée <br>Fin : '.$table_item4["$var"][1].' à '.$table_item4["$var"][2].'</td>
+					<td><img src = "images_web/'.$table_photo3["$var"][0].'" height=100 width =100 ></td>
+					<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a></td>
+					<td>'.$table_item3["$var"][2].'</td>
+					<td>'.$table_item3["$var"][5].'</td> 
+					<td>'.$prixEnch.'</td>
+					<td>Aucune Modification possible</td>
+				</tr>
 
-					}
-					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item3["$var"][0]."<br>";
-					echo 'Le nom de l\'item :
-						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a><br>';
-					echo "Le nom de l'item :".$table_item3["$var"][1]."<br>";
-					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
-					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "La catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
-					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 
-					echo "La date de fin de l'enchere :".$table_item4["$var"][1]."<br>";
-					echo "L'heure' de fin de l'enchere :".$table_item4["$var"][2]."<br>"; 
-					echo "Le Prix premier :".$table_item4["$var"][3]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le Prix second  :".$table_item4["$var"][4]."<br>";
-					echo "Le chiffre Fin  :".$table_item4["$var"][5]."<br>";  
-					echo "Montant de cette enchere :".$table_item4["$var"][4]." + 1 <br>";
+			'; 
 					$prix_tot_achat+=$table_item4["$var"][4]; ///Prix précédent
 					$prix_tot_achat++;
 				}
-			}	 
-			$prix_tot_achat2+=$prix_tot_achat;
-			echo "Prix total svp: ".$prix_tot_achat2."<br><br><br>";
-			$_SESSION["prix_total"] = $prix_tot_achat2;
-			echo '<a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a>';
-			echo "<br>";
+			}	
+				$_SESSION["prix_total"] = $prix_tot_achat;
+		echo '	<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>Total: </td>
+					<td>'.$prix_tot_achat.'</td>
+					<td><a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a></td>
+				</tr>
+		';
+			echo "</table>"; 
 
 //EN COURS
-			echo "--------------------------------En Attente--------------------------------------<br>";
+			echo '
+			<table class = "table center">
+				<tr>
+					<td class = "text-center"><B>Panier en attente<B></td>
+				</tr>
+
+			</table>';
 			//meilleur offre en cours
+			echo '
+			<table class="table">
+				<tr>
+					<td>Type d\'achat</td>
+					<td>Photo</td>
+					<td>Nom</td>
+					<td>Le vendeur</td>
+					<td>La catégorie</td>
+					<td>Le prix</td>
+					<td>Action</td>
+				</tr>
+			';
 			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
 				if($statut2["$ID_item2[$i]"] <= 2) //Affichage de tout les items dont l'offre est au statut 2
 				{
-						for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++)
-						{
-							echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
-
-						}
-						//traitement de la table item:
-						echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
-						echo 'Le nom de l\'item :
-						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a><br>';
-						echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
-						echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-						echo "La catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
-						echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
-						echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br>"; //Faudrait le lien mais là on a affiché que le nom
-						echo "Statut (pour savoir autour de qui) :".$statut2["$ID_item2[$i]"]."<br>";
-						echo "Votre offre demandé :".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
-						echo '<form action="" method="post">';
-						
 						$accepter_offre["$ID_item2[$i]"] = "accepter_offre_".$i;
-						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter l\'offre">';
-						echo "<br>";
-
 						$supprimer2["$ID_item2[$i]"] = "supprimer2_".$i;
-						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item du panier">';
-						echo "<br>";
-						echo "</form>";
+
+					echo'
+					<tr>';
+					if ($statut2["$ID_item2[$i]"] == 1)
+						echo '<td>Offre en cours<br> Votre tour</td>';
+					if ($statut2["$ID_item2[$i]"] == 2)
+						echo '<td>Offre en cours<br> En attente de la réponse du vendeur</td>';
+					echo '
+						<td><img src = "images_web/'.$table_photo2["$ID_item2[$i]"][0].'" height=100 width =100 ></td>
+						<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a></td>
+						<td>'.$table_item2["$ID_item2[$i]"][2].'</td>
+						<td>'.$table_item2["$ID_item2[$i]"][5].'</td>
+						<td>Votre offre: '.$prix_acheteur_accepte["$ID_item2[$i]"].'€<br>
+							Vendeur: '.$prix_vendeur["$ID_item2[$i]"].'€</td>
+						<td>
+							<form action="" method="post">
+								<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter l\'offre"><br>
+								<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item du panier">
+							</form>
+						</td>
+					</tr>
+					';
 						$prix_tot_achat2+=$prix_acheteur_accepte["$ID_item2[$i]"];
 					}	
 			}	 
@@ -685,32 +716,37 @@
 				$var = $table_encherir["$i"][0];
 				if($table_item4["$var"][5] == 0)
 					{
-						for ($u = 0 ; $u < count($table_photo3["$var"]); $u++){
-						echo '<img src = "images_web/'.$table_photo3["$var"][$u].'" height=100 width =100 ><br>';
-
-					}
+echo'
+					<tr>
+						<td>Enchère en cours <br>Fin : '.$table_item4["$var"][1].' à '.$table_item4["$var"][2].'</td>
+						<td><img src = "images_web/'.$table_photo3["$var"][0].'" height=100 width =100 ></td>
+						<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a></td>
+						<td>'.$table_item3["$var"][2].'</td>
+						<td>'.$table_item3["$var"][5].'</td>
+						<td>Votre mise : '.$table_encherir["$i"][2].'€<br>
+							Montant actuel : '.$table_item4["$var"][3].'€</td>
+						<td><a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a></td>
+					</tr>';
 					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item3["$var"][0]."<br>";
-					echo 'Le nom de l\'item :
-						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a><br>';
-					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
-					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "La catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
-					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-					echo "La date de fin de l'enchere :".$table_item4["$var"][1]."<br>";
-					echo "L'heure' de fin de l'enchere :".$table_item4["$var"][2]."<br>"; 
-					echo "Le Prix premier :".$table_item4["$var"][3]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le Prix second  :".$table_item4["$var"][4]."<br>";
-					echo "Le chiffre Fin  :".$table_item4["$var"][5]."<br>";  
-					echo "Votre mise : ".$table_encherir["$i"][2]."<br>";
-
 					$prix_tot_achat2+=$table_encherir["$i"][2];
 				}
-				echo "Prix total du panier en cours: ".$prix_tot_achat2."<br><br><br>";
 			}
+			echo '	<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>Estimation total: </td>
+					<td>'.$prix_tot_achat2.'</td>
+					<td></td>
+				</tr>
+		';
+
+			echo "</table>";
+
 			mysqli_close($db_handle);
 			?>
+</div>
 		</div>
 
 

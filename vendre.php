@@ -54,6 +54,7 @@
 
 	//Pour la partie suppression de ventes
 	$table_item = array();
+	$vendeur_item = array();
 	$table_photo = array();
 	$nom_item = array();
 	$ID_item = array();
@@ -76,6 +77,8 @@
 			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
 			$i_temp++;
 			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+			$i_temp++;
+			$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2 Le vendeur
 
 			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
 			$j++;
