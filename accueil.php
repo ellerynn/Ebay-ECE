@@ -28,6 +28,7 @@
 	$nom = array();
 	$prix = array();
 	$categorie = array();
+	$type = array();
 	$temp = array();
 	$c = 0;
 
@@ -42,6 +43,7 @@
 				$prix[$i] = $data['Prix'];
 				$nom[$i] = $data['Nom_item'];
 				$categorie[$i] = $data['Categorie'];
+				$type[$i] = $data['ID_type_vente'];
 				$i++;
 			}
 
@@ -53,6 +55,7 @@
 				$temp[1] = $nom[$u];
 				$temp[2] = $prix[$u]; 
 				$temp[3] = $categorie[$u];
+				$temp[4] = $type[$u];
 
 				$table_item["$ID_i[$u]"] = $temp; // Tableau associatif
 			}
@@ -71,13 +74,13 @@
 				}
 			}
 			if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
-			$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
-			$result = mysqli_query($db_handle, $sql);	
-			if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
-				$_SESSION['itemClick'] = $_GET['idLien'];
-				header('Location: page_produit.php');
-				exit();
-			}
+		$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
+		$result = mysqli_query($db_handle, $sql);	
+		if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
+			$_SESSION['itemClick'] = $_GET['idLien'];
+			header('Location: page_produit.php');
+			exit();
+		}
 	}
 		}
 	else
@@ -229,20 +232,20 @@
 			    				
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 									echo '<td>';
-									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>'; 
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo '<td>oui</td>'; //Achat immédiat
 									else
 										echo '<td>non</td>';
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo '<td>oui</td>'; //Meilleur offre
 									else
 										echo '<td>non</td>'; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo '<td>oui</td>'; //Enchere
 									else
-										echo '<td>non</td>'; 
+										echo '<td>non</td>';
 								echo '<tr>';
 			    			}
 
@@ -270,19 +273,19 @@
 			    			if ($table_item["$ID_i[$i]"][3] == "Musee"){
 			    				echo "<tr>";
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
-								//}
 									echo '<td>';
 									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
+								//}
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else
 										echo "<td>non</td>";
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo "<td>oui</td>"; //Meilleur offre
 									else
 										echo "<td>non</td>"; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo "<td>oui</td>"; //Enchere
 									else
 										echo "<td>non</td>"; 
@@ -308,30 +311,30 @@
 			    				//echo "<td>Prix (€)</td>";
 			    			echo "</tr>";
 
-			    		for ($i= 0; $i < count($table_item); $i++){
-			    		$var = $ID_i[$i]; //pour chaque item
+			    		for ($i= 0; $i < count($table_item); $i++)
+			    		{ //pour chaque item
+			    			$var = $ID_i[$i];
 			    			if ($table_item["$ID_i[$i]"][3] == "VIP"){
 			    				echo "<tr>";
 			    				//on affiche tout les données des items de catégorie ferraille 
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
+								//}
 									echo '<td>';
 									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
-								//}
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else
 										echo "<td>non</td>";
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo "<td>oui</td>"; //Meilleur offre
 									else
 										echo "<td>non</td>"; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo "<td>oui</td>"; //Enchere
 									else
 										echo "<td>non</td>"; 
-									//echo "<td>".$table_item[$i][6]."</td>"; //Prix
 								echo "<tr>";
 			    			}
 
@@ -352,11 +355,10 @@
 				<div class="row">
 					<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px;width:250px"> <?php
-							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>  
-							
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<td>';
-							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
+							echo '<a style="margin-left:3em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> <?php
 			}
 
@@ -364,11 +366,10 @@
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12" style="width:100px"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
-							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>   
-							
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<td>';
-							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
+							echo '<a style="margin-left:3em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> <?php
 			}
 
@@ -376,11 +377,10 @@
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
-							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>     
-							
+							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<td>';
-							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>  
+							echo '<a style="margin-left:3em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> 
     				<div class="col-lg-2 col-md-2 col-sm-12"></div> 
     			</div> <br><?php
