@@ -58,6 +58,7 @@
 	$nom_item = array();
 	$ID_item = array();
 
+	$filevideo = isset($_POST["filevideo"])? $_POST["filevideo"] : "";
 	//Récuperation des ID_item du vendeur (dont admins) connecté
 	$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
 	$r1 = mysqli_query($db_handle, $sql1);
@@ -99,7 +100,7 @@
 	{
 	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
 		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
-		$filevideo = isset($_POST["fileVideo"])? $_POST["fileVideo"] : "";
+		
 		$description = isset($_POST["description"])? $_POST["description"]: "";
 		$categorie = isset($_POST["categorie"])? $_POST["categorie"] : "";
 		$prix = isset($_POST["prix"])? $_POST["prix"] : "";
@@ -127,8 +128,8 @@
 		}
 
 	 	//vérification du type de la vidéo
-	 	if (count($_FILES['filevideo']['name']) == 1 && $_FILES['filevideo']['type'][0] != "video/mp4" && $_FILES['filevideo']['name'][0] != "")
-	 	 	$erreur .="La vidéo choisi doit être en .mp4. <br>";
+	 	if ($filevideo == "")
+	 	 	$erreur .="La vidéo choisi doit être en un lien url <br>";
 
 		if ($description == "")  
 		 	$erreur .= "La description est vide. <br>"; 
@@ -180,22 +181,12 @@
 		    ///BDD
 	        if ($db_found) 
 	        {
-	        	$filenamevideo = "";
-				if (isset($fileVideo))
-				{
-				    $countfiles = count($_FILES['filevideo']['name']);
-					for($i=0;$i<$countfiles;$i++)
-					{
-						$filenamevideo = $_FILES['filevideo']['name'][$i];
-						move_uploaded_file($_FILES['filevideo']['tmp_name'][$i],'videos_web/'.$filenamevideo);
-					}
-				}
 				
 				//s'il ne s'agit que d'un enchère Sinon le prix reste en prix par défaut: 
 				if (strlen($type_vente_choisi) == 8)
 					$prix = $prixdepart;
 
-		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filenamevideo');";
+		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filevideo');";
 		        $result = mysqli_query($db_handle, $sql);
 		        //Normalement c'est ajouté , mtn vérifions et extraction de l'ID: 
 		        $sql3 = "SELECT LAST_INSERT_ID(ID_item) FROM item ";
@@ -387,11 +378,10 @@
 				<span class="navbar-toggler-icon"></span>       
 			</button>   
 
-			<form class="navbar-form inline-form">
+			<form action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
-				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				   	<button class="btn btn-outline-secondary btn-sm" name = "chercher">Faire une recherche</button>
 				</div>
 			</form>
 
@@ -464,7 +454,7 @@
 						                </div>
 										<div class="col-lg-6 col-md-6 col-sm-12">
 							                <p class="font-weight-bold">Vidéo (facultative)</p>
-						                    <input type="file" name="filevideo[]" id="file" multiple>
+						                    <input class="form-control" type="text" style="width: 100%" name="filevideo" placeholder="URL Video">
 							            </div>
 							        </div>
 				                </div>
@@ -473,7 +463,7 @@
 						        </div>
 						        <div class="form-group">
 						            <p class="font-weight-bold">Catégorie(s)</p>
-						            <input type="radio" name="categorie" value="Farraille_tresor" id="cb">Ferraille ou Trésor
+						            <input type="radio" name="categorie" value="Ferraille_tresor" id="cb">Ferraille ou Trésor
 									<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
 									<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
 						        </div>
