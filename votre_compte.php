@@ -144,11 +144,11 @@
 				<span class="navbar-toggler-icon"></span>       
 			</button>   
 
-			<form class="navbar-form inline-form">
+			<form style="display: none;" id="barre" action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
 				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				   	<button name="chercher" class="btn btn-outline-secondary btn-sm">Chercher</button>
 				</div>
 			</form>
 
@@ -540,6 +540,9 @@
 			elseif($_SESSION['Statut'] == ACHETEUR)
 			{?>
 				<script>
+					var recherche = document.getElementById("barre");
+					recherche.style.display = "block";
+
 					document.getElementById("ades").onclick = function() {
 						var cachebis = document.getElementById("l2");
 						cachebis.style.display = "none";
