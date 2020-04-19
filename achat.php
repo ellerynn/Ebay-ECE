@@ -84,6 +84,18 @@
 					$var = $table_item[$i][0];
 					$table_vendeur["$var"] = $data['Pseudo'];
 				}
+			}else //Si le vendeur n'est pas trouvé, c'est un administrateur
+			{
+				$sqlContour = "SELECT Prenom FROM personne WHERE ID = ".$table_item[$i][2];
+				$resultContour = mysqli_query($db_handle,$sqlContour);
+				if (mysqli_num_rows($resultContour) != 0)
+				{
+					while ($data = mysqli_fetch_assoc($resultContour) ) //extraction de toute les photos d'un item donnée
+					{
+						$var = $table_item[$i][0];
+						$table_vendeur["$var"] = $data['Prenom'];
+					}
+				}
 			}
 		}
 		//Récupération de la table enchère
@@ -229,7 +241,7 @@
 						    			echo '</tr>';
 						    		for ($i= 0; $i < count($table_item); $i++)
 						    		{ //pour chaque item
-						    			if ($table_item[$i][5] == "Farraille_tresor")
+						    			if ($table_item[$i][5] == "Ferraille_tresor")
 						    			{
 						    				echo '<tr>';
 						    				//on affiche tout les données des items de catégorie ferraille 
