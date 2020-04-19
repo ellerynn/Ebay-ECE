@@ -182,7 +182,7 @@
 		</nav>
 
 		<?php if ($statut == VENDEUR)?>
-			<div class="container-fluid features" style="background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?
+			<div class="container-fluid features" style="background-size: cover; background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?
 		else
 			echo'<div class="container-fluid features">';?>
 			<div class="panel">
