@@ -70,6 +70,15 @@
 					$table_photo["$ID_i[$a]"]= $photo; //array de photo dans tableau associatif
 				}
 			}
+			if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
+			$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
+			$result = mysqli_query($db_handle, $sql);	
+			if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
+				$_SESSION['itemClick'] = $_GET['idLien'];
+				header('Location: page_produit.php');
+				exit();
+			}
+	}
 		}
 	else
 		echo "pas de database";
@@ -115,11 +124,10 @@
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
-			<form class="navbar-form inline-form">
+			<form action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
-				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				   	<button class="btn btn-outline-secondary btn-sm" name = "chercher">Faire une recherche</button>
 				</div>
 			</form>
 
@@ -214,11 +222,14 @@
 			    			echo '</tr>';
 			    		for ($i= 0; $i < count($table_item); $i++)
 			    		{ //pour chaque item
+			    			$var = $ID_i[$i];
 			    			if ($table_item["$ID_i[$i]"][3] == "Farraille_tresor")
 			    			{
 			    				echo '<tr>';
 			    				
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
+									echo '<td>';
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>'; 
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
 										echo '<td>oui</td>'; //Achat immédiat
@@ -255,10 +266,13 @@
 			    			echo "</tr>";
 
 			    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+			    			$var = $ID_i[$i];
 			    			if ($table_item["$ID_i[$i]"][3] == "Musee"){
 			    				echo "<tr>";
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 								//}
+									echo '<td>';
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
 										echo "<td>oui</td>"; //Achat immédiat
@@ -294,11 +308,14 @@
 			    				//echo "<td>Prix (€)</td>";
 			    			echo "</tr>";
 
-			    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+			    		for ($i= 0; $i < count($table_item); $i++){
+			    		$var = $ID_i[$i]; //pour chaque item
 			    			if ($table_item["$ID_i[$i]"][3] == "VIP"){
 			    				echo "<tr>";
 			    				//on affiche tout les données des items de catégorie ferraille 
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
+									echo '<td>';
+									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  
 								//}
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 
@@ -329,14 +346,17 @@
 		//Pour chaque item
 		for ($i = 0 ; $i<count($ID_i); $i++)
 		{
+			$var = $ID_i[$i];
 			if($c == 0)
 			{?>
 				<div class="row">
 					<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px;width:250px"> <?php
-							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>  
+							
 						</div>
-						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
+						<?php echo '<td>';
+							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> <?php
 			}
 
@@ -344,9 +364,11 @@
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12" style="width:100px"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
-							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>   
+							
 						</div>
-						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
+						<?php echo '<td>';
+							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> <?php
 			}
 
@@ -354,9 +376,11 @@
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
-							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
+							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>     
+							
 						</div>
-						<?php echo '<p style="margin-left:2em;">'.$table_item["$ID_i[$i]"][1].'<br>'.$table_item["$ID_i[$i]"][2].'€</p>';?>
+						<?php echo '<td>';
+							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>  
     				</div> 
     				<div class="col-lg-2 col-md-2 col-sm-12"></div> 
     			</div> <br><?php
