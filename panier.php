@@ -16,59 +16,88 @@
 	  header('Location: connexion.php');
 	  exit();
 	}
+//traitement des données de la date actuelle
+	date_default_timezone_set('Europe/Paris');
+	$today = getdate();
+	$date_actuelle = "";
+	if (strlen($today["mon"]) != 2) //nombre en mois
+		$date_actuelle .=  $today["year"]."-0".$today["mon"]."-";
+	else
+		$date_actuelle .=  $today["year"]."-".$today["mon"]."-";
+	if(strlen($today["mday"]) !=2) //nombre en jour
+		$date_actuelle .= "0".$today["mday"];
+	else
+		$date_actuelle .= $today["mday"];
+
+	$heure_actuelle = "";
+	if (strlen($today["hours"]) != 2) //nombre H
+		$heure_actuelle .=  "0".$today["hours"].":";
+	else
+		$heure_actuelle .= $today["hours"].":";
+
+	if(strlen($today["minutes"]) !=2) //nombre M
+		$heure_actuelle .= "0".$today["minutes"].":";
+	else
+		$heure_actuelle .= $today["minutes"].":";
+	if(strlen($today["seconds"]) !=2) //nombre S
+		$heure_actuelle .= "0".$today["seconds"];
+	else
+		$heure_actuelle .= $today["seconds"];
+//FIN traitement des données de la date actuelle
 
 	$ID_temporaire_acheteur = $id;
-	$Date_fin_temporaire = "2020-04-19";
 	$supprimer = array();
 	$supprimer2 = array();
+	$accepter_offre = array();
 	//declaration achat immediat
 	$table_item = array();
 	$table_photo = array();
-	$nom_item = array();
-	$ID_vendeur = array();
-	$description = array();
-	$categorie = array();
-	$prix = array();
-	$video = array();
-	$ID =array();
+	//$nom_item = array();
+	//$ID_vendeur = array();
+	//$description = array();
+	//$categorie = array();
+	//$prix = array();
+	//$video = array();
+	//$ID =array();
 	$ID_item = array();
-	$ID_type_vente = array();
+	//$ID_type_vente = array();
 
 	 // declaration meilleur offre
 	$table_item2 = array();
 	$table_photo2 = array();
-	$nom_item2 = array();
-	$ID_vendeur2 = array();
-	$description2 = array();
-	$categorie2 = array();
-	$prix2 = array();
-	$video2 = array();
-	$ID2 =array();
+	//$nom_item2 = array();
+	//$ID_vendeur2 = array();
+	//$description2 = array();
+	//$categorie2 = array();
+	//$prix2 = array();
+	//$video2 = array();
+	//$ID2 =array();
 	$ID_item2 = array();
 	$statut2 = array();
-	$ID_type_vente2 = array();
+	$prix_acheteur_accepte = array();
+	//$ID_type_vente2 = array();
 
 	// declaration enchere
 	$table_item3 = array();
 	$table_item4 = array();
 	$table_photo3 = array();
-	$nom_item3 = array();
-	$ID_vendeur3 = array();
-	$description3 = array();
-	$categorie3 = array();
-	$prix3 = array();
-	$video3 = array();
-	$ID3 =array();
-	$ID_item3 = array();
-	$ID_type_vente3 = array();
-	$Prix_premier = array();
-	$Prix_second = array();
-	$Prix_acheteur = array();
-	$ID_acheteur = array();
-	$ID_enchere = array();
-	$Date_fin = array();
-	$Heure_fin = array();
-	$Fin = array();
+	//$nom_item3 = array();
+	//$ID_vendeur3 = array();
+	//$description3 = array();
+	//$categorie3 = array();
+	//$prix3 = array();
+	//$video3 = array();
+	//$ID3 =array();
+	//$ID_item3 = array();
+	//$ID_type_vente3 = array();
+	//$Prix_premier = array();
+	//$Prix_second = array();
+	//$Prix_acheteur = array();
+	//$ID_acheteur = array();
+	//$ID_enchere = array();
+	//$Date_fin = array();
+	//$Heure_fin = array();
+	//$Fin = array();
 
 	if(isset($_SESSION['login']))
 	{
@@ -84,38 +113,62 @@
 	  //header('Location: connexion.php');
 	  //exit();
 	}
+
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
 	if ($db_found) 
 	{
+		//On vérifie si des enchères sont terminés (code identique dans panier.php)
+		//On récupère touuuut les enchères TOUUT pour vérifier leur date
+		//pas que acheteur
+		$sql = "SELECT * FROM liste_enchere";
+		$result = mysqli_query($db_handle,$sql);
+		if (mysqli_num_rows($result) != 0)
+		{
+			while ($data = mysqli_fetch_assoc($result)) 
+			{
+				$itemDateFin = $data['Date_fin'];
+				$itemHeureFin = $data['Heure_fin'];
+				$tempItem = $data['ID_item'];
+				if ($itemDateFin < $date_actuelle)
+				{
+					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+				}
+				if ($itemDateFin == $date_actuelle && $itemHeureFin <= $heure_actuelle)
+				{
+					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+				}
+			}
+		}
+
 		//PARTIE RECUPERATION ET AFFICHAGE ACHAT IMMEDIAT
 		$sql = "SELECT * FROM panier WHERE ID LIKE '$ID_temporaire_acheteur' AND ID_type_vente LIKE 'achat_immediat'";
 		$result = mysqli_query($db_handle, $sql);
 
-		if (mysqli_num_rows($result) == 0) {
-		} 
-		else {
+		if (mysqli_num_rows($result) != 0) 
+		{
 			$i=0;
 			while ($data = mysqli_fetch_assoc($result)) 
 			{
-				$ID[$i] = $data['ID'];
+				//$ID[$i] = $data['ID'];
 				$ID_item[$i] = $data['ID_item'];
-				$ID_type_vente[$i] = $data['ID_type_vente'];
+				//$ID_type_vente[$i] = $data['ID_type_vente'];
 				$i++;
 			}
 			
 		}
 
-
 		//On recupère les données de chaque item de la table Item
-		for($a=0; $a < count($ID_item); $a++){
-		$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item[$a]' "; //retrouver les ID_items issu de ID_item[]
-		$result1 = mysqli_query($db_handle, $sql1);
+		for($a=0; $a < count($ID_item); $a++)
+		{
+			$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item[$a]' "; //retrouver les ID_items issu de ID_item[]
+			$result1 = mysqli_query($db_handle, $sql1);
 
-			if (mysqli_num_rows($result1) == 0) {
-			}
-			else {
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$i=0;
 				$temp = array();
 				while ($data = mysqli_fetch_assoc($result1) ) 
@@ -142,14 +195,10 @@
 				
 			}
 
-		}	
-
-		for($a=0; $a < count($ID_item); $a++){
-		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
-		$result1 = mysqli_query($db_handle, $sql1);
-			if (mysqli_num_rows($result1) == 0) {
-			} 
-			else {
+			$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
+			$result1 = mysqli_query($db_handle, $sql1);
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$v = 0;
 				$temp =array();
 				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
@@ -158,41 +207,37 @@
 					$v++;
 				}
 				$table_photo["$ID_item[$a]"]= $temp; //array de photo dans tableau associatif
-				
 			}
-		}
 
+		}	
+		//FIN récup pour les items d'achat immédiat
 
 		//PARTIE RECUPERATION ET AFFICHAGE MEILLEUR OFFRE
 		$sql1 = "SELECT * FROM panier WHERE ID LIKE '$ID_temporaire_acheteur' AND ID_type_vente LIKE 'offre'";
 		$result1 = mysqli_query($db_handle, $sql1);
-
-		if (mysqli_num_rows($result1) == 0) {
-		} 
-		else {
+		if (mysqli_num_rows($result1) != 0) {
 			$i=0;
 			while ($data = mysqli_fetch_assoc($result1)) 
 			{
-				$ID2[$i] = $data['ID'];
+				echo "Objet dans offre";
+				//$ID2[$i] = $data['ID'];
 				$ID_item2[$i] = $data['ID_item'];
-				$ID_type_vente2[$i] = $data['ID_type_vente'];
+				//$ID_type_vente2[$i] = $data['ID_type_vente'];
 				$i++;
 			}
-			
 		}
 
-
 		//On recupère les données de chaque item de la table Item
-		for($a=0; $a < count($ID_item2); $a++){
-		$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item2[$a]' "; //retrouver les ID_items issu de ID_item[]
-		$result1 = mysqli_query($db_handle, $sql1);
+		for($a=0; $a < count($ID_item2); $a++)
+		{
+			$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item2[$a]' "; //retrouver les ID_items issu de ID_item[]
+			$result1 = mysqli_query($db_handle, $sql1);
 
-			if (mysqli_num_rows($result1) == 0) {
-			}
-			else {
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$i=0;
 				$temp2 = array();
-				while ($data = mysqli_fetch_assoc($result1) ) 
+				while ($data = mysqli_fetch_assoc($result1)) 
 				{
 					$i_temp2 = 0;
 					$temp2[$i_temp2] = $ID_item2[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
@@ -213,17 +258,12 @@
 
 					$table_item2["$ID_item2[$a]"] = $temp2; // Tableau associatif
 				}
-				
 			}
 
-		}	
-
-		for($a=0; $a < count($ID_item2); $a++){
-		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item2[$a]' ";
-		$result1 = mysqli_query($db_handle, $sql1);
-			if (mysqli_num_rows($result1) == 0) {
-			} 
-			else {
+			$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item2[$a]' ";
+			$result1 = mysqli_query($db_handle, $sql1);
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$v = 0;
 				$temp2 =array();
 				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
@@ -235,54 +275,67 @@
 				
 			}
 		}
+
 		//on recupere la variable statut dans meilleur offre pour blindage
 		$sql3 = "SELECT * FROM meilleur_offre WHERE ID_acheteur LIKE '$ID_temporaire_acheteur'";
 		$result3 = mysqli_query($db_handle, $sql3);
-
-		if (mysqli_num_rows($result3) == 0) {
-		} 
-		else {
+		if (mysqli_num_rows($result3) != 0) 
+		{
 			$i=0;
 			while ($data = mysqli_fetch_assoc($result3)) 
 			{
-				$statut2[$i] = $data['Statut'];
+				$dat = $data['ID_item'];
+				$statut2["$dat"] = $data['Statut']; // statue2 {ID_item => status }
+				$prix_acheteur_accepte["$dat"] = $data['Prix_acheteur']; // {ID_item => prix_acheteur}
+				$i++;
+			}	
+		}
+		//FIN PARTIE RECUPERATION ET AFFICHAGE MEILLEUR OFFRE
+
+		//ENCHERE
+		$table_encherir = array();
+		//récupération de tout les enchères faites par le client
+		$sql5 = "SELECT * FROM encherir WHERE ID_acheteur LIKE '$ID_temporaire_acheteur'";
+		$result5 = mysqli_query($db_handle, $sql5);
+
+		if (mysqli_num_rows($result5) != 0) 
+		{
+			$i_temp4=0;
+			$i = 0;
+			$temp4 = array();
+			while ($data = mysqli_fetch_assoc($result5)) 
+			{
+				$i_temp4 = 0;
+				$temp4[$i_temp4] = $data['ID_item']; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+				$i_temp4++;
+				$temp4[$i_temp4] = $data['ID_enchere']; // i_temp = 1
+				$i_temp4++;
+				$temp4[$i_temp4] = $data['Prix_acheteur']; // i_temp = 2
+
+				$table_encherir["$i"] = $temp4;
+
+				//$ID_enchere[$i] = $data['ID_enchere'];
+				//$Prix_acheteur[$i] = $data['Prix_acheteur'];
+				//$ID_acheteur[$i] = $data['ID_acheteur'];
 				$i++;
 			}	
 		}
 
-		//recuperation donnee enchere finie
-		$sql1 = "SELECT * FROM panier WHERE ID LIKE '$ID_temporaire_acheteur' AND ID_type_vente LIKE 'enchere'";
-		$result1 = mysqli_query($db_handle, $sql1);
-
-		if (mysqli_num_rows($result1) == 0) {
-		} 
-		else {
-			$i=0;
-			while ($data = mysqli_fetch_assoc($result1)) 
-			{
-				$ID3[$i] = $data['ID'];
-				$ID_item3[$i] = $data['ID_item'];
-				$ID_type_vente3[$i] = $data['ID_type_vente'];
-				$i++;
-			}
-			
-		}
-
-
 		//On recupère les données de chaque item de la table Item
-		for($a=0; $a < count($ID_item3); $a++){
-		$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$ID_item3[$a]' "; //retrouver les ID_items issu de ID_item[]
-		$result1 = mysqli_query($db_handle, $sql1);
+		for($a=0; $a < count($table_encherir); $a++)
+		{
+			$var = $table_encherir["$a"][0];
+			$sql1 = "SELECT * FROM item WHERE ID_item LIKE '$var' "; //retrouver les ID_items issu de ID_item[]
+			$result1 = mysqli_query($db_handle, $sql1);
 
-			if (mysqli_num_rows($result1) == 0) {
-			}
-			else {
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$i=0;
 				$temp3 = array();
 				while ($data = mysqli_fetch_assoc($result1) ) 
 				{
 					$i_temp3 = 0;
-					$temp3[$i_temp3] = $ID_item3[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$temp3[$i_temp3] = $var; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
 					$i_temp3++;
 					$temp3[$i_temp3] = $data['Nom_item']; // i_temp = 1
 					$i_temp3++;
@@ -297,20 +350,15 @@
 					$temp3[$i_temp3] = $data['Prix']; // i_temp = 6
 					$i_temp3++;
 					$temp3[$i_temp3] = $data['Video']; // i_temp = 7
-
-					$table_item3["$ID_item3[$a]"] = $temp3; // Tableau associatif
+					$var = $table_encherir["$a"][0];
+					$table_item3["$var"] = $temp3; // Tableau associatif
 				}
-				
 			}
 
-		}	
-
-		for($a=0; $a < count($ID_item3); $a++){
-		$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item3[$a]' ";
-		$result1 = mysqli_query($db_handle, $sql1);
-			if (mysqli_num_rows($result1) == 0) {
-			} 
-			else {
+			$sql1 = "SELECT * FROM photo WHERE ID_item LIKE '$var'";
+			$result1 = mysqli_query($db_handle, $sql1);
+			if (mysqli_num_rows($result1) != 0) 
+			{
 				$v = 0;
 				$temp3 =array();
 				while ($data = mysqli_fetch_assoc($result1) )  //extraction de toute les photos d'un item donnée ($u)
@@ -318,40 +366,20 @@
 					$temp3[$v] = $data['Nom_photo'];
 					$v++;
 				}
-				$table_photo3["$ID_item3[$a]"]= $temp3; //array de photo dans tableau associatif
+				$table_photo3["$var"]= $temp3; //array de photo dans tableau associatif
 				
 			}
-		}
+			$sql1 = "SELECT * FROM liste_enchere WHERE ID_item LIKE '$var' "; //Retrouve données de l'enchère de l'item
+			$result1 = mysqli_query($db_handle, $sql1);
 
-		$sql5 = "SELECT * FROM encherir WHERE ID_acheteur LIKE '$ID_temporaire_acheteur'";
-		$result5 = mysqli_query($db_handle, $sql5);
-
-		if (mysqli_num_rows($result5) == 0) {
-		} 
-		else {
-			$i=0;
-			while ($data = mysqli_fetch_assoc($result5)) 
+			if (mysqli_num_rows($result1) != 0) 
 			{
-				$ID_enchere[$i] = $data['ID_enchere'];
-				$Prix_acheteur[$i] = $data['Prix_acheteur'];
-				$ID_acheteur[$i] = $data['ID_acheteur'];
-				$i++;
-			}	
-		}
-
-		for($a=0; $a < count($ID_item3); $a++){
-		$sql1 = "SELECT * FROM liste_enchere WHERE ID_enchere LIKE '$ID_enchere[$a]' "; //retrouver les ID_items issu de ID_item[]
-		$result1 = mysqli_query($db_handle, $sql1);
-
-			if (mysqli_num_rows($result1) == 0) {
-			}
-			else {
 				$i=0;
 				$temp4 = array();
 				while ($data = mysqli_fetch_assoc($result1) ) 
 				{
 					$i_temp4 = 0;
-					$temp4[$i_temp4] = $ID_item3[$a]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+					$temp4[$i_temp4] = $data['ID_item']; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
 					$i_temp4++;
 					$temp4[$i_temp4] = $data['Date_fin']; // i_temp = 1
 					$i_temp4++;
@@ -362,30 +390,37 @@
 					$temp4[$i_temp4] = $data['Prix_second']; // i_temp = 4
 					$i_temp4++;
 					$temp4[$i_temp4] = $data['Fin']; // i_temp = 5
+					$i_temp4++;
+					$temp4[$i_temp4] = $data['ID_enchere']; // i_temp = 5
 
-					$Prix_premier[$i] = $data['Prix_premier'];
-					$Prix_second[$i] = $data['Prix_second'];
-					$ID_enchere[$i] = $data['ID_enchere'];
-					$Date_fin[$i] = $data['Date_fin'];
-					$Heure_fin[$i] = $data['Heure_fin'];
-					$Fin[$i] = $data['Fin'];
-
-					$i++;
-					$table_item4["$ID_item3[$a]"] = $temp4; // Tableau associatif
+					//$Prix_premier[$i] = $data['Prix_premier'];
+					//$Prix_second[$i] = $data['Prix_second'];
+					//$ID_enchere[$i] = $data['ID_enchere'];
+					//$Date_fin[$i] = $data['Date_fin'];
+					//$Heure_fin[$i] = $data['Heure_fin'];
+					//$Fin[$i] = $data['Fin'];
+					//$i++;
+					$table_item4["$var"] = $temp4; //données Enchère des items dont le client a enchéri
 				}
 			}
-		}	
+		}
 	}
 	else
 	{
 		echo "Database not found";
 	}
 	//fermer la connexion 
+
+	if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans contien l'id de l'item)
+		$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
+		$result = mysqli_query($db_handle, $sql);	
+		if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
+			$_SESSION['itemClick'] = $_GET['idLien'];
+			header('Location: page_produit.php');
+			exit();
+		}
+	}
 ?>
-
-
-
-
 
 <!DOCTYPE html> 
 <html> 
@@ -473,8 +508,11 @@
 
 				}
 				//traitement de la table item:
+
 				echo "L'ID de l'item :".$table_item["$ID_item[$i]"][0]."<br>";
-				echo "Le nom de l'item :".$table_item["$ID_item[$i]"][1]."<br>";
+				echo 'Le nom de l\'item :
+						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item["$ID_item[$i]"][0].'">'.$table_item["$ID_item[$i]"][1].'</a><br>';
+
 				echo "Le vendeur de l'item :".$table_item["$ID_item[$i]"][2]."<br>"; 
 				echo "La description de l'item :".$table_item["$ID_item[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
 				echo "Le catégorie de l'item :".$table_item["$ID_item[$i]"][5]."<br>"; 
@@ -485,10 +523,10 @@
 				echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier'.$i.'">';
 				echo "<br>";
 				$prix_tot_achat2+=$table_item["$ID_item[$i]"][6];
-				
 				echo "</form>";
 				
 			}
+
 			for ($i = 0 ; $i<count($ID_item); $i++)
 			if (isset($_POST["$supprimer[$i]"])) 
 			{
@@ -497,146 +535,184 @@
 				$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'achat_immediat'";
 				$result = mysqli_query($db_handle, $sql);
 				$prix_tot_achat2-=$table_item["$ID_item[$i]"][6];
+
+				echo "<script type='text/javascript'>document.location.replace('panier.php');</script>";
+				exit();
 			}
 
 
 			//meilleur offre immediat
-			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
+			for ($i = 0 ; $i<count($ID_item2); $i++){ //nombre d'objets en offre issu du panier de l'acheteur
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				if($statut2[$i] == 3){
+				if($statut2["$ID_item2[$i]"] == 3){ ///
 					for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++){
 						echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
 					}
 					//traitement de la table item:
 					echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
+					echo 'Le nom de l\'item :
+						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a><br>';
 					echo "Le nom de l'item :".$table_item2["$ID_item2[$i]"][1]."<br>";
 					echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
 					echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
 					echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
 					echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
 					echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-					$prix_tot_achat+=$table_item2["$ID_item2[$i]"][6];
+					echo "Prix de l'offre : ".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
+					$prix_tot_achat+=$prix_acheteur_accepte["$ID_item2[$i]"];
 				}
 			}	 
 
 			//Enchere achat possible
-			for ($i = 0 ; $i<count($ID_item3); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
+			for ($i = 0 ; $i< count($table_encherir); $i++)
+			{ //items enchéris par le client
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				if($Fin[$i] == 1 && $ID_temporaire_acheteur == $ID_acheteur[$i] && $Prix_premier[$i] == $Prix_acheteur[$i]){
-					for ($u = 0 ; $u < count($table_photo3["$ID_item3[$i]"]); $u++){
-						echo '<img src = "images_web/'.$table_photo3["$ID_item3[$i]"][$u].'" height=100 width =100 ><br>';
+				$var = $table_encherir["$i"][0];
+				if($table_item4["$var"][5] == 1 && $table_item4["$var"][3] == $table_encherir["$i"][2])
+				{
+
+					for ($u = 0 ; $u < count($table_photo3["$var"]); $u++)
+					{
+						echo '<img src = "images_web/'.$table_photo3["$var"][$u].'" height=100 width =100 ><br>';
 
 					}
 					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item3["$ID_item3[$i]"][0]."<br>";
-					echo "Le nom de l'item :".$table_item3["$ID_item3[$i]"][1]."<br>";
-					echo "Le vendeur de l'item :".$table_item3["$ID_item3[$i]"][2]."<br>"; 
-					echo "La description de l'item :".$table_item3["$ID_item3[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item3["$ID_item3[$i]"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item3["$ID_item3[$i]"][6]."<br>"; 
-					echo "La video de l'item :".$table_item3["$ID_item3[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
+					echo "L'ID de l'item :".$table_item3["$var"][0]."<br>";
+					echo 'Le nom de l\'item :
+						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a><br>';
+					echo "Le nom de l'item :".$table_item3["$var"][1]."<br>";
+					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
+					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
+					echo "Le catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
+					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
+					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
 
-					echo "La date de fin de l'enchere :".$table_item4["$ID_item3[$i]"][1]."<br>";
-					echo "L'heure' de fin de l'enchere :".$table_item4["$ID_item3[$i]"][2]."<br>"; 
-					echo "Le Prix premier :".$table_item4["$ID_item3[$i]"][3]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le Prix second  :".$table_item4["$ID_item3[$i]"][4]."<br>";
-					echo "Le chiffre Fin  :".$table_item4["$ID_item3[$i]"][5]."<br>";  
-
-					$prix_tot_achat+=$table_item4["$ID_item3[$i]"][4];
+					echo "La date de fin de l'enchere :".$table_item4["$var"][1]."<br>";
+					echo "L'heure' de fin de l'enchere :".$table_item4["$var"][2]."<br>"; 
+					echo "Le Prix premier :".$table_item4["$var"][3]."<br>"; //3 = le type de vente mais on en veut pas 
+					echo "Le Prix second  :".$table_item4["$var"][4]."<br>";
+					echo "Le chiffre Fin  :".$table_item4["$var"][5]."<br>";  
+					echo "Montant de cette enchere :".$table_item4["$var"][4]." + 1 <br>";
+					$prix_tot_achat+=$table_item4["$var"][4]; ///Prix précédent
 					$prix_tot_achat++;
 				}
 			}	 
 			$prix_tot_achat2+=$prix_tot_achat;
-
 			echo "Prix total svp: ".$prix_tot_achat2."<br><br><br>";
 			$_SESSION["prix_total"] = $prix_tot_achat2;
 			echo '<a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a>';
 			echo "<br>";
 
+//EN COURS
+
 			echo "Panier En Cours, achat non possible <br>";
-
-
 			//meilleur offre en cours
 			for ($i = 0 ; $i<count($ID_item2); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				if(($statut2[$i] == 1) && ($statut2[$i] != 4)){
-					for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++){
-						echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
+				if($statut2["$ID_item2[$i]"] <= 2) //Affichage de tout les items dont l'offre est au statut 2
+				{
+						for ($u = 0 ; $u < count($table_photo2["$ID_item2[$i]"]); $u++)
+						{
+							echo '<img src = "images_web/'.$table_photo2["$ID_item2[$i]"][$u].'" height=100 width =100 ><br>';
 
-					}
-					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
-					echo "Le nom de l'item :".$table_item2["$ID_item2[$i]"][1]."<br>";
-					echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
-					echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
-					echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
-					echo '<form action="" method="post">';
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="accepter_offre" type="submit" value="Accepter Offre">';
-					echo "<br>";
-					$supprimer2[$i] = "supprimer2_".$i;
-					echo '<form action="" method="post">';
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2[$i].'" type="submit" value="Supprimer l\'item du panier'.$i.'">';
-					echo "<br>";
-					echo "</form>";
-					if (isset($_POST["accepter_offre"])) 
+						}
+						//traitement de la table item:
+						echo "L'ID de l'item :".$table_item2["$ID_item2[$i]"][0]."<br>";
+						echo 'Le nom de l\'item :
+						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a><br>';
+						echo "Le vendeur de l'item :".$table_item2["$ID_item2[$i]"][2]."<br>"; 
+						echo "La description de l'item :".$table_item2["$ID_item2[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
+						echo "Le catégorie de l'item :".$table_item2["$ID_item2[$i]"][5]."<br>"; 
+						echo "Le Prix de l'item :".$table_item2["$ID_item2[$i]"][6]."<br>"; 
+						echo "La video de l'item :".$table_item2["$ID_item2[$i]"][7]."<br>"; //Faudrait le lien mais là on a affiché que le nom
+						echo "Statut (pour savoir autour de qui) :".$statut2["$ID_item2[$i]"]."<br>";
+						echo "Votre offre demandé :".$prix_acheteur_accepte["$ID_item2[$i]"]."<br>";
+						echo '<form action="" method="post">';
+
+						
+						$accepter_offre["$ID_item2[$i]"] = "accepter_offre_".$i;
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$accepter_offre["$ID_item2[$i]"].'" type="submit" value="Accepter Offre">';
+						echo "<br>";
+
+						$supprimer2["$ID_item2[$i]"] = "supprimer2_".$i;
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer2["$ID_item2[$i]"].'" type="submit" value="Supprimer l\'item '.$ID_item2[$i].' du panier">';
+						echo "<br>";
+						echo "</form>";
+
+						$prix_tot_achat2+=$prix_acheteur_accepte["$ID_item2[$i]"];
+					}	
+
+			}	 
+			for ($i = 0 ; $i<count($ID_item2); $i++)
+			{ //on parcourt l'ensemble des items de type offre
+				$var = $ID_item2[$i];
+				if ($statut2["$var"] <= 2)
+				{ //peut supprimer quand statut = 1 ou 2
+					if (isset($_POST["$supprimer2[$var]"])) 
 					{
-
+						$stock1 = $table_item2["$ID_item2[$i]"][0];
+						$stock2 = $table_item2["$ID_item2[$i]"][2];
+						$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'offre'";
+						$result = mysqli_query($db_handle, $sql);
+						$sql2 = "UPDATE meilleur_offre SET Statut = '5' WHERE ID_item = $stock1 AND ID_acheteur = $ID_temporaire_acheteur AND ID_vendeur = $stock2";
+						$result2 = mysqli_query($db_handle, $sql2);
+						$prix_tot_achat2-=$table_item2["$ID_item2[$i]"][6];
+						echo "<script type='text/javascript'>document.location.replace('panier.php');</script>";
+						exit();
+					}
+				}
+				if ($statut2["$var"] == 1)
+				{//on peut accepté que quand statut = 1 (au tour du client) si = 2, même si tu cliques ça ne fera rien
+					if (isset($_POST["$accepter_offre[$var]"]))
+					{
 						$stock1 = $table_item2["$ID_item2[$i]"][0];
 						$stock2 = $table_item2["$ID_item2[$i]"][2];
 						$sql = "UPDATE meilleur_offre SET Statut = '3' WHERE ID_item = $stock1 AND ID_acheteur = $ID_temporaire_acheteur AND ID_vendeur = $stock2";
 						$result = mysqli_query($db_handle, $sql);
 						$prix_tot_achat2-=$table_item2["$ID_item2[$i]"][6];
+						echo "<script type='text/javascript'>document.location.replace('panier.php');</script>";
+						exit();
 					}
 					else
 						$prix_tot_achat2+=$table_item2["$ID_item2[$i]"][6];
-					echo "</form>";
 				}
-				
-
-				for ($i = 0 ; $i<count($ID_item2); $i++)
-				if (isset($_POST["$supprimer2[$i]"])) 
-				{
-					$stock1 = $table_item2["$ID_item2[$i]"][0];
-					$stock2 = $table_item2["$ID_item2[$i]"][2];
-					$sql = "DELETE FROM panier WHERE ID_item = $stock1 AND ID = $ID_temporaire_acheteur AND ID_type_vente = 'offre'";
-					$result = mysqli_query($db_handle, $sql);
-					$prix_tot_achat2-=$table_item2["$ID_item2[$i]"][6];
-				}
-			}	 
+			}
 
 			//Enchere achat non possible
-			for ($i = 0 ; $i<count($ID_item3); $i++){ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
+			for ($i = 0 ; $i<count($table_encherir); $i++)
+			{ //La taille du tableau ID_acheteur est pareil que le tableau ID_item 
 				//Affichage des images pour un item donnée :
 				//traitement de la table photo
-				if($Fin[$i] == 0 && $ID_temporaire_acheteur == $ID_acheteur[$i]){
-					for ($u = 0 ; $u < count($table_photo3["$ID_item3[$i]"]); $u++){
-						echo '<img src = "images_web/'.$table_photo3["$ID_item3[$i]"][$u].'" height=100 width =100 ><br>';
+				$var = $table_encherir["$i"][0];
+				if($table_item4["$var"][5] == 0)
+					{
+						for ($u = 0 ; $u < count($table_photo3["$var"]); $u++){
+						echo '<img src = "images_web/'.$table_photo3["$var"][$u].'" height=100 width =100 ><br>';
 
 					}
 					//traitement de la table item:
-					echo "L'ID de l'item :".$table_item3["$ID_item3[$i]"][0]."<br>";
-					echo "Le nom de l'item :".$table_item3["$ID_item3[$i]"][1]."<br>";
-					echo "Le vendeur de l'item :".$table_item3["$ID_item3[$i]"][2]."<br>"; 
-					echo "La description de l'item :".$table_item3["$ID_item3[$i]"][4]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le catégorie de l'item :".$table_item3["$ID_item3[$i]"][5]."<br>"; 
-					echo "Le Prix de l'item :".$table_item3["$ID_item3[$i]"][6]."<br>"; 
-					echo "La video de l'item :".$table_item3["$ID_item3[$i]"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
+					echo "L'ID de l'item :".$table_item3["$var"][0]."<br>";
+					echo 'Le nom de l\'item :
+						<a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a><br>';
+					echo "Le vendeur de l'item :".$table_item3["$var"][2]."<br>"; 
+					echo "La description de l'item :".$table_item3["$var"][4]."<br>"; //3 = le type de vente mais on en veut pas 
+					echo "Le catégorie de l'item :".$table_item3["$var"][5]."<br>"; 
+					echo "Le Prix de l'item :".$table_item3["$var"][6]."<br>"; 
+					echo "La video de l'item :".$table_item3["$var"][7]."<br><br>"; //Faudrait le lien mais là on a affiché que le nom
+					echo "La date de fin de l'enchere :".$table_item4["$var"][1]."<br>";
+					echo "L'heure' de fin de l'enchere :".$table_item4["$var"][2]."<br>"; 
+					echo "Le Prix premier :".$table_item4["$var"][3]."<br>"; //3 = le type de vente mais on en veut pas 
+					echo "Le Prix second  :".$table_item4["$var"][4]."<br>";
+					echo "Le chiffre Fin  :".$table_item4["$var"][5]."<br>";  
+					echo "Votre mise : ".$table_encherir["$i"][2]."<br>";
 
-					echo "La date de fin de l'enchere :".$table_item4["$ID_item3[$i]"][1]."<br>";
-					echo "L'heure' de fin de l'enchere :".$table_item4["$ID_item3[$i]"][2]."<br>"; 
-					echo "Le Prix premier :".$table_item4["$ID_item3[$i]"][3]."<br>"; //3 = le type de vente mais on en veut pas 
-					echo "Le Prix second  :".$table_item4["$ID_item3[$i]"][4]."<br>";
-					echo "Le chiffre Fin  :".$table_item4["$ID_item3[$i]"][5]."<br>";  
-
-					$prix_tot_achat2+=$Prix_acheteur[$i];
+					$prix_tot_achat2+=$table_encherir["$i"][2];
 				}
 				echo "Prix total du panier en cours: ".$prix_tot_achat2."<br><br><br>";
-			}	 
+			}
 			mysqli_close($db_handle);
 			?>
 		</div>
