@@ -462,11 +462,11 @@
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
-			<form class="navbar-form inline-form">
+			<form style="display: none;" id="barre" action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
 				   	<input type="search" class="input-sm form-control-sm" placeholder="Rechercher sur eBay ECE">
-				   	<button class="btn btn-outline-secondary btn-sm">Chercher</button>
+				   	<button name="chercher" class="btn btn-outline-secondary btn-sm">Chercher</button>
 				</div>
 			</form>
 

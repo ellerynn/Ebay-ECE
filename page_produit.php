@@ -275,16 +275,19 @@
 	    	if ($votre_prix_offre < $prix && $votre_prix_offre != "")
 	    	{
 	    	//Indique que l'item n'a jamais été dans son panier donc l'user peut faire une offre et le mettre dans son panier
-		    	if (mysqli_num_rows($resultVerif) == 0 && mysqli_num_rows($resultOffre) == 0 && mysqli_num_rows($resultVerifStatutItem) == 0) //Si pas fait de meilleur offre et que offre n'a pas été accepté pour qlq
+		    	if (mysqli_num_rows($resultVerif) == 0 && mysqli_num_rows($resultOffre) == 0 && mysqli_num_rows($resultVerifStatutItem) == 0 ) //Si pas fait de meilleur offre et que offre n'a pas été accepté pour qlq
 	            {
-		            //insert dans la table ENCHERIR
-			    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
-			    	$result = mysqli_query($db_handle, $sql);
-			    	//insert dans la table PANIER
-			    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
-			    	$result2 = mysqli_query($db_handle, $sql2);
-			    	//variable test pour blindage saisit enchere inferieur
-			    	$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre ou supprimer. Cependant si vous ne voulez plus faire d'offre soyez sûr, car vous ne pourrez plus retenter.<br>";
+	            	if(isset($_POST["clause"]))
+	            	{
+	            				            //insert dans la table ENCHERIR
+				    	$sql = "INSERT INTO meilleur_offre (ID_acheteur, ID_vendeur, ID_item, Prix_acheteur, Prix_vendeur, Tentative, Statut) VALUES ('$ID_temporaire_acheteur', '$ID_vendeur', '$ID_temporaire_item', '$votre_prix_offre', '$prix', '1', '2');";
+				    	$result = mysqli_query($db_handle, $sql);
+				    	//insert dans la table PANIER
+				    	$sql2 = "INSERT INTO panier (ID, ID_item, ID_type_vente) VALUES ('$ID_temporaire_acheteur', '$ID_temporaire_item', 'offre');";
+				    	$result2 = mysqli_query($db_handle, $sql2);
+				    	//variable test pour blindage saisit enchere inferieur
+				    	$erreurOffre .= "Merci de votre demande, nous la transmettrons au vendeur. S'il l'accepte, vous pourrez acheter le produit, sinon faites une meilleure offre ou supprimer. Cependant si vous ne voulez plus faire d'offre soyez sûr, car vous ne pourrez plus retenter.<br>";
+	            	}
 
 	            }elseif($type_achat == "offre"){ //on vérifie si l'objet dans le panier est un achat en offre
 			    	//Partie Deuxième ou nième <= 5 offre et que c'est son tour: 
@@ -312,6 +315,7 @@
 			    	if ($stat == 5) //L'acheteur a supprimé
 						$erreurOffre .="Vous avez déjà tenté votre chance.<br>";
 			    }
+
 			}else{
 				$erreurOffre .= "Erreur, vous ne pouvez pas mettre un prix vide ou supérieur/égal au prix actuel.<br>";
 			}
@@ -478,6 +482,18 @@
 						echo $erreurOffre;
 						$erreurOffre = "";
 					}
+					//Clause
+					echo '<div class="form-group">';
+		          	echo '<p class="font-weight-bold">Clause</p>';
+		           	echo '<input type="checkbox" name="clause" value="clause"  requiered>Accepte d\'être sous le contrat légal pour acheter l\'article si le vendeur accepte l\'offre <br>';
+		           	if(isset($_POST["clause"]))
+		           	{
+		           		echo"Merci d'avoir accepté la clause ! <br>";
+		           	}
+		           	else
+		           		echo "Vous êtes obligés d'accepter la clause ! <br>";
+
+					echo '</div>';
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
 				}
 
@@ -499,6 +515,7 @@
 						echo $erreurEnchere;
 						$erreurEnchere = "";
 					}
+
 					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
 				}
 				echo "</form><br><br><br><br>";
