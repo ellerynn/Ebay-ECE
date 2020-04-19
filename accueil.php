@@ -17,10 +17,6 @@
     $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
 
-	//On sélectionne tous les items présents dans la table item
-	$sql = "SELECT * FROM item";
-	$r = mysqli_query($db_handle, $sql);
-
 	$table_item = array();
 	$table_photo = array();
 
@@ -33,6 +29,10 @@
 	$c = 0;
 
 	if($db_found)
+	{
+		//On sélectionne tous les items présents dans la table item
+		$sql = "SELECT * FROM item";
+		$r = mysqli_query($db_handle, $sql);
 		if (mysqli_num_rows($r) != 0)
 		{
 			$i = 0;
@@ -74,6 +74,7 @@
 				}
 			}
 		}
+	}
 	else
 		echo "pas de database";
 

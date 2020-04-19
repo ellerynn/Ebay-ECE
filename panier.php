@@ -52,6 +52,8 @@
 	//declaration achat immediat
 	$table_item = array();
 	$table_photo = array();
+	$vendeurItems =array();
+	$pseudoVendeur = array();
 	//$nom_item = array();
 	//$ID_vendeur = array();
 	//$description = array();
@@ -141,6 +143,47 @@
 				{
 					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
 					$resultModif = mysqli_query($db_handle,$sqlModif);
+				}
+			}
+		}
+
+		$sql = "SELECT ID_item FROM panier WHERE ID LIKE '$ID_temporaire_acheteur'";
+		$result = mysqli_query($db_handle, $sql);
+		if (mysqli_num_rows($result) != 0) 
+		{
+			while ($data = mysqli_fetch_assoc($result)) 
+			{
+				$temp = $data['ID_item'];
+				$sql1 = "SELECT ID_vendeur FROM item WHERE ID_item = $temp";
+				$result1 = mysqli_query($db_handle, $sql1);
+				if (mysqli_num_rows($result1) != 0) 
+				{
+					while ($data = mysqli_fetch_assoc($result1)) 
+					{
+						$temp2 = $data['ID_vendeur'];
+						$sql2 = "SELECT Pseudo FROM vendeur WHERE ID = $temp2";
+						$result2 = mysqli_query($db_handle, $sql2);
+						if (mysqli_num_rows($result2) != 0) 
+						{
+							while ($data = mysqli_fetch_assoc($result2)) 
+							{
+								$vendeurItems["$temp"] = $data['Pseudo']; // {Clé ID_item => Pseudo}
+							}
+						}
+						else
+						{
+							$sql3 = "SELECT Prenom FROM personne WHERE ID = $temp2";
+							$result3 = mysqli_query($db_handle, $sql3);
+							if (mysqli_num_rows($result3) != 0) 
+							{
+								while ($data = mysqli_fetch_assoc($result3)) 
+								{
+									$vendeurItems["$temp"] = $data['Prenom']; // {Clé ID_item => Prenom}
+								}
+							}
+
+						}
+					}
 				}
 			}
 		}
@@ -258,6 +301,7 @@
 					$temp2[$i_temp2] = $data['Video']; // i_temp = 7
 
 					$table_item2["$ID_item2[$a]"] = $temp2; // Tableau associatif
+
 				}
 			}
 
@@ -315,10 +359,6 @@
 				$temp4[$i_temp4] = $data['Prix_acheteur']; // i_temp = 2
 
 				$table_encherir["$i"] = $temp4;
-
-				//$ID_enchere[$i] = $data['ID_enchere'];
-				//$Prix_acheteur[$i] = $data['Prix_acheteur'];
-				//$ID_acheteur[$i] = $data['ID_acheteur'];
 				$i++;
 			}	
 		}
@@ -394,18 +434,11 @@
 					$temp4[$i_temp4] = $data['Fin']; // i_temp = 5
 					$i_temp4++;
 					$temp4[$i_temp4] = $data['ID_enchere']; // i_temp = 5
-
-					//$Prix_premier[$i] = $data['Prix_premier'];
-					//$Prix_second[$i] = $data['Prix_second'];
-					//$ID_enchere[$i] = $data['ID_enchere'];
-					//$Date_fin[$i] = $data['Date_fin'];
-					//$Heure_fin[$i] = $data['Heure_fin'];
-					//$Fin[$i] = $data['Fin'];
-					//$i++;
 					$table_item4["$var"] = $temp4; //données Enchère des items dont le client a enchéri
 				}
 			}
 		}
+
 	}
 	else
 	{
@@ -533,10 +566,13 @@
 		  echo '<tr>
 		  			<td>Achat immédiat</td>
 		  			<td><img src = "images_web/'.$table_photo["$ID_item[$i]"][0].'" height=100 width =100 ></td>
-		  			<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item["$ID_item[$i]"][0].'">'.$table_item["$ID_item[$i]"][1].'</a></td>
-		  			<td>'.$table_item["$ID_item[$i]"][2].'</td>
+		  			<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item["$ID_item[$i]"][0].'">'.$table_item["$ID_item[$i]"][1].'</a></td>';
+
+		  			//<td>'.$table_item["$ID_item[$i]"][2].'</td>
+		  			echo'
+		  			<td>'.$vendeurItems["$ID_item[$i]"].'</td>
 		  			<td>'.$table_item["$ID_item[$i]"][5].'</td>
-		  			<td>'.$table_item["$ID_item[$i]"][6].'</td>
+		  			<td>'.$table_item["$ID_item[$i]"][6].'€</td>
 		  			<td>
 		  				<form action="" method="post">
 		  					<input class="btn border btn-outline-secondary rounded-lg" name="'.$supprimer[$i].'" type="submit" value="Supprimer l\'item du panier">
@@ -570,9 +606,9 @@
 					<td>Offre conclu</td>
 					<td><img src = "images_web/'.$table_photo2["$ID_item2[$i]"][0].'" height=100 width =100 ></td>
 					<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a></td>
-					<td>'.$table_item2["$ID_item2[$i]"][2].'</td>
+		  			<td>'.$vendeurItems["$ID_item2[$i]"].'</td>
 					<td>'.$table_item2["$ID_item2[$i]"][5].'</td>
-					<td>'.$prix_acheteur_accepte["$ID_item2[$i]"].'</td>
+					<td>'.$prix_acheteur_accepte["$ID_item2[$i]"].'€</td>
 					<td>Aucune Modification possible</td>
 				</tr>
 			';
@@ -595,9 +631,9 @@
 					<td>Enchère gagnée <br>Fin : '.$table_item4["$var"][1].' à '.$table_item4["$var"][2].'</td>
 					<td><img src = "images_web/'.$table_photo3["$var"][0].'" height=100 width =100 ></td>
 					<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a></td>
-					<td>'.$table_item3["$var"][2].'</td>
+		  			<td>'.$vendeurItems["$var"].'</td>
 					<td>'.$table_item3["$var"][5].'</td> 
-					<td>'.$prixEnch.'</td>
+					<td>'.$prixEnch.'€</td>
 					<td>Aucune Modification possible</td>
 				</tr>
 
@@ -614,7 +650,7 @@
 					<td></td>
 					<td></td>
 					<td>Total: </td>
-					<td>'.$prix_tot_achat.'</td>
+					<td>'.$prix_tot_achat.'€</td>
 					<td><a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a></td>
 				</tr>
 		';
@@ -658,7 +694,7 @@
 					echo '
 						<td><img src = "images_web/'.$table_photo2["$ID_item2[$i]"][0].'" height=100 width =100 ></td>
 						<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item2["$ID_item2[$i]"][0].'">'.$table_item2["$ID_item2[$i]"][1].'</a></td>
-						<td>'.$table_item2["$ID_item2[$i]"][2].'</td>
+		  				<td>'.$vendeurItems["$ID_item2[$i]"].'</td>
 						<td>'.$table_item2["$ID_item2[$i]"][5].'</td>
 						<td>Votre offre: '.$prix_acheteur_accepte["$ID_item2[$i]"].'€<br>
 							Vendeur: '.$prix_vendeur["$ID_item2[$i]"].'€</td>
@@ -721,7 +757,7 @@ echo'
 						<td>Enchère en cours <br>Fin : '.$table_item4["$var"][1].' à '.$table_item4["$var"][2].'</td>
 						<td><img src = "images_web/'.$table_photo3["$var"][0].'" height=100 width =100 ></td>
 						<td><a href = "'.$_SERVER['PHP_SELF'].'?idLien='.$table_item3["$var"][0].'">'.$table_item3["$var"][1].'</a></td>
-						<td>'.$table_item3["$var"][2].'</td>
+		  				<td>'.$vendeurItems["$var"].'</td>
 						<td>'.$table_item3["$var"][5].'</td>
 						<td>Votre mise : '.$table_encherir["$i"][2].'€<br>
 							Montant actuel : '.$table_item4["$var"][3].'€</td>

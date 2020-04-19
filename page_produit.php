@@ -408,22 +408,32 @@
 						    echo '<li data-target="#carousel" data-slide-to="'.$i.'"></li>';
 						}?>
 					</ul>
-				<div> 
-					<?php
-						for ($i = 0 ; $i < count($nom_photo); $i++)
-		            	{
-							    if ($i == 0)
-							    echo'
-								    <div class="carousel-item active">
-								      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
-								    </div>';
-							    else
-							    echo'
-								    <div class="carousel-item">
-								      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
-								    </div>'; 
-						}?>
-				</div>
+					<div> 
+						<?php
+							for ($i = 0 ; $i < count($nom_photo); $i++)
+			            	{
+								    if ($i == 0)
+								    echo'
+									    <div class="carousel-item active">
+									      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+									    </div>';
+								    else
+								    echo'
+									    <div class="carousel-item">
+									      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+									    </div>'; 
+							}
+							if($video != "" || $video != 0 )
+							{
+								echo'
+								<div class="carousel-item">
+			                    	<div class="embed-responsive embed-responsive-4by3">;
+			                    		<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =350 	></iframe>
+			                    	</div>
+			                    </div>'; 
+			                }		
+							?>
+					</div>
 					<a class="carousel-control-prev" href="#carousel" data-slide="prev">
 					    <i style="color: black;"class="fas fa-chevron-left"></i>
 					</a>
@@ -521,17 +531,8 @@
 				echo "</form><br><br><br><br>";
 	            ?>
 	    	</div>
-	    </div>        
-	    <?php					
-				if($video != "" || $video != 0 )
-				{
-                    echo '<div class="embed-responsive embed-responsive-4by3">';
-                    echo '<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =450 	></iframe>';
-                    echo '</div>';
-                }
-                ?>
-        <br><br><br>
-
+	    </div>
+	    <br>
 		<footer class="page-footer container-fluid">   
 			<div class="container">    
 				<div class="row">       
