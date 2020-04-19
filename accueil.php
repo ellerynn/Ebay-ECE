@@ -51,7 +51,7 @@
 			for ($u = 0 ; $u < count($ID_i) ; $u++)
 			{ 
 				
-				$temp[0] = $ID_i[$u]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
+				$temp[0] = $ID_i[$u]; //on garde en mémoire d'ID du item 
 				$temp[1] = $nom[$u];
 				$temp[2] = $prix[$u]; 
 				$temp[3] = $categorie[$u];

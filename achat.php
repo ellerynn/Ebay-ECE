@@ -102,7 +102,8 @@
 		for ($i = 0 ; $i < count($table_item); $i++){
 			$sql = "SELECT * FROM liste_enchere WHERE ID_item = ".$table_item[$i][0]; //emplacement où se trouve l'id vendeur
 			$result = mysqli_query($db_handle,$sql);
-			if (mysqli_num_rows($result) != 0){
+			if (mysqli_num_rows($result) != 0)
+			{
 				$temp = array();
 				while ($data = mysqli_fetch_assoc($result) ) //extraction de toute les photos d'un item donnée
 				{
@@ -122,6 +123,25 @@
 			}
 		}
 
+		//Envoie de message, non terminé
+		$objet = isset($_POST["objet"])? $_POST["objet"] : "";
+		$message = isset($_POST["message"])? $_POST["message"] : "";
+		$erreur ="";
+		if (isset($_POST["buttonenvoyer"])) 
+		{
+		  	if ($objet == "") 
+	            $erreur .= "Objet est vide. <br>";
+	        if ($message == "") 
+	            $erreur .= "Message est vide. <br>";
+	        if ($erreur == "") 
+	        {
+	        	if ($db_found) 
+	            {	
+	            	$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Objet) VALUES ('3','$id','$message','$objet');";
+	                $result = mysqli_query($db_handle, $sql);
+	            }
+	        }
+		}
 	}//END
 	else
 		echo "Database not found";
@@ -493,9 +513,25 @@
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>
 					    </div>
-					    <div class="panel-body">					
+					    <div class="panel-body">
+					    	<form method="post" action="" enctype="multipart/form-data">
+						       	<div class="form-group">
+						          	<div class="row">
+						          		<div class="col-lg-6 col-md-6 col-sm-12">
+						           			<p class="font-weight-bold">Objet de votre message</p>
+						               		<input class="form-control" style="width: 100%" type="text" name="objet" placeholder="Objet" required>
+						               	</div>
+							        </div>
+						        </div>
+						        <div class="form-group">
+						            <textarea name="message" rows="5" cols="100" placeholder="Message" id="message" required></textarea>
+						        </div>
+						        <div class="form-group">
+						           	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonenvoyer" type="submit" value="Envoyer votre message">
+								</div>
+						    </form>					
 				        </div>
-				    </div>
+					</div>
 			    </div>
 			</div>
 		</div>
