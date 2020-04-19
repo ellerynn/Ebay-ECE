@@ -171,7 +171,7 @@
                                 <input class="btn border btn-outline-secondary rounded-lg" name="buttoninscription" type="submit" value="S'inscrire">
                                 <p class="text-center"><small>Vous avez déjà un <a href="connexion.php">compte</a> ?
                                 <br><br>Vous êtes vendeur professionnel ?
-                                <br><a href="#">Contactez</a> l'administrateur</small></p>
+                                <br><a href="mailto:camille.bruant@edu.ece.fr">Contactez</a> l'administrateur</small></p>
                             </td>
                         </tr>
                     </table>
