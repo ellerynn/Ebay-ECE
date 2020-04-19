@@ -26,7 +26,9 @@
 	$table_photo = array();
 	$table_vendeur = array();
 	$table_enchere = array();
-	if ($db_found){
+	
+	if ($db_found)
+	{
 		//Récupération des données de la table item
 		$sql = "SELECT * FROM item"; // récupération de tout les items
 		$result = mysqli_query($db_handle,$sql);
@@ -109,13 +111,15 @@
 		}
 
 	}//END
-	else{
+	else
 		echo "Database not found";
-	}
-	if (isset($_GET['idLien'])){ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
+	
+	if (isset($_GET['idLien']))
+	{ // Si un lien en particulier est cliqué : On récupère la valeur de idLien (dedans ctn l'id de l'item)
 		$sql = "SELECT * from item WHERE ID_item = ".$_GET['idLien'].""; // On vérifie quand même s'il existe dans la BDD
 		$result = mysqli_query($db_handle, $sql);	
-		if (mysqli_num_rows($result) != 0){ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
+		if (mysqli_num_rows($result) != 0)
+		{ //Si l'objet existe, on le stock dans la session et on le renvoi à la page page_produit.php
 			$_SESSION['itemClick'] = $_GET['idLien'];
 			header('Location: page_produit.php');
 			exit();

@@ -28,6 +28,7 @@
 	$nom = array();
 	$prix = array();
 	$categorie = array();
+	$type = array();
 	$temp = array();
 	$c = 0;
 
@@ -42,6 +43,7 @@
 				$prix[$i] = $data['Prix'];
 				$nom[$i] = $data['Nom_item'];
 				$categorie[$i] = $data['Categorie'];
+				$type[$i] = $data['ID_type_vente'];
 				$i++;
 			}
 
@@ -53,6 +55,7 @@
 				$temp[1] = $nom[$u];
 				$temp[2] = $prix[$u]; 
 				$temp[3] = $categorie[$u];
+				$temp[4] = $type[$u];
 
 				$table_item["$ID_i[$u]"] = $temp; // Tableau associatif
 			}
@@ -220,18 +223,18 @@
 			    				
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo '<td>oui</td>'; //Achat immédiat
 									else
 										echo '<td>non</td>';
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo '<td>oui</td>'; //Meilleur offre
 									else
 										echo '<td>non</td>'; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo '<td>oui</td>'; //Enchere
 									else
-										echo '<td>non</td>'; 
+										echo '<td>non</td>';
 								echo '<tr>';
 			    			}
 
@@ -260,15 +263,15 @@
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
 								//}
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else
 										echo "<td>non</td>";
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo "<td>oui</td>"; //Meilleur offre
 									else
 										echo "<td>non</td>"; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo "<td>oui</td>"; //Enchere
 									else
 										echo "<td>non</td>"; 
@@ -294,7 +297,8 @@
 			    				//echo "<td>Prix (€)</td>";
 			    			echo "</tr>";
 
-			    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
+			    		for ($i= 0; $i < count($table_item); $i++)
+			    		{ //pour chaque item
 			    			if ($table_item["$ID_i[$i]"][3] == "VIP"){
 			    				echo "<tr>";
 			    				//on affiche tout les données des items de catégorie ferraille 
@@ -302,19 +306,18 @@
 								//}
 									echo '<td>'.$table_item["$ID_i[$i]"][1].'</td>'; //Nom de l'item
 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 15 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
 										echo "<td>oui</td>"; //Achat immédiat
 									else
 										echo "<td>non</td>";
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 6 ) || (strlen($table_item["$ID_i[$i]"][3]) == 20 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "offre") !== FALSE)
 										echo "<td>oui</td>"; //Meilleur offre
 									else
 										echo "<td>non</td>"; 
-									if ( (strlen($table_item["$ID_i[$i]"][3]) == 8 ) || (strlen($table_item["$ID_i[$i]"][3]) == 22 ) )
+									if (strpos($table_item["$ID_i[$i]"][4], "enchere") !== FALSE)
 										echo "<td>oui</td>"; //Enchere
 									else
 										echo "<td>non</td>"; 
-									//echo "<td>".$table_item[$i][6]."</td>"; //Prix
 								echo "<tr>";
 			    			}
 
