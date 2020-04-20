@@ -107,6 +107,7 @@
 	//Si on ajoute un produit
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
+		echo "<br><br><br>H";
 	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
 		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
 		
@@ -190,22 +191,19 @@
 				//s'il ne s'agit que d'un enchère Sinon le prix reste en prix par défaut: 
 				if (strlen($type_vente_choisi) == "enchere")
 					$prix = $prixdepart;
-
 		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filevideo');";
 		        $result = mysqli_query($db_handle, $sql);
 		        //Normalement c'est ajouté , mtn vérifions et extraction de l'ID: 
-		        $sql3 = "SELECT LAST_INSERT_ID(ID_item) FROM item ";
+		        $sql3 = "SELECT MAX(ID_item) FROM item ";
 		        $r3 = mysqli_query($db_handle, $sql3);
-
 	        	$last_id_item = "";
 	           	if (mysqli_num_rows($r3) != 0)
 	            {
 	            	while ($data = mysqli_fetch_assoc($r3)) 
                     {
-                        $last_id_item = $data['LAST_INSERT_ID(ID_item)'];
+                        $last_id_item = $data['MAX(ID_item)'];
                     }
 		        } 
-
 		        //Ajout dans la table photo
 				$countfiles = count($_FILES['filephoto']['name']);
 				for($i=0;$i<$countfiles;$i++)
@@ -215,7 +213,6 @@
 					$sql = "INSERT INTO photo(Nom_photo, ID_item) VALUES ('$filenamephoto','$last_id_item');";
 			        $result = mysqli_query($db_handle, $sql);
 				}
-				
 				//Ajout dans la liste d'enchere si enchere.
 				if (strlen($type_vente_choisi) == 8 || strlen($type_vente_choisi) == 22)
 				{
