@@ -1,7 +1,7 @@
 <?php
 	include("const.php");
-	// On prolonge la session
 	
+	// On prolonge la session
 	session_start();
 
 	// On teste si la variable de session existe et contient une valeur
@@ -19,28 +19,32 @@
 	  exit();
 	}
 
+	//Include .php pour la modification des données d'un compte (mes informations)
 	include("modification_donnees.php");
 
 	$database = "ebay ece paris";
 	$db_handle = mysqli_connect('localhost', 'root', '');
 	$db_found = mysqli_select_db($db_handle, $database);
 
-	//Déclaration de variable général
+	//Déclaration de variables
 	$nom = "";
 	$prenom = "";
 	$email = "";
 	$statutNom = "";
 	$mdp = "";
 
+	//Set les statuts
 	if ($statut == ADMIN){$statutNom = "Administrateur";}
 	if ($statut == VENDEUR){$statutNom = "Vendeur";}
 	if ($statut == ACHETEUR){$statutNom = "Acheteur";}
 
-	if ($db_found) {
+	if ($db_found) 
+	{
 		//récuperation données de la table personne (identique pour tout les statuts)
 		$sql = "SELECT * FROM personne WHERE ID = '$id';";
 		$result = mysqli_query($db_handle, $sql);
-		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+		if (mysqli_num_rows($result) != 0)
+		{ 
 			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
 			{
 				$nom = $data['Nom'];
@@ -62,14 +66,15 @@
 			}
 		}
 
-		//Déclaration de varaibles spécial vendeur
+		//Déclaration de variables spéciales vendeur
 		$pseudo = "Vide";
 		$photo_vendeur = "Vide";
 		$fond_vendeur = "Vide";
 
 		$sql = "SELECT * FROM vendeur WHERE ID = '$id';";
 		$result = mysqli_query($db_handle, $sql);
-		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+		if (mysqli_num_rows($result) != 0)
+		{
 			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
 			{ 	
 				$pseudo = $data['Pseudo'];
@@ -78,7 +83,7 @@
 			}
 		}
 
-		//Déclaration de variables spécials acheteur 
+		//Déclaration de variables spéciales acheteur 
 		$adresse_ligne1 = "Vide";
 		$adresse_ligne2 = "Vide";
 		$ville = "Vide";
@@ -94,7 +99,8 @@
 
 		$sql = "SELECT * FROM acheteur WHERE ID = '$id';";
 		$result = mysqli_query($db_handle, $sql);
-		if (mysqli_num_rows($result) != 0){ // != 0 : il existe une ligne
+		if (mysqli_num_rows($result) != 0)
+		{
 			while ($data = mysqli_fetch_assoc($result)) //on récupère les données
 			{ 	
 				$adresse_ligne1 = $data['Adresse_ligne1'];
@@ -111,8 +117,9 @@
 				$solde = $data['Solde'];
 			}
 		}
-	}//End 
-	else{
+	} 
+	else
+	{
 		echo "Database not found";
 	}
 ?>
@@ -160,10 +167,12 @@
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="ades">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
+					  		<!--Liens cachés selon profil-->
 						    <a class="nav-link dropdown-item" href="achat.php" id="l3">Achat</a>
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
 					  	</div>
 					</li> 
+					<!--Lien vers admin visible seulement si admin-->
 					<li class="nav-item">
 						<a style="display: none; transform: translateY(7px); color: white;" href="admin.php" id="ad">Admin.</a>
 					</li> 
@@ -174,6 +183,7 @@
 						    <a class="nav-link dropdown-item" href="deconnexion.php">Se déconnecter</a>
 					  	</div>
 					</li> 
+					<!--Lien vers panier valable que si acheteur-->
 					<li class="nav-item">
 						<a class="nav-link" href="panier.php" id="panier"><i class="fas fa-shopping-cart"></i></a>
 					</li>    
@@ -182,6 +192,7 @@
 		</nav>
 <br><br>
 
+		<!--Si c'est un vendeur, on lui met son image de fond-->
 		<?php if ($statut == VENDEUR)
 		{?>
 			<div class="container-fluid features" style="background-size: cover; background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?php 
@@ -194,6 +205,7 @@
 				<div class="panel-heading">
 				   	<br><h3 class="text-center">Mes informations</h3><br>
 				</div>
+				<!--Affichage des données générales communes a tout le monde-->
 				<div class="row panel-body">
 					<div class="border-right" style="margin-left: 2em;margin-right: 1em;">
 						<table>
@@ -214,11 +226,13 @@
 								<?php echo'<td>Mot de passe : '.$mdp.'</td>'; ?>
 							</tr>
 							<tr>
-							<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m0()">Modifier mes informations générales</button></td>
+								<!--Bouton affiche le form de modifications. Manipulation faite pour tous les boutons de la page-->
+								<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m0()">Modifier mes informations générales</button></td>
 							</tr>
 						</table>
 					</div>
 
+					<!--Pour modifier mes info. Code plus ou moins répété pour chaque profil par la suite-->
 					<form method = "post" action = "">
 						<div class="form-group" style="display: none;" id="infoGeneral">
 							<input class="form-control" style="width: 100%" type="text" name="nomGen" placeholder="Nom">
@@ -232,7 +246,6 @@
 					<script>
 						function m0() 
 						{
-							// Get the output text
 							var text = document.getElementById("infoGeneral");
 							text.style.display = "block";
 						}
@@ -252,7 +265,7 @@
 									<?php echo'<td>Pseudo : '.$pseudo.'</td>'; ?>
 								</tr>
 								<tr>
-								<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m1()">Modifier mes informations vendeur</button></td>
+									<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m1()">Modifier mes informations vendeur</button></td>
 								</tr>
 							</table>
 						</div>
@@ -400,31 +413,20 @@
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
-							<li>
-								<a href="#">Ferraille ou Trésor</a>
-							</li>    
-							<li>
-								<a href="#">Bon pour le Musée</a>
-							</li> 
-							<li>
-								<a href="#">Accessoires VIP</a>
-							</li>               
+							<li>Ferraille ou Trésor</li>    
+							<li>Bon pour le Musée</li> 
+							<li>Accessoires VIP</li>               
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold"><a href="achat.php" id="achat">Achat</a></h5>
 						<ul> 
-							<li>
-								<a href="#" id="enchere">Enchères</a>
-							</li>    
-							<li>
-								<a href="#" id="achetez">Achetez-le maintenant</a>
-							</li> 
-							<li>
-								<a href="#" id="offre">Meilleure offre</a>
-							</li>               
+							<li>Enchères</a></li>    
+							<li>Achetez-le maintenant</a></li> 
+							<li>Meilleure offre</a></li>               
 						</ul> 
 					</div>   
+					<!--Liens actifs ou non selon profil-->
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
@@ -470,6 +472,7 @@
 					document.getElementById("achetez").onclick = function() {return false;}
 					document.getElementById("offre").onclick = function() {return false;}
 
+					//Afficher lien admin
 					var x = document.getElementById("ad");
 					x.style.display = "block";
 				</script> <?php
@@ -491,6 +494,7 @@
 					document.getElementById("offre").onclick = function() {return false;}
 					document.getElementById("admin").onclick = function() {return false;}
 
+					//Affichage des info du vendeur et boutons
 					var liste = document.getElementById("lvendeur");
 					liste.style.display ="block";
 
