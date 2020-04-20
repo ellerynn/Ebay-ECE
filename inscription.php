@@ -1,4 +1,5 @@
 <?php
+	//PHP l'inscription il vérifie les données saisies et l'affecté dans la BDD
     include("const.php");
 
     $nom = isset($_POST["nom"])? $_POST["nom"] : "";
@@ -7,10 +8,9 @@
     $psw = isset($_POST["psw"])? $_POST["psw"] : "";
     $erreur = "";
 
-    //identifier votre BDD
+    //BDD
     $database = "ebay ece paris";
-    //connectez-vous dans votre BDD
-    //Rappel: votre serveur = localhost | votre login = root |votre password = <rien>
+    //Serveur = localhost | votre login = root |votre password = <rien>
     $db_handle = mysqli_connect('localhost', 'root', '');
     $db_found = mysqli_select_db($db_handle, $database);
 
@@ -38,23 +38,24 @@
         echo "<br>";
 
         if ($erreur == "") 
-        {
+        {	//Aucune erreur de saisie
             if ($db_found) 
             {
                 $sql = "SELECT * FROM personne";
                 if ($login != "") 
                 {
-                    //on cherche le livre avec les paramètres titre et auteur
+                    //on cherche si le mail existe
                     $sql .= " WHERE email LIKE '$login'";
                     $result = mysqli_query($db_handle, $sql);
                     //Si on trouve une correspondance : le compte existe deja
                     if (mysqli_num_rows($result) != 0) 
-                    {
-                        //echo "Le compte existe déjà. Veuillez vous connecter";
+                    {	//Pas d'inscription
+                		$erreur.= "Le login existe déjà";
                         header('Location: connexion.php');
                     } 
                     else 
                     {
+                    	//Si n'existe pas : on le crée dans la BDD
                         $sql = "INSERT INTO personne( Nom, Prenom, Email, Statut, Mot_de_passe)
                         VALUES('$nom', '$prenom','$login', '3', '$psw');";
                         $result = mysqli_query($db_handle, $sql);
@@ -64,7 +65,6 @@
                         $id = "";
                         while ($data = mysqli_fetch_assoc($result)) 
                             $id =$data['ID'];
-                            
                         $sql = "INSERT INTO acheteur(ID) VALUES ('$id');";
                         $result = mysqli_query($db_handle, $sql); 
 
@@ -143,6 +143,7 @@
         <br><br><br>
         <div class="container-fluid features">
             <div class="panel border" style="height: 500px; width: 700px; transform: translateX(40%); padding: 50px; margin-bottom: 1em;">
+            	<!--Formulaire d'inscription -->
                 <h1 class="text-center">Créer un compte</h1>
                 <form style="transform: translateX(8%);" action="" method="post">
                     <table>
