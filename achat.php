@@ -82,7 +82,7 @@
 				while ($data = mysqli_fetch_assoc($result) ) //extraction de toute les photos d'un item donnée
 				{
 					$var = $table_item[$i][0];
-					$table_vendeur["$var"] = $data['Pseudo'];
+					$table_vendeur["$var"] = "[Vendeur] ".$data['Pseudo'];
 				}
 			}else //Si le vendeur n'est pas trouvé, c'est un administrateur
 			{
@@ -93,7 +93,7 @@
 					while ($data = mysqli_fetch_assoc($resultContour) ) //extraction de toute les photos d'un item donnée
 					{
 						$var = $table_item[$i][0];
-						$table_vendeur["$var"] = $data['Prenom'];
+						$table_vendeur["$var"] = "[Admin] ".$data['Prenom'];
 					}
 				}
 			}

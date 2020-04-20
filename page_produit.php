@@ -106,27 +106,49 @@
 		$sql = "SELECT * FROM item WHERE ID_item LIKE '$ID_temporaire_item'";
 		$result = mysqli_query($db_handle, $sql);
 		$nom_item ="";
-		$ID_vendeur = "";
+		$vendeurItem = "";
 		$ID_type_vente = "";
 		$description = "";
 		$categorie = "";
 		$prix = "";
 		$video = "";
-			if (mysqli_num_rows($result) == 0) {
-				//Livre inexistant
+			if (mysqli_num_rows($result) == 0) 
+			{	
 				$erreur.= "Erreur, cet item n'est pas disponible. <br>";
 			} 
 			else {
-				
-				while ($data = mysqli_fetch_assoc($result) ) 
-				{	//On les récupère
-					$nom_item = $data['Nom_item'];
-					$ID_vendeur = $data['ID_vendeur'];
-					$ID_type_vente = $data['ID_type_vente'];
-					$description = $data['Description'];
-					$categorie = $data['Categorie'];
-					$prix = $data['Prix'];
-					$video = $data['Video'];
+					while ($data = mysqli_fetch_assoc($result) ) 
+					{	//On les récupère
+						$nom_item = $data['Nom_item'];
+						$ID_type_vente = $data['ID_type_vente'];
+						$description = $data['Description'];
+						$categorie = $data['Categorie'];
+						$prix = $data['Prix'];
+						$video = $data['Video'];
+
+						$ID_vendeur = $data['ID_vendeur']; //On récupère l'ID du vendeur
+						$sql1 = "SELECT Pseudo FROM vendeur WHERE ID = $ID_vendeur"; //On cherche son pseudo
+						$result1 = mysqli_query($db_handle, $sql1);
+						if (mysqli_num_rows($result1) != 0) 
+						{	//s'il existe
+							while ($data1 = mysqli_fetch_assoc($result1) )
+							{	//On récupère
+								$vendeurItem = "[Vendeur] ".$data1['Pseudo'];
+							} 
+						}
+						else
+						{	//S'il existe pas, c'est un administrateur
+							$sql2 = "SELECT Prenom FROM personne WHERE ID = $ID_vendeur";
+							$result2 = mysqli_query($db_handle, $sql2);
+							if (mysqli_num_rows($result2) != 0) 
+							{
+								while ($data2 = mysqli_fetch_assoc($result2) )
+								{
+									$vendeurItem = "[Admin] ".$data2['Prenom'];
+								}
+							}
+
+						}
 				}
 			}
 
@@ -476,7 +498,7 @@
 
 				if($categorie == "Musee")
 					echo "Catégorie : Bon pour le Musée. <br>";
-
+				echo "Vendu par : ".$vendeurItem."<br>";
 				echo "Description de l'article : <br>".$description."<br>";
 				
 				if (strpos($ID_type_vente, "achat_immediat") !== FALSE || strpos($ID_type_vente, "offre") !== FALSE)

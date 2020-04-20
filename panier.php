@@ -143,7 +143,7 @@
 						{	//Si c'est un vendeur
 							while ($data = mysqli_fetch_assoc($result2)) 
 							{	//On enregistre dans un tableau associatif
-								$vendeurItems["$temp"] ="Vendeur: ".$data['Pseudo']; // {Clée ID_item => Pseudo}
+								$vendeurItems["$temp"] ="[Vendeur] ".$data['Pseudo']; // {Clée ID_item => Pseudo}
 							}
 						}
 						else
@@ -154,7 +154,7 @@
 							{	
 								while ($data = mysqli_fetch_assoc($result3)) 
 								{	//On récupère son prénom
-									$vendeurItems["$temp"] = "Admin: ".$data['Prenom']; // {Clé ID_item => Prenom}
+									$vendeurItems["$temp"] = "[Admin] ".$data['Prenom']; // {Clé ID_item => Prenom}
 								}
 							}
 						}
