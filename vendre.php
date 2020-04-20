@@ -104,7 +104,6 @@
 	//Si on ajoute un produit
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
-		echo "<br><br><br>H";
 	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
 		$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
 		

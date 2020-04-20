@@ -41,7 +41,7 @@
                 //Si aucun résultat, c'est peut être un vendeur ! son email lui sert de mot de passe
                 if (mysqli_num_rows($result) == 0 && mysqli_num_rows($resultv) == 0) 
                 {
-                    echo "Le compte n'existe pas, veuillez vous inscrire";
+                    $erreur.= "Le compte n'existe pas, veuillez vous inscrire";
                     header('Location: inscription.php');
                 }
                 
@@ -83,7 +83,7 @@
                             exit();
                         }
                         elseif (mysqli_num_rows($result) == 0)
-                            echo "Erreur de connexion admin/acheteur, veuillez reessayer.";
+                            $erreur.= "Erreur de connexion admin/acheteur, veuillez reessayer.";
                     }
 
                     //Si c'est un vendeur
@@ -106,7 +106,7 @@
                             exit();
                         }
                         elseif (mysqli_num_rows($result) == 0)
-                            echo "Erreur de connexion vendeur, veuillez reessayer.";
+                            $erreur .="Erreur de connexion vendeur, veuillez reessayer.";
                     }
                 }
             }
