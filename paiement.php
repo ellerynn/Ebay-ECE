@@ -442,7 +442,7 @@ echo'<div class ="form-group" id ="infosCarte'.$infosCarte.'" style="display: no
 
 	<form method = "post" action = "">
 		<?php
-  echo '<div class="form-group" style="display: none;" id="formulaireCarte'.$infosCarte.'">';
+  		echo '<div class="form-group" style="display: none;" id="formulaireCarte'.$infosCarte.'">';
 		?>
 			<p>Type de carte:</p>
 			<select  name = "typecarte">
@@ -475,7 +475,20 @@ echo'
 <form method = "post" action = "">
 <input class="form-control" style="width: 100%" type="password" minlength = "4" maxlength = "4" pattern = "\d+" name="code" placeholder="Code de sécurité" required>
 <input class="form-control" style="width:200px; margin: 0 auto" name="payer" type="submit" value="Valider" required>
-</form>';
+';	
+if (isset($_POST["payer"])) 
+{
+	$database = "ebay ece paris";
+	$db_handle = mysqli_connect('localhost', 'root', '');
+	$db_found = mysqli_select_db($db_handle, $database);
+	if($erreurPaiement=="")
+	{
+			$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message) VALUES ('0','$id','$prixTot');";
+   			 $result = mysqli_query($db_handle, $sql);
+	}
+
+}
+echo '</form>';
 ?>
 
 </div>

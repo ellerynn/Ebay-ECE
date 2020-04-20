@@ -180,6 +180,30 @@
 					$i++;
 	       }
     	}
+
+    		//Facture recu pour lacheteur
+	if ($db_found) 
+    {	
+		$sql8 = "SELECT * FROM contact WHERE ID_admin = '0' AND ID_acheteur = '$id' ;";
+		$result8 = mysqli_query($db_handle, $sql8);
+		if (mysqli_num_rows($result8) != 0){
+			$temp3 = array();
+			$i = 0;
+			while($data = mysqli_fetch_assoc($result8))
+		    {
+
+			        $i_temp = 0;
+
+					$temp3[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
+
+					$table_reponse["$i"] = $temp2; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
+					$i++;
+	    	
+	       }
+
+    	}
+    	
+	}
 	}//END
 	else
 		echo "Database not found";
@@ -548,6 +572,32 @@
 					</div>
 					<!-- SECTION MESSAGE POUR SAISIR SON MESSAGE-->
 				    <div class="panel" style="display: none;" id="panel_messages">
+				    	<!-- FACTURE QUE RECOIT LES CLIENTS LORSQU'ILS ONT ACHETE -->
+				    	<?php 
+						echo '<div class="panel-heading">';
+						echo '<br><h2 class="text-center">Facture(s)</h2><br>';
+						echo '</div>';
+						 for ($i= 0; $i < count($table_reponse); $i++)
+			    		 { //pour chaque item
+
+									
+								    echo '<div class="panel-body">';
+										echo '<form method="post" action="" enctype="multipart/form-data">';
+											echo '<div class="form-group">';
+											//echo "ID de l'acheteur: ".$id_acheteur_bis;
+											echo "<br>";
+											echo "Merci pour votre confiance et pour votre achat.<br> Votre/Vos article(s) seront envoyés en 5 jours ouvrés. Veuillez trouvez ci-joint le montant total de vos achats.<br>
+											Bonne journée.<br>
+											Facture : <td>".$table_reponse[$i][0]." euros </td>"; //id message
+											echo "<br>";
+
+											echo '</div>';
+											         	
+									    echo '</form>';
+
+						}
+
+						?>
 						<?php 
 						echo '<div class="panel-heading">';
 						echo '<br><h2 class="text-center">Réponse(s)</h2><br>';
