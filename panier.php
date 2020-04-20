@@ -99,25 +99,43 @@
 				$tempItem = $data['ID_item'];
 				$itemDateDebut = $data['Date_debut'];
 				$itemHeureDebut = $data['Heure_debut'];
+				$dejamodif = 0;
 				if ($itemDateFin < $date_actuelle) 
+				{
+					//Si la date de fin de l'enchère est passé
+					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
+				}
+				if ($itemDateFin == $date_actuelle && $itemHeureFin <= $heure_actuelle && $dejamodif == 0)
 				{	//Si la date de fin de l'enchère est passé
 					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
 					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
 				}
-				if ($itemDateFin == $date_actuelle && $itemHeureFin <= $heure_actuelle)
-				{	//Si la date de fin de l'enchère est passé
-					$sqlModif = "UPDATE liste_enchere SET Fin = 1 WHERE ID_item = $tempItem;";
-					$resultModif = mysqli_query($db_handle,$sqlModif);
-				}
-				if ($itemDateDebut > $date_actuelle)
+				if ($itemDateDebut > $date_actuelle && $dejamodif == 0)
 				{	//Si pas encore ouvert
 					$sqlModif = "UPDATE liste_enchere SET Fin = 2 WHERE ID_item = $tempItem;";
 					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
 				}
-				if ($itemDateDebut == $date_actuelle && $itemHeureDebut > $heure_actuelle)
+				if ($itemDateDebut == $date_actuelle && $itemHeureDebut > $heure_actuelle && $dejamodif == 0)
 				{	//Si pas encore ouvert
 					$sqlModif = "UPDATE liste_enchere SET Fin = 2 WHERE ID_item = $tempItem;";
 					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
+				}
+				if ($itemDateDebut < $date_actuelle && $dejamodif == 0) //Si la date de début est dans le passé
+				{	//On ouvre l'enchère
+					$sqlModif = "UPDATE liste_enchere SET Fin = 0 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
+				}
+				if ($itemDateDebut == $date_actuelle && $itemHeureDebut <= $heure_actuelle && $dejamodif == 0)
+				{	//Si on est au même date et que l'heure est dans le passé, onouvre l'enchère
+					$sqlModif = "UPDATE liste_enchere SET Fin = 0 WHERE ID_item = $tempItem;";
+					$resultModif = mysqli_query($db_handle,$sqlModif);
+					$dejamodif = 1;
 				}
 			}
 		}
