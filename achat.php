@@ -120,6 +120,7 @@
 		$id_acheteur_bis ="";	
 		$id_message_bis ="";
 		$table_reponse = array();
+		$table_reponse2 = array();
 
 		if (isset($_POST["buttonenvoyer"])) 
 		{
@@ -196,7 +197,7 @@
 
 					$temp3[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
 
-					$table_reponse["$i"] = $temp2; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
+					$table_reponse2["$i"] = $temp3; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
 					$i++;
 	    	
 	       }
@@ -577,7 +578,7 @@
 						echo '<div class="panel-heading">';
 						echo '<br><h2 class="text-center">Facture(s)</h2><br>';
 						echo '</div>';
-						 for ($i= 0; $i < count($table_reponse); $i++)
+						 for ($i= 0; $i < count($table_reponse2); $i++)
 			    		 { //pour chaque item
 
 									
@@ -588,12 +589,12 @@
 											echo "<br>";
 											echo "Merci pour votre confiance et pour votre achat.<br> Votre/Vos article(s) seront envoyés en 5 jours ouvrés. Veuillez trouvez ci-joint le montant total de vos achats.<br>
 											Bonne journée.<br>
-											Facture : <td>".$table_reponse[$i][0]." euros </td>"; //id message
+											Facture : <td>".$table_reponse2[$i][0]." euros </td>"; //id message
 											echo "<br>";
 
-											echo '</div>';
-											         	
+											echo '</div>';	
 									    echo '</form>';
+									    echo '</div>';
 
 						}
 
