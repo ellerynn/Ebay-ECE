@@ -441,139 +441,143 @@
 		</nav>
 		<br><br><br><br>
 		
-		<div class="row">
-        	<div class="col-lg-4 col-md-4 col-sm-12">
-        		<div style="margin:2em; width: 350px; height: 350px;" id="carousel" class="carousel slide" data-ride="carousel">
-				 	<ul class="carousel-indicators">
-				 	<?php
-		            	for ($i = 0 ; $i < count($nom_photo); $i++)
-		            	{
-						    echo '<li data-target="#carousel" data-slide-to="'.$i.'"></li>';
-						}?>
-					</ul>
-					<div class = "carousel-inner">
-						<?php
-							for ($i = 0 ; $i < count($nom_photo); $i++)
+		<div class="container-fluid features">
+			<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-12"></div>
+	        	<div class="col-lg-4 col-md-4 col-sm-12">
+	        		<div style="margin:2em; width: 350px; height: 350px;" id="carousel" class="carousel slide" data-ride="carousel">
+					 	<ul class="carousel-indicators">
+					 	<?php
+			            	for ($i = 0 ; $i < count($nom_photo); $i++)
 			            	{
-								    if ($i == 0)
-								    echo'
-									    <div class="carousel-item active">
-									      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
-									    </div>';
-								    else
-								    echo'
-									    <div class="carousel-item">
-									      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
-									    </div>'; 
-							}
-							if($video != "" || $video != 0 )
-							{
-								echo'
-								<div class="carousel-item">
-			                    	<div class="embed-responsive embed-responsive-4by3">;
-			                    		<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =350 	></iframe>
-			                    	</div>
-			                    </div>'; 
-			                }		
-							?>
+							    echo '<li data-target="#carousel" data-slide-to="'.$i.'"></li>';
+							}?>
+						</ul>
+						<div class = "carousel-inner">
+							<?php
+								for ($i = 0 ; $i < count($nom_photo); $i++)
+				            	{
+									    if ($i == 0)
+									    echo'
+										    <div class="carousel-item active">
+										      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+										    </div>';
+									    else
+									    echo'
+										    <div class="carousel-item">
+										      	<img src = "images_web/'.$nom_photo[$i].'" height=350 width =350 >
+										    </div>'; 
+								}
+								if($video != "" || $video != 0 )
+								{
+									echo'
+									<div class="carousel-item">
+				                    	<div class="embed-responsive embed-responsive-4by3">;
+				                    		<iframe class="embed-responsive-item" src="'.$video.'" height=350 width =350 	></iframe>
+				                    	</div>
+				                    </div>'; 
+				                }		
+								?>
+						</div>
+						<a class="carousel-control-prev" href="#carousel" data-slide="prev">
+						    <i style="color: black;"class="fas fa-chevron-left"></i>
+						</a>
+						<a class="carousel-control-next" href="#carousel" data-slide="next">
+						    <i style="color: black;"class="fas fa-chevron-right"></i>
+						</a>
 					</div>
-					<a class="carousel-control-prev" href="#carousel" data-slide="prev">
-					    <i style="color: black;"class="fas fa-chevron-left"></i>
-					</a>
-					<a class="carousel-control-next" href="#carousel" data-slide="next">
-					    <i style="color: black;"class="fas fa-chevron-right"></i>
-					</a>
-				</div>
-			</div> <br>
-			<div style="padding:2em;" class="col-lg-8 col-md-8 col-sm-12">
-			<?php 
-			//Affichage données de l'item
-				echo'<h1>'.$nom_item.'<br></h1>';
-				
-				if($categorie == "Ferraille_tresor")
-					echo "Catégorie : Ferraille ou trésor. <br>";
-
-				if($categorie == "VIP")
-					echo "Catégorie : Accessoires VIP. <br>";
-
-				if($categorie == "Musee")
-					echo "Catégorie : Bon pour le Musée. <br>";
-				echo "Vendu par : ".$vendeurItem."<br>";
-				echo "Description de l'article : <br>".$description."<br>";
-				
-				if (strpos($ID_type_vente, "achat_immediat") !== FALSE || strpos($ID_type_vente, "offre") !== FALSE)
-					echo "Prix : ".$prix."€<br>";
-					//Il s'affiche que quand c'est achat immédiat ou offre
-
-				echo '<form action="" method="post">';
-				if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
-					echo "Achat immédiat possible. <br>";
-				//Si l'objet peut être vendu en achat immediat
-				if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
-				{	//Bouton pour ajouter dans le panier comme achat immédiat
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="Ajouter dans le panier" onclick="montrerErreur()"><br><br>';
-					if ($erreurAchat != "")
-					{
-						echo $erreurAchat;
-						$erreurAchat = "";
-					}
-				}
-
-				if (strpos($ID_type_vente, "offre") !== FALSE)
-					echo "Meilleure offre possible. <br>";
-				//Si l'objet peut être vendu en offre
-				//meilleur offre formulaire
-				if (strpos($ID_type_vente, "offre") !== FALSE)
-				{	//Le prix à rentrer
-					echo '<td><input type="number" name="votre_prix_offre" placeholder="Votre offre"></td>';
-					if (mysqli_num_rows($resultOffre) != 0)
-						echo '<p>Le prix actuel est de '.$prix_vendeur.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>'; //Indicateur
-					else 
-						echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';	//Indicateur
-					if ($erreurOffre != ""){
-						echo $erreurOffre;
-						$erreurOffre = "";
-					}
-					//Clause
-					echo '<div class="form-group">';
-		          	echo '<p class="font-weight-bold">Clause</p>';
-		           	echo '<input type="checkbox" name="clause" value="clause"  requiered>Accepte d\'être sous le contrat légal pour acheter l\'article si le vendeur accepte l\'offre <br>';
-		           	if(isset($_POST["clause"]))
-		           	{
-		           		echo"Merci d'avoir accepté la clause ! <br>";
-		           	}
-		           	else
-		           		echo "Vous êtes obligés d'accepter la clause ! <br>";
-
-					echo '</div>';
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
-				}
-
-				//Si l'objet peut être vendu en enchère
-				//enchere formulaire
-				if (strpos($ID_type_vente, "enchere") !== FALSE)
-				{
-					if ($fin == 0)
-					echo "L'enchère est ouverte ! <br>";
-					elseif ($fin == 1)
-						echo "L'enchère est fermée ! <br>";
-					elseif ($fin == 2)
-						echo "L'enchère n'est pas encore ouverte : <br>";
-					echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
-					echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
-					echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';
-					echo '<p>Le prix actuel est de '.$Prixactuelle.'€, veuillez saisir un montant supérieur.</p>';
+				</div> <br>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+				<?php 
+				//Affichage données de l'item
+					echo'<h1>'.$nom_item.'<br></h1>';
 					
-					if ($erreurEnchere != "")
+					if($categorie == "Ferraille_tresor")
+						echo "Catégorie : Ferraille ou trésor. <br>";
+
+					if($categorie == "VIP")
+						echo "Catégorie : Accessoires VIP. <br>";
+
+					if($categorie == "Musee")
+						echo "Catégorie : Bon pour le Musée. <br>";
+					echo "Vendu par : ".$vendeurItem."<br>";
+					echo "Description de l'article : <br>".$description."<br>";
+					
+					if (strpos($ID_type_vente, "achat_immediat") !== FALSE || strpos($ID_type_vente, "offre") !== FALSE)
+						echo "Prix : ".$prix."€<br>";
+						//Il s'affiche que quand c'est achat immédiat ou offre
+
+					echo '<form action="" method="post">';
+					if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
+						echo "Achat immédiat possible. <br>";
+					//Si l'objet peut être vendu en achat immediat
+					if (strpos($ID_type_vente, "achat_immediat") !== FALSE)
+					{	//Bouton pour ajouter dans le panier comme achat immédiat
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonachat" type="submit" value="Ajouter dans le panier" onclick="montrerErreur()"><br><br>';
+						if ($erreurAchat != "")
+						{
+							echo $erreurAchat;
+							$erreurAchat = "";
+						}
+					}
+
+					if (strpos($ID_type_vente, "offre") !== FALSE)
+						echo "Meilleure offre possible. <br>";
+					//Si l'objet peut être vendu en offre
+					//meilleur offre formulaire
+					if (strpos($ID_type_vente, "offre") !== FALSE)
+					{	//Le prix à rentrer
+						echo '<td><input type="number" name="votre_prix_offre" placeholder="Votre offre"></td>';
+						if (mysqli_num_rows($resultOffre) != 0)
+							echo '<p>Le prix actuel est de '.$prix_vendeur.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>'; //Indicateur
+						else 
+							echo '<p>Le prix actuel est de '.$prix.', veuillez mettre un prix inférieur au prix actuel si vous souhaitez négocier</p>';	//Indicateur
+						if ($erreurOffre != ""){
+							echo $erreurOffre;
+							$erreurOffre = "";
+						}
+						//Clause
+						echo '<div class="form-group">';
+			          	echo '<p class="font-weight-bold">Clause</p>';
+			           	echo '<input type="checkbox" name="clause" value="clause"  requiered>Accepte d\'être sous le contrat légal pour acheter l\'article si le vendeur accepte l\'offre <br>';
+			           	if(isset($_POST["clause"]))
+			           	{
+			           		echo"Merci d'avoir accepté la clause ! <br>";
+			           	}
+			           	else
+			           		echo "Vous êtes obligés d'accepter la clause ! <br>";
+
+						echo '</div>';
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonoffre" type="submit" value="Faire la demande">';
+					}
+
+					//Si l'objet peut être vendu en enchère
+					//enchere formulaire
+					if (strpos($ID_type_vente, "enchere") !== FALSE)
 					{
-						echo $erreurEnchere;
-						$erreurEnchere = "";
-					}	
-					echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
-				}
-				echo "</form><br><br><br><br>";
-	            ?>
-	    	</div>
+						if ($fin == 0)
+						echo "L'enchère est ouverte ! <br>";
+						elseif ($fin == 1)
+							echo "L'enchère est fermée ! <br>";
+						elseif ($fin == 2)
+							echo "L'enchère n'est pas encore ouverte : <br>";
+						echo "Début : ".$Date_debut." à ".$Heure_debut."<br>";
+						echo "Fin : ".$Date_fin." à ".$Heure_fin."<br>";
+						echo '<td><input type="number" name="votre_prix" placeholder="Votre prix"></td>';
+						echo '<p>Le prix actuel est de '.$Prixactuelle.'€, veuillez saisir un montant supérieur.</p>';
+						
+						if ($erreurEnchere != "")
+						{
+							echo $erreurEnchere;
+							$erreurEnchere = "";
+						}	
+						echo '<input class="btn border btn-outline-secondary rounded-lg" name="buttonenchere" type="submit" value="Enchérir">';
+					}
+					echo "</form><br><br><br><br>";
+		            ?>
+		    	</div>
+		    	<div class="col-lg-2 col-md-2 col-sm-12"></div>
+		    </div>
 	    </div>
 	    <br>
 		<footer class="page-footer container-fluid">   

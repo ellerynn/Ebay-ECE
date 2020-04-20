@@ -73,7 +73,7 @@
                         // On enregistre le login en session
                         $_SESSION['login'] = $login;
                         $_SESSION['psw'] = $psw;
-                        $_SESSION['Statut'] = $statut;
+                        $_SESSION['Statut'] = ACHETEUR;
                         $_SESSION['ID'] = $id;
                         // On redirige vers le fichier votre_compte.php
                         header('Location: accueil.php');
