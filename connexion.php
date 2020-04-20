@@ -1,6 +1,8 @@
 <?php
+    //Constantes
     include("const.php");
 
+    //Variables de connexion
     $login = isset($_POST["login"])? $_POST["login"] : "";
     $psw = isset($_POST["psw"])? $_POST["psw"] : "";
     $erreur = "";
@@ -41,7 +43,6 @@
                 {
                     echo "Le compte n'existe pas, veuillez vous inscrire";
                     header('Location: inscription.php');
-                    //AJOUTER UNE ALERTE
                 }
                 
                 else
@@ -77,7 +78,7 @@
                             $_SESSION['psw'] = $psw;
                             $_SESSION['Statut'] = $statut;
                             $_SESSION['ID'] = $id;
-                            // On redirige vers le fichier votre_compte.php
+                            // On redirige vers le fichier accueil.php
                             header('Location: accueil.php');
                             exit();
                         }
@@ -100,7 +101,7 @@
                             $_SESSION['psw'] = $psw;
                             $_SESSION['Statut'] = $statut;
                             $_SESSION['ID'] = $id;
-                            // On redirige vers le fichier votre_compte.php
+                            // On redirige vers le fichier acuueil.php
                             header('Location: accueil.php');
                             exit();
                         }
@@ -197,31 +198,20 @@
                     <div class="col-lg-3 col-md-3 col-sm-12">   
                         <h5 class="text-uppercase font-weight-bold">Catégories</h5>
                         <ul>  
-                            <li>
-                                <a href="#">Ferraille ou Trésor</a>
-                            </li>    
-                            <li>
-                                <a href="#">Bon pour le Musée</a>
-                            </li> 
-                            <li>
-                                <a href="#">Accessoires VIP</a>
-                            </li>               
+                            <li>Ferraille ou Trésor                            </li>    
+                            <li>Bon pour le Musée</li> 
+                            <li>Accessoires VIP</li>               
                         </ul> 
                     </div> 
                     <div class="col-lg-3 col-md-3 col-sm-12">   
                         <a href="achat.php" id="l3"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
                         <ul>  
-                            <li>
-                                <a href="#">Enchères</a>
-                            </li>    
-                            <li>
-                                <a href="#">Achetez-le maintenant</a>
-                            </li> 
-                            <li>
-                                <a href="#">Meilleure offre</a>
-                            </li>               
+                            <li>Enchères </li>    
+                            <li>Achetez-le maintenant</li> 
+                            <li>Meilleure offre</li>               
                         </ul> 
                     </div>   
+                    <!--On a laissé les liens actifs ici parce que de toute facon, si vous cliquez, vous serez redirigé vers connexion-->
                     <div class="col-lg-3 col-md-3 col-sm-12">   
                         <ul>  
                             <li>

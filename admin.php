@@ -1,9 +1,10 @@
 <?php
+	//Constantes
 	include("const.php");
-	// On prolonge la session
+	//On prolonge la session
 	session_start();
 
-	// On teste si la variable de session existe et contient une valeur
+	//On teste si la variable de session existe et contient une valeur
 	if(isset($_SESSION['login']))
 	{
 		$login = $_SESSION['login'];
@@ -13,7 +14,7 @@
 	}
 	else
 	{
-	  // Si inexistante ou nulle, on redirige vers le formulaire de login
+	  //Si inexistante ou nulle, on redirige vers le formulaire de connexion
 	  header('Location: connexion.php');
 	  exit();
 	}
@@ -24,6 +25,7 @@
     $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
 
+	//Déclarations des variables
 	$table_item = array();
 	$table_photo = array();
 	$nom_item = array();
@@ -44,17 +46,15 @@
 			$ID_item[$i] = $data['ID_item'];
 			$i++;
 		
-			$i_temp = 0;
-			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
-			$i_temp++;
-			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
+			$temp[0] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite
+			$temp[1] = $data['Nom_item']; 
 
 			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
 			$j++;
 		}
 	}	
 
-	//Récuperation de la première photo de chaque item du vendeur
+	//Récuperation de la première photo SEULEMENT de chaque item du vendeur
 	for($a=0; $a < count($ID_item); $a++)
 	{
 		$sqlp = "SELECT * FROM photo WHERE ID_item LIKE '$ID_item[$a]' ";
@@ -81,22 +81,20 @@
 			$ID_vendeur[$i] = $data['ID'];
 			$i++;
 		
-			$i_temp = 0;
-			$temp[$i_temp] = $ID_vendeur[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
-			$i_temp++;
-			$temp[$i_temp] = $data['Pseudo']; // i_temp = 1
+			$temp[0] = $ID_vendeur[$j]; //on garde en mémoire d'ID du item qu'on traite
+			$temp[1] = $data['Pseudo']; 
 
 			$table_vendeur["$ID_vendeur[$j]"] = $temp; // Tableau associatif
 			$j++;
 		}
 	}	
+
 	//transfert de valeurs : récepteur 
 	$erreurAjoutVendeur = "";
 	if (isset($_GET['idErreur']))
 	{ 
 		$erreurAjoutVendeur = $_GET['idErreur'];
 	}
-
 ?>
 
 <!DOCTYPE html> 
@@ -121,6 +119,7 @@
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
 	<body> 
+		<!--Barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> 
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
 				<span class="navbar-toggler-icon"></span>       
@@ -160,6 +159,7 @@
 				<div class="col-lg-3 col-md-3 col-sm-12">
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
+					<!--Liste des options d'un admin. Affichage des panels correspondant au clic-->
 					<div class="list-group">
 			        	<button type="button" class="list-group-item btn" id="bad1">Supprimer un item du site</button>
 			        	<button type="button" class="list-group-item btn" id="bad2">Gérer les vendeurs</button>
@@ -170,6 +170,7 @@
 					    <div class="panel-body row">
 					    	<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 					    		<br><h2 class="text-center">Supprimer un item du site</h2><br>
+					    		<!--Form de suppression, champs requis pour continuer-->
 							    <form action="suppression_produit_admin.php" method="post">
 									<div class="form-group">
 				                        <input class="form-control" style="width: 50%; margin: 0 auto" type="number" name="id" placeholder="ID de l'article" required>
@@ -179,6 +180,7 @@
 									</div>
 								</form>	
 							</div>
+							<!--Affichage de tous les items du site en liste-->
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
 								<br><h2 class="text-center">Liste items</h2><br>
 								<?php
@@ -218,6 +220,7 @@
 					    	<div class="row">
 						    	<div class="col-lg-4 col-md-4 col-sm-12 border-right" style="padding: 1em;">
 						    		<h4 class="text-center">Ajouter un vendeur</h4>
+									<!--Form d'ajout, tous les champs sont requis-->
 									<form action="ajout_vendeur.php" method="post" style="margin-left: 1em;">
 										<div class="form-group">
 					                        <input class="form-control" style="margin-bottom: 5px;" type="text" name="nom" placeholder="Nom" required>
@@ -230,6 +233,7 @@
 						    	</div>
 						    	<div class="col-lg-4 col-md-4 col-sm-12" style="padding: 1em;">
 						    		<h4 class="text-center">Supprimer un vendeur</h4>
+						    		<!--Form de suppression. Tous les champs sont requis-->
 									<form action="suppression_vendeur.php" method="post">
 										<div class="form-group">
 					                        <input class="form-control" style="margin: 0 auto; margin-bottom: 5px;" type="number" name="id" placeholder="ID vendeur" required>
@@ -238,6 +242,7 @@
 										</div>
 									</div>
 						    	<div class="col-lg-4 col-md-4 col-sm-12" style="padding: 1em;">
+						    		<!--Affichage liste des vendeurs du site du site-->
 						    		<h4 class="text-center">Liste vendeurs</h4>
 						    		<?php
 									if(count($ID_vendeur)==0)	
@@ -277,15 +282,9 @@
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
-							<li>
-								<a href="#">Ferraille ou Trésor</a>
-							</li>    
-							<li>
-								<a href="#">Bon pour le Musée</a>
-							</li> 
-							<li>
-								<a href="#">Accessoires VIP</a>
-							</li>               
+							<li>Ferraille ou Trésor</li>    
+							<li>Bon pour le Musée</li> 
+							<li>Accessoires VIP</li>               
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
@@ -325,6 +324,7 @@
 		</footer>
 
 		<script type="text/javascript">
+			//Permet d'afficher/cacher les différents panel (suppression item ou gérer vendeurs) selon le clic
 			var panel_supp = document.getElementById("panel_supp_admin");
 			var panel_gv = document.getElementById("panel_gv_admin");
 

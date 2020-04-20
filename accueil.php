@@ -1,22 +1,25 @@
 <?php
+	//PARTIE TRAITEMENT POUR AFFICHER LES ITEMS PRESENTS DANS LA BDD SUR L'ACCUEIL
+	//On include les constantes ADMIN, ACHETEUR et VENDEUR
 	include("const.php");
 
 	// On prolonge la session
 	session_start();
 	if(isset($_SESSION['login']))
 	{
-		$login = $_SESSION['login'];
-		$psw = $_SESSION['psw'];
-		$statut = $_SESSION['Statut'];
-		$id = $_SESSION['ID'];
+		$login = $_SESSION['login']; //Pseudo ou mail selon le statut
+		$psw = $_SESSION['psw']; //Mot de passe
+		$statut = $_SESSION['Statut']; //Statut : 1 2 ou 3
+		$id = $_SESSION['ID']; //ID de l'utilisateur
 	}
 
-	//identifier votre BDD
+	//Idientification de la BDD
     $database = "ebay ece paris";
-    $db_handle = mysqli_connect('localhost', 'root', '');
+    $db_handle = mysqli_connect('localhost', 'root', ''); //Identifiant 'root', mdp ''
     $db_found = mysqli_select_db($db_handle, $database);
 	$erreur ="";
 
+	//Déclarations des variables
 	$table_item = array();
 	$table_photo = array();
 
@@ -28,15 +31,18 @@
 	$temp = array();
 	$c = 0;
 
+	//Si la BDD existe
 	if($db_found)
 	{
 		//On sélectionne tous les items présents dans la table item
 		$sql = "SELECT * FROM item";
 		$r = mysqli_query($db_handle, $sql);
+
+		//Si on a effectivement un résultat
 		if (mysqli_num_rows($r) != 0)
 		{
 			$i = 0;
-			//On récupère id et prix de chaque item
+			//On récupère id, nom, catégorie, type de vente et prix de chaque item
 			while ($data = mysqli_fetch_assoc($r)) 
 			{
 				$ID_i[$i] = $data['ID_item'];
@@ -47,17 +53,17 @@
 				$i++;
 			}
 
-			//Pour chaque item
+			//Pour chaque item, on garder en mémoire dans un seul tableau toutes ses données
 			for ($u = 0 ; $u < count($ID_i) ; $u++)
 			{ 
-				
-				$temp[0] = $ID_i[$u]; //on garde en mémoire d'ID du item 
+				$temp[0] = $ID_i[$u]; 
 				$temp[1] = $nom[$u];
 				$temp[2] = $prix[$u]; 
 				$temp[3] = $categorie[$u];
 				$temp[4] = $type[$u];
 
 				$table_item["$ID_i[$u]"] = $temp; // Tableau associatif
+				//Tous les items sont donc dans $table_item
 			}
 
 			//Récuperation de la première photo de chaque item
@@ -113,12 +119,15 @@
 	</head> 	
 
 	<body> 
+		<!--Code repris du TP7 puis modifié par la suite au fil du projet-->
 		<!--Ajouter une barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
 
+			<!--barre de recherche, s'affiche selon le profil (acheteur)-->
+			<!--EN COURS : pour l'instant la barre n'est la que pour des raisons esthétiques, cliquez sur le bouton CHERCHER pour accèder a un nouveau fichier php ou vous pourrez faire une recherche -->
 			<form style="display: none;" id="barre" action="rechercher.php" class="navbar-form inline-form">
 				<div class="form-group">
 				  	<span style="color:white;"><i class="fas fa-search"></i></span>
@@ -132,6 +141,8 @@
 					<li class="nav-item">
 						<a class="nav-link" href="accueil.php">Accueil</a>
 					</li>
+					<!--Menu déroulant qui affiche les liens vers achat et vendre.-->
+					<!--Les différents liens sont cachés selon le profil. Par exemple, un acheteur n'a pas accès a la page vendre, ce lien ne s'affiche donc pas.-->
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="ades">Mon eBay</button>
 					  	<div class="dropdown-menu" id="menu-deroulant">
@@ -139,9 +150,11 @@
 						    <a class="nav-link dropdown-item" href="vendre.php" id="l2">Vendre</a>
 					  	</div>
 					</li> 
+					<!--Indique que vous etes connecté en tant qu'admin, et renvoie a la page dédiée-->
 					<li class="nav-item">
 						<a style="display: none; transform: translateY(7px); color: white;" href="admin.php" id="ad">Admin.</a>
 					</li> 
+					<!--Second menu déroulant qui, si vous êtes connecté, affiche mon compte et se déco ; si vous n'êtes pas connecté, se connecter et renvoie aux pages dédiées-->
 					<li class="nav-item dropdown">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="btnpop"><i class="fas fa-user"></i></button>
 					  	<div class="dropdown-content border rounded" id="apop1">
@@ -152,6 +165,7 @@
 						    <a class="nav-link dropdown-item" href="connexion.php">Se connecter</a>
 					  	</div>
 					</li> 
+					<!--Icone panier, renvoie a la page panier, accessible seulement pour les acheteurs-->
 					<li class="nav-item">
 						<a class="nav-link" href="panier.php" id="panier"><i class="fas fa-shopping-cart"></i></a>
 					</li>    
@@ -161,6 +175,7 @@
 
 		<header class="page-header header container-fluid"> <!-- -fluid permet de s'assurer que le conteneur s'étend sur toute la largeur de l'écran. Il y a aussi juste un container, avec des largeurs fixes appliquées = espace des deux côtés de l'écran.-->
 			<div class="row"> 
+				<!--Premiere colonne : liste des catégories, avec systeme de liens et ancres qui affiche les catégories et amene l'utilisateur la ou elles sont affichées, sur la meme page-->
 				<div class="col-lg-3 col-md-3 col-sm-12">
 					<div class="list-group" style="width: 80%;">
 						<button class="btn btn-lg" id="b0" style="background-color: white; border :0;"><h3 class="text-center">eBay ECE</h3></button>
@@ -170,7 +185,9 @@
 			          	<button class="btn btn-lg" id="b3"><a href="#panel_vip">Accessoires VIP</a></button>
 			        </div>
 		        </div>
+		        <!--Seconde colonne : carousel qui affiche des promo. Pour l'intant, ces promos ne sont que des images et ne sont pas réelles.-->
 		        <div class="col-lg-9 col-md-9 col-sm-12">
+		        	<!--Affiche les traits en bas du carousel, pour indiquer le nombre de slides-->
 		        	<div id="carousel" class="carousel slide" data-ride="carousel">
 					 	<ul class="carousel-indicators">
 					    	<li data-target="#carousel" data-slide-to="0" class="active"></li>
@@ -178,6 +195,7 @@
 					    	<li data-target="#carousel" data-slide-to="2"></li>
 						</ul>
 
+						<!--Définition des slide et de leur contenu. Active est nécessaire pour l'affichage des slides. Carousel-inner est nécessair pour que les slides ne s'affichent pas en dehors du carousel quand elles défilent-->
 						<div class="carousel-inner">
 						    <div class="carousel-item active">
 						      	<img src="promo1.jpg" alt="1">
@@ -190,6 +208,7 @@
 						    </div>
 						</div>
 
+						<!--Pour gérer le controle des slides manuellement-->
 						<a class="carousel-control-prev" href="#carousel" data-slide="prev">
 						    <span class="carousel-control-prev-icon"></span>
 						</a>
@@ -201,11 +220,13 @@
 	    	</div>
 		</header>
 
-		<!--DEBUT Ajout de code 2-->
+	    <!--Affichage des items du site et des tableaux de catégories-->
 	    <div class="container-fluid features">
+	    	<!--Chaque catégorie a un panel dédié qui ne s'affiche que lorsque l'utilisateur clique sur le lien/l'ancre établi plus haut.-->
 	    	<div class="panel" style="display: none;" id="panel_ferraille_tresor">
 			    <div class="panel-body">
 			    	<br><h3 class="text-center">Ferraille ou Trésor</h3><br>
+			    	<!--Mise en place d'un tableau pour afficher la catégorie-->
 			    	<?php
 			    		echo '<table class = "table">';
 			    			echo '<tr>';
@@ -214,10 +235,10 @@
 			    				echo '<td>Achat immédiat</td>';
 			    				echo '<td>Meilleur offre</td>';
 			    				echo '<td>Enchère</td>';
-			    				//echo "<td>Prix (€)</td>";
 			    			echo '</tr>';
+			    		//Pour chaque item, on récupère ses caractéristiques pour les afficher
 			    		for ($i= 0; $i < count($table_item); $i++)
-			    		{ //pour chaque item
+			    		{ 
 			    			$var = $ID_i[$i];
 			    			if ($table_item["$ID_i[$i]"][3] == "Ferraille_tresor")
 			    			{
@@ -257,7 +278,6 @@
 			    				echo "<td>Achat immédiat</td>";
 			    				echo "<td>Meilleur offre</td>";
 			    				echo "<td>Enchère</td>";
-			    				//echo "<td>Prix (€)</td>";
 			    			echo "</tr>";
 
 			    		for ($i= 0; $i < count($table_item); $i++){ //pour chaque item
@@ -279,7 +299,6 @@
 										echo "<td>oui</td>"; //Enchere
 									else
 										echo "<td>non</td>"; 
-									//echo "<td>".$table_item[$i][6]."</td>"; //Prix
 								echo "<tr>";
 			    			}
 			    		}
@@ -298,7 +317,6 @@
 			    				echo "<td>Achat immédiat</td>";
 			    				echo "<td>Meilleur offre</td>";
 			    				echo "<td>Enchère</td>";
-			    				//echo "<td>Prix (€)</td>";
 			    			echo "</tr>";
 
 			    		for ($i= 0; $i < count($table_item); $i++)
@@ -308,7 +326,6 @@
 			    				echo "<tr>";
 			    				//on affiche tout les données des items de catégorie ferraille 
 									echo '<td><img src = "images_web/'.$table_photo["$ID_i[$i]"].'" height=100 width =100 ></td>';
-								//}
 									echo '<td>';
 									echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';
 									if (strpos($table_item["$ID_i[$i]"][4], "achat_immediat") !== FALSE)
@@ -325,7 +342,6 @@
 										echo "<td>non</td>"; 
 								echo "<tr>";
 			    			}
-
 			    		}
 			    		echo "</table>";
 			    	?>
@@ -334,7 +350,8 @@
 		</div>
 	   
 		<?php
-		//Pour chaque item
+		//Après affichage des catégories, on affiche tous les items sur site
+		//Row de 4 colonnes (4 images donc). Ajout de row automatique quand nécessaire grace au compteur $c.
 		for ($i = 0 ; $i<count($ID_i); $i++)
 		{
 			$var = $ID_i[$i];
@@ -346,6 +363,7 @@
 							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<td>';
+							//Systeme de lien qui renvoie a la page produit de l'item considéré.
 							echo '<a style="margin-left:3em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
     				</div> <?php
 			}
@@ -361,11 +379,12 @@
     				</div> <?php
 			}
 
+			//Ici, derniere colonne de la ligne ou dernier item du site, donc on ferme la div et on met c a -1 puisque quand il y a c++ il passera a 0;
 			if($c == 3 || $i == count($ID_i))
 			{?>
     				<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px; width:250px"><?php
-							echo '<img class="img-fluid" data-toggle="modal" data-target="#mod" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?>       
 						</div>
 						<?php echo '<td>';
 							echo '<a style="margin-left:3em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
@@ -380,7 +399,8 @@
 		<!--Créer un pied de page (footer)-->
 		<footer class="page-footer container-fluid">   
 			<div class="container">    
-				<div class="row">       
+				<div class="row">
+					<!--Nouvelles ancres vers les categories-->       
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
@@ -395,6 +415,7 @@
 							</li>               
 						</ul> 
 					</div> 
+					<!--Liens non définis pour l'instant-->
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<a href="achat.php" id="achat"><h5 class="text-uppercase font-weight-bold">Achat</h5></a>
 						<ul>  
@@ -408,7 +429,8 @@
 								<a href="#" id="offre">Meilleure offre</a>
 							</li>               
 						</ul> 
-					</div>   
+					</div>
+					<!--Liens vers les différentes pages du site, actifs ou non selon le profil actif.-->   
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<ul>  
 							<li>
@@ -438,13 +460,14 @@
 		</footer>
 		
 		<?php
+			//L'utilisateur n'est pas connecté
 			if(empty($_SESSION['login'])) 
 			{?>
 				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
+					//Affichage de se connecter
+					//On récupère le bouton, s'il y a clic, on exécute la fonction montrer()
 					document.getElementById("btnpop").onclick = function() {montrer()};
 
-					/* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
 					function montrer() 
 					{
 						document.getElementById("apop2").classList.toggle("show");
@@ -452,19 +475,23 @@
 				</script> 
 			<?php exit();
 			}
+			//Si on est connecté
 			else
 			{
 				if($_SESSION['Statut'] == ADMIN)
 				{?>
 					<script>
+						//On cache le lien vers la page achat
 						document.getElementById("ades").onclick = function() {
 							var cache = document.getElementById("l3");
 							cache.style.display = "none";
 						}	
 
+						//On affiche le lien vers la page admin
 						var x = document.getElementById("ad");
 						x.style.display = "block";
 
+						//Blocage des liens inutiles a l'admin, mais qui seront toujours afficher pour le design
 						document.getElementById("panier").onclick = function() {return false;}
 						document.getElementById("achat").onclick = function() {return false;}
 						document.getElementById("enchere").onclick = function() {return false;}
@@ -476,12 +503,13 @@
 				elseif($_SESSION['Statut'] == VENDEUR)
 				{?>
 					<script>
-						//Bloquer les liens onClick
+						//Bloquer le lien vers achat
 						document.getElementById("ades").onclick = function() {
 							var cache = document.getElementById("l3");
 							cache.style.display = "none";
 						}
 
+						//Blocage des liens inutiles au vendeur
 						document.getElementById("panier").onclick = function() {return false;}
 						document.getElementById("achat").onclick = function() {return false;}
 						document.getElementById("enchere").onclick = function() {return false;}
@@ -494,25 +522,29 @@
 				elseif($_SESSION['Statut'] == ACHETEUR)
 				{?>
 					<script>
+						//Blocage du lien vers vendre
 						document.getElementById("ades").onclick = function() {
 							var cache = document.getElementById("l2");
 							cache.style.display = "none";
 						}
 
+						//Affichage de la barre de recherche
 						var recherche = document.getElementById("barre");
 						recherche.style.display = "block";
 						
+						//Blocage des liens inutiles a l'acheteur
 						document.getElementById("admin").onclick = function() {return false;}
 						document.getElementById("vendre").onclick = function() {return false;}
 					</script> <?php
 				}?>
 				
 				<script>
-					// Get the button, and when the user clicks on it, execute myFunction
+					//Affichage de se déco et lien vers votre_compte
 					document.getElementById("btnpop").onclick = function() {
 						document.getElementById("apop1").classList.toggle("show");
 					}
 
+					//Affichages des catégories quand on clique sur les ancres du header ET du footer
 					var panel_ferraille = document.getElementById("panel_ferraille_tresor");
 					var panel_bon = document.getElementById("panel_bon_musee");
 					var panel_vip = document.getElementById("panel_vip");

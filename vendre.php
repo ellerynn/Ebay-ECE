@@ -18,14 +18,17 @@
 	  	header('Location: connexion.php');
 	  	exit();
 	}
-	    
+	 
+	//Recupere la date d'aujourd'hui pour les enchères   
 	date_default_timezone_set('Europe/Paris');
 	$today = getdate();
 	$date_actuelle = "";
+	//Conversions
 	if (strlen($today["mon"]) != 2) //nombre en mois
 		$date_actuelle .=  $today["year"]."-0".$today["mon"]."-";
 	else
 		$date_actuelle .=  $today["year"]."-".$today["mon"]."-";
+	
 	if(strlen($today["mday"]) !=2) //nombre en jour
 		$date_actuelle .= "0".$today["mday"];
 	else
@@ -41,6 +44,7 @@
 		$heure_actuelle .= "0".$today["minutes"].":";
 	else
 		$heure_actuelle .= $today["minutes"].":";
+	
 	if(strlen($today["seconds"]) !=2) //nombre S
 		$heure_actuelle .= "0".$today["seconds"];
 	else
@@ -60,6 +64,7 @@
 	$ID_item = array();
 
 	$filevideo = isset($_POST["filevideo"])? $_POST["filevideo"] : "";
+	
 	//Récuperation des ID_item du vendeur (dont admins) connecté
 	$sql1 = "SELECT * FROM item WHERE ID_vendeur LIKE '$id' ";
 	$r1 = mysqli_query($db_handle, $sql1);
@@ -73,12 +78,9 @@
 			$ID_item[$i] = $data['ID_item'];
 			$i++;
 		
-			$i_temp = 0;
-			$temp[$i_temp] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
-			$i_temp++;
-			$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
-			$i_temp++;
-			$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2 Le vendeur
+			$temp[0] = $ID_item[$j]; //on garde en mémoire d'ID du item qu'on traite
+			$temp[1] = $data['Nom_item']; 
+			$temp[2] = $data['ID_vendeur']; 
 
 			$table_item["$ID_item[$j]"] = $temp; // Tableau associatif
 			$j++;
@@ -99,6 +101,7 @@
 		}
 	}
 
+	//Si on ajoute un produit
 	if (isset($_POST["boutonajoutproduit"])) 
 	{
 	  	$nom = isset($_POST["nom"])? $_POST["nom"] : "";
@@ -115,6 +118,7 @@
 		$heurefin = isset($_POST["heurefin"])? $_POST["heurefin"] : "";
 		$prixdepart = isset($_POST["prixdepart"])? $_POST["prixdepart"] : "";
 
+		//On clible touuuutes les erreurs possibles
 		if ($nom == "")  
 			$erreur .= "Nom est vide. <br>"; 
 		
@@ -129,8 +133,6 @@
 			if ($_FILES['filephoto']['type'][$i] != "image/jpeg" && $_FILES['filephoto']['name'][0] !="")
 				$erreur .= "Une ou plusieurs images ne sont pas en .jpg. <br>";	
 		}
-
-	 	//vérification du type de la vidéo
 
 		if ($description == "")  
 		 	$erreur .= "La description est vide. <br>"; 
@@ -182,9 +184,8 @@
 		    ///BDD
 	        if ($db_found) 
 	        {
-				
 				//s'il ne s'agit que d'un enchère Sinon le prix reste en prix par défaut: 
-				if (strlen($type_vente_choisi) == 8)
+				if (strlen($type_vente_choisi) == "enchere")
 					$prix = $prixdepart;
 
 		        $sql = "INSERT INTO item(ID_vendeur, ID_type_vente, Nom_item, Description, Categorie, Prix, Video) VALUES ($id,'$type_vente_choisi','$nom','$description','$categorie','$prix','$filevideo');";
@@ -196,9 +197,7 @@
 	        	$last_id_item = "";
 	           	if (mysqli_num_rows($r3) != 0)
 	            {
-	                //echo "Votre item a été ajouté avec succes";
-					echo "<script type='text/javascript'>document.location.replace('vendre.php');</script>";
-	                while ($data = mysqli_fetch_assoc($r3)) 
+	            	while ($data = mysqli_fetch_assoc($r3)) 
                     {
                         $last_id_item = $data['LAST_INSERT_ID(ID_item)'];
                     }
@@ -273,20 +272,13 @@
 			{
 				while ($data = mysqli_fetch_assoc($r5)) 
 				{
-					$i_temp = 0;
-					$temp[$i_temp] = $ID_i[$u]; //on garde en mémoire d'ID du item qu'on traite i_temp = 0
-					$i_temp++;
-					$temp[$i_temp] = $data['Nom_item']; // i_temp = 1
-					$i_temp++;
-					$temp[$i_temp] = $data['ID_vendeur']; // i_temp = 2
-					$i_temp++;
-					$temp[$i_temp] = $data['ID_type_vente']; // i_temp = 3
-					$i_temp++;
-					$temp[$i_temp] = $data['Description']; // i_temp = 4
-					$i_temp++;
-					$temp[$i_temp] = $data['Categorie']; // i_temp = 5
-					$i_temp++;
-					$temp[$i_temp] = $data['Prix']; // i_temp = 6
+					$temp[0] = $ID_i[$u]; //on garde en mémoire d'ID du item qu'on traite
+					$temp[1] = $data['Nom_item']; 
+					$temp[2] = $data['ID_vendeur']; 
+					$temp[3] = $data['ID_type_vente']; 
+					$temp[4] = $data['Description']; 
+					$temp[5] = $data['Categorie'];
+					$temp[6] = $data['Prix']; 
 
 					$table_item_offre["$ID_i[$u]"] = $temp; // Tableau associatif
 				}
@@ -307,43 +299,52 @@
 			}
 		}
 	}
+
+	//Creation de tableaux de boutons, chaque bouton propre a un item donc
 	for ($a = 0 ; $a < count($ID_i) ; $a++)
 	{
 		$refuser[$a] = "refuser_".$a;
 		$accepter[$a] = "accepter_".$a;
 		$soumettre[$a] = "soumettre_".$a;
 	}
+
+	//Refuser une offre
 	for ($a = 0 ; $a < count($ID_i) ; $a++)
 	{
 		if(isset($_POST["$refuser[$a]"]))
 		{
-			//A l'acheteur de répondre
+			//A l'acheteur de répondre statut 1
 			$sql = "UPDATE meilleur_offre SET Statut = '1' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
 			$result = mysqli_query($db_handle, $sql);
 		}
 	}
+
+	//Accepter une offre
 	for ($a = 0 ; $a < count($ID_i) ; $a++)
 	{
 		if(isset($_POST["$accepter[$a]"]))
 		{
-			//Offre acceptée pour l'acheteur
+			//Offre acceptée pour l'acheteur statut 3
 			$sql7 = "UPDATE meilleur_offre SET Statut = '3' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
 			$r7 = mysqli_query($db_handle, $sql7);
+			//Offre redusée pour les autres statut 4
 			$sql8 = "UPDATE meilleur_offre SET Statut = '4' WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur != $ID_a[$a]";
 			$r8 = mysqli_query($db_handle, $sql8);
 		}
 	}
 
+	//Soumettre une offre
 	for ($a = 0 ; $a < count($ID_i) ; $a++)
 	{
 		if(isset($_POST["$soumettre[$a]"]))
 		{
+			//Au vendeur de repondre statut 2
 			$sql11 = "UPDATE meilleur_offre SET Statut = '1' , Prix_vendeur = $contre_offre WHERE ID_item = $ID_i[$a] AND ID_vendeur = $id AND ID_acheteur = $ID_a[$a];";
 			$r11 = mysqli_query($db_handle, $sql11);
 		}
 	}
 
-	//Envoie de message, on terminé
+	//MESSAGES SUT
 	$objet = isset($_POST["objet"])? $_POST["objet"] : "";
 	$message = isset($_POST["message"])? $_POST["message"] : "";
 	$erreur ="";
@@ -429,6 +430,7 @@
 					<h3 class="text-center">eBay ECE</h3>
 					<p></p>
 					
+					<!--Liste de toutes les options possibles pour un vendeur (et admin)-->
 			        <div class="list-group">
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv1">Vendre</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv2">Supprimer une vente</button>
@@ -436,6 +438,7 @@
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv4">Offres</button>
 			        </div>	
 			    </div>
+			    <!--Differents panels pour chaque option, s'affiche selon élément cliqué dans liste-->
 			    <div class="col-lg-9 col-md-9 col-sm-12" style="position: relative; height: 800px;">
 			    	<div class="panel border" style="padding: 1em; border-radius: 5px;" id="panel_vendre">
 					    <div class="panel-heading">
@@ -476,7 +479,6 @@
 									<input type="radio" name="categorie" value="Musee" id="cb">Bon pour le Musée
 									<input type="radio" name="categorie" value="VIP" id="cb">Accessoire VIP
 						        </div>
-						        <!--A BLINDER-->
 						        <div class="form-group">
 						          	<p class="font-weight-bold">Type de vente</p>
 						           	<input type="checkbox" name="vente1" value="achat_immediat" id="cb">Achat immédiat 
@@ -511,12 +513,12 @@
 								<script>
 									function montrer() 
 									{
-										// Get the checkbox
+										//On choppe la checkbox
 										var checkBox = document.getElementById("ench");
-										// Get the output text
+										//et le form
 										var text = document.getElementById("jpp");
 
-										// If the checkbox is checked, display the output text
+										//Si la checkbox est check, on affiche la partie enchère
 										if (checkBox.checked == true)
 											text.style.display = "block";
 										else 
@@ -540,6 +542,7 @@
 								</form>	
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-12" style="position: relative; min-height: 400px;">
+								<!--Affichage de mes ventes-->
 								<br><h2 class="text-center">Mes ventes</h2><br>
 								<?php
 									if(count($ID_item)==0)	
@@ -591,6 +594,7 @@
 				        </div>
 				    </div>
 				    <div class="panel" style="display: none;" id="panel_o_vendeur">
+				    	<!--Affichage de mes offres s'il y en a-->
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Offres</h2><br>
 					    </div>
@@ -620,25 +624,26 @@
 											</div>
 										</div>
 										<?php 
-												echo '<form action="" method="post">
-													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-12">
-															<input class="btn" name="'.$refuser[$i].'" type="submit" value="Refuser la proposition">
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-12">
-															<input class="btn" name="'.$accepter[$i].'" type="submit" value="Accepter la proposition">
-														</div>
-														<div class="row col-lg-6 col-md-6 col-sm-12">
-															<div class="col-lg-4 col-md-4 col-sm-12">
-																<input class="form-control" style="width:120px;" type="text" name="contre_offre" placeholder="Contre-offre">
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-12">
-																<input class="btn" name="'.$soumettre[$i].'" type="submit" value="Soumettre">
-															</div>
-															<div class="col-lg-6 col-md-6 col-sm-12"></div>
-														</div>
+										//Affichage du fameux tableau bouton selon chaque item
+										echo '<form action="" method="post">
+											<div class="row">
+												<div class="col-lg-3 col-md-3 col-sm-12">
+													<input class="btn" name="'.$refuser[$i].'" type="submit" value="Refuser la proposition">
+												</div>
+												<div class="col-lg-3 col-md-3 col-sm-12">
+													<input class="btn" name="'.$accepter[$i].'" type="submit" value="Accepter la proposition">
+												</div>
+												<div class="row col-lg-6 col-md-6 col-sm-12">
+													<div class="col-lg-4 col-md-4 col-sm-12">
+														<input class="form-control" style="width:120px;" type="text" name="contre_offre" placeholder="Contre-offre">
 													</div>
-												</form>';
+													<div class="col-lg-3 col-md-3 col-sm-12">
+														<input class="btn" name="'.$soumettre[$i].'" type="submit" value="Soumettre">
+													</div>
+													<div class="col-lg-6 col-md-6 col-sm-12"></div>
+												</div>
+											</div>
+										</form>';
 									}
 								}
 							}?>     					
@@ -654,15 +659,9 @@
 					<div class="col-lg-3 col-md-3 col-sm-12">	
 						<h5 class="text-uppercase font-weight-bold">Catégories</h5>
 						<ul>  
-							<li>
-								<a href="#">Ferraille ou Trésor</a>
-							</li>    
-							<li>
-								<a href="#">Bon pour le Musée</a>
-							</li> 
-							<li>
-								<a href="#">Accessoires VIP</a>
-							</li>               
+							<li>Ferraille ou Trésor</li>    
+							<li>Bon pour le Musée</li> 
+							<li>Accessoires VIP</li>               
 						</ul> 
 					</div> 
 					<div class="col-lg-3 col-md-3 col-sm-12">	
@@ -710,7 +709,8 @@
 		<?php
 			if($_SESSION['Statut'] == VENDEUR)
 			{?>
-				<script>		
+				<script>	
+					//Lien du footer	
 					document.getElementById("admin").onclick = function() {return false;}
 				</script> <?php
 			}
@@ -718,12 +718,14 @@
 			else
 			{?>
 				<script type="text/javascript">
+					//Affichage lien admin
 					var x = document.getElementById("ad");
 					x.style.display = "block";
 				</script> <?php
 			}?>
 
 		<script type="text/javascript">
+			//Permet affichage des différents panels selon le clic de l'utilisateur
 			var panel_supp = document.getElementById("panel_supp_vendeur");
 			var panel_vendre = document.getElementById("panel_vendre");
 			var panel_mes = document.getElementById("panel_mes_vendeur");
