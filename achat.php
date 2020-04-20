@@ -123,7 +123,7 @@
 			}
 		}
 
-		//Envoie de message, non terminé
+		//Envoie de message
 		$objet = isset($_POST["objet"])? $_POST["objet"] : "";
 		$message = isset($_POST["message"])? $_POST["message"] : "";
 		$erreur ="";
@@ -508,7 +508,7 @@
 					        </div>
 					    </div>
 					</div>
-
+					<!-- SECTION MESSAGE POUR SAISIR SON MESSAGE-->
 				    <div class="panel" style="display: none;" id="panel_messages">
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>

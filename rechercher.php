@@ -1,4 +1,5 @@
 <?php
+//Code qui permet de faire la recher dun article dans la barre de rechercher
 	include("const.php");
 
 	// On prolonge la session
@@ -13,16 +14,12 @@
 		$ID_temporaire_item = $item_clique;
 		$ID_temporaire_acheteur = $id ;
 	}
-	/*else
-	{
-	  header('Location: accueil.php');
-	  exit();
-	}*/
 
-	//identifier votre BDD
+	//identifie notre BDD
     $database = "ebay ece paris";
     $db_handle = mysqli_connect('localhost', 'root', '');
     $db_found = mysqli_select_db($db_handle, $database);
+    //declaration des nos variables
 
     $rechercher = isset($_POST["rechercher"])? $_POST["rechercher"] : "";
 
@@ -44,11 +41,9 @@
 
 if($db_found)
 {
+	//si clique sur le bouton chercher
 	if (isset($_POST["chercher"])) 
 	{
-
-		if ($rechercher == "") 
-            $erreur .= "Rechercher est vide. <br>"; 
 		//PARTIE AFFICHAGE
 		//Récuperation donnee table item
 		if($erreur == "")
@@ -198,10 +193,10 @@ mysqli_close($db_handle);
 				<div class="row">
 					<div class="col-lg-3 col-md-3 col-sm-12"> 
 						<div class="img-thumbnail" style="margin:0 auto; height: 250px;width:250px"> <?php
-							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?> 
+							echo '<img class="img-fluid" src = "images_web/'.$table_photo["$ID_i[$i]"].'" height = 100% width = 100%>';?> <!--on affiche la photo-->
 						</div>
 						<?php echo '<td>';
-							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?>
+							echo '<a style="margin-left:2em" href = "'.$_SERVER['PHP_SELF'].'?idLien='.$var.'">'.$table_item["$ID_i[$i]"][1].'</a> </td>';  ?><!--lien qui redirige vers la page produit lorsque l'on clique sur le nom du produit-->
     				</div> <?php
 			}
 
@@ -232,6 +227,7 @@ mysqli_close($db_handle);
 			$c++;
 		}?>    
 		<br><br><br><br><br><br><br><br><br><br><br><br>
+		<!--FOOTER-->
 		<footer class="page-footer container-fluid">   
 			<div class="container">    
 				<div class="row">       

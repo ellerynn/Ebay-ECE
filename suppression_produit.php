@@ -1,4 +1,5 @@
 <?php
+//CODE QUI PERMET DE SUPPRMIER UN PRODUIT,VIA UN VENDEUR OU VIA UN ADMIN
 	include("const.php");
 	// On prolonge la session
 	session_start();
@@ -11,6 +12,7 @@
 		$statut = $_SESSION['Statut'];
 		$idv = $_SESSION['ID'];
 	}
+	//DECLARATION DES VARIABLES 
 
 	$id = isset($_POST["id"])? $_POST["id"] : "";
 	$filephoto = isset($_POST["filephoto"])? $_POST["filephoto"] : "";
@@ -41,18 +43,20 @@
 			///BDD
 	        if ($db_found) 
 	        {
-	           	//Vérification si le nom est déjà existant:
+	           	//Vérification si l'item est déjà existant:
 	           	$sql = "SELECT * FROM item WHERE ID_item LIKE '$id'";
 	           	$result = mysqli_query($db_handle, $sql);
+	           	//condition pour verifier les varibles si elles sont vides ou non
 	                	
 				if ($id != "") 
 				{
-					$sql .= " WHERE ID_item LIKE '%$id%'";
+					$sql .= " WHERE ID_item LIKE '%$id%'"; //id de l'item
 					if ($idv != "") 
-						$sql .= " AND ID_vendeur LIKE '%$idv%'";	
+						$sql .= " AND ID_vendeur LIKE '%$idv%'";// id du vendeur	
 				}
 					
 				$dat = "";
+				//on affecte a la variable dat l'id du vendeur
                 while ($data = mysqli_fetch_assoc($result)) 
                 {
                     $dat =$data['ID_vendeur'];
@@ -67,15 +71,15 @@
 				{
 					while ($data = mysqli_fetch_assoc($result) ) 
 					{
-						$id = $data['ID_item'];
+						$id = $data['ID_item']; //affectation de la variable id avec l'id de l'item
 						echo "<br>";
 					}
-
+					//on supprimer l'article 
 					$sql = "DELETE FROM item";
 					$sql .= " WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql);
 					//echo "Suppression réussi ! . <br>";
-
+					//on selectionne les photos de l'item pour aussi les supprimer, meme principe
 					$sqlphoto = "SELECT * FROM photo WHERE ID_item LIKE '$id'";
 	                $resultphoto = mysqli_query($db_handle, $sqlphoto);
 		                
@@ -90,12 +94,9 @@
 					$result = mysqli_query($db_handle, $sql2);
 					//echo "Suppression des photos réussi ! . <br>";
 
-					///PARTIE MODIFIER ------
 					//Suppression des items dans la liste d'enchere
 					$sql = "DELETE FROM liste_enchere WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql);
-
-					//ATTENTION : LES CODES EN DESSOUS SUJET à MODIFICATION SI PROBLEME
 
 					//Suppression des items dans encherir, si l'item n'existe plus, les données des clients qui ont enchérir sur l'item disparait
 					$sql = "DELETE FROM encherir WHERE ID_item = $id";

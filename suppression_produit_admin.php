@@ -8,20 +8,22 @@
 
 
 
-//suppression iem
+//suppression item pour un admin
 
+//declaration des variables
 	$id = isset($_POST["id"])? $_POST["id"] : "";
 	$filenamevideo = "";
 	$erreur = "";
 
-	if (isset($_POST["buttonsupprimer"])) 
+	if (isset($_POST["buttonsupprimer"])) //si clique sur le boutton
 	{
+		//si champ id vide
 	  	if ($id == "") 
 	 	$erreur .= "Le champ ID de l'article est vide. <br>";
 	 	 
 		if ($erreur == "") 
 		{
-			//identifier votre BDD
+			//identifie notre BDD
 		    $database = "ebay ece paris";
 
 		    $db_handle = mysqli_connect('localhost', 'root', '');
@@ -30,28 +32,28 @@
 		    //BDD
 	        if ($db_found) 
 	        {
-	           	//Vérification si le nom est déjà existant:
+	           	//Vérification si l'item est déjà existant:
 	            $sql = "SELECT * FROM item WHERE ID_item LIKE '$id'";
 	            $result = mysqli_query($db_handle, $sql);
 	               	
-				if ($id != "") 
+				if ($id != "") //si pas d'erreur
 					$sql .= " WHERE ID_item LIKE '%$id%'";
 							
-				if (mysqli_num_rows($result) == 0 ) 
+				if (mysqli_num_rows($result) == 0 ) //si =0, alors erreur
 					$erreur = "Erreur, cet item n'existe pas. <br>";
 
 				else 
 				{
-					while ($data = mysqli_fetch_assoc($result) ) 
+					while ($data = mysqli_fetch_assoc($result))  //si tout est bon, alors on affecte la variable id pour recuperer l'id de l'item
 					{
 						$id = $data['ID_item'];
 						echo "<br>";
 					}
-					
+					//on supprime l'item
 					$sql = "DELETE FROM item WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql);
 					echo "Suppression réussi ! . <br>";
-
+					//on select les photos
 					$sqlphoto = "SELECT * FROM photo WHERE ID_item LIKE '$id'";
 	                $resultphoto = mysqli_query($db_handle, $sqlphoto);
 	                while ($data = mysqli_fetch_assoc($resultphoto) ) 
@@ -59,7 +61,7 @@
 						$id = $data['ID_item'];
 						echo "<br>";
 					}
-					
+					//on supprime les photos
 					$sql2 = "DELETE FROM photo WHERE ID_item = $id";
 					$result = mysqli_query($db_handle, $sql2);
 					echo "Suppression des photos réussi ! . <br>";
