@@ -182,28 +182,19 @@
 	       }
     	}
 
-    		//Facture recu pour lacheteur
-	if ($db_found) 
-    {	
-		$sql8 = "SELECT * FROM contact WHERE ID_admin = '0' AND ID_acheteur = '$id' ;";
-		$result8 = mysqli_query($db_handle, $sql8);
-		if (mysqli_num_rows($result8) != 0){
-			$temp3 = array();
-			$i = 0;
-			while($data = mysqli_fetch_assoc($result8))
-		    {
+    $sql8 = "SELECT * FROM contact WHERE ID_admin = '0' AND ID_acheteur = '$id' ;";
+	$result8 = mysqli_query($db_handle, $sql8);
+	if (mysqli_num_rows($result8) != 0)
+	{
+		$temp3 = array();
+		$i = 0;
+		while($data = mysqli_fetch_assoc($result8))
+	    {
+			$temp3[0] = $data['Message']; //on garde en mémoire  i_temp = 0
 
-			        $i_temp = 0;
-
-					$temp3[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
-
-					$table_reponse2["$i"] = $temp3; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
-					$i++;
-	    	
-	       }
-
-    	}
-    	
+			$table_reponse2["$i"] = $temp3; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
+			$i++;
+       }
 	}
 	}//END
 	else
@@ -247,7 +238,6 @@
 				$('.header').height($(window).height()); 
 			}); 
 		</script> 
-
 		<!--Icones personnalisés-->
 		<script src="https://kit.fontawesome.com/58c71aba33.js" crossorigin="anonymous"></script>
 	</head> 	
@@ -255,6 +245,7 @@
 	<body> 
 		<!--Ajouter une barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
+			<a class="navbar-brand" href="accueil.php"><img src="logo.png" style="width: 100px; transform: translateY(-4px);"></a>
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   

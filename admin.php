@@ -121,6 +121,7 @@
 	<body> 
 		<!--Barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> 
+			<a class="navbar-brand" href="accueil.php"><img src="logo.png" style="width: 100px; transform: translateY(-4px);"></a>
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">    
 				<span class="navbar-toggler-icon"></span>       
 			</button>   

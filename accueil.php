@@ -178,7 +178,7 @@
 				<!--Premiere colonne : liste des catégories, avec systeme de liens et ancres qui affiche les catégories et amene l'utilisateur la ou elles sont affichées, sur la meme page-->
 				<div class="col-lg-3 col-md-3 col-sm-12">
 					<div class="list-group" style="width: 80%;">
-						<button class="btn btn-lg" id="b0" style="background-color: white; border :0;"><h3 class="text-center">eBay ECE</h3></button>
+						<button class="btn btn-lg" id="b0" style="background-color: white; border :0;"><img src="logo.png" style="width: 100%;"></button>
 						<p></p>
 			        	<button class="btn btn-lg" id="b1"><a href="#panel_ferraille_tresor">Ferraille ou trésor</a></button>
 			          	<button class="btn btn-lg" id="b2"><a href="#panel_bon_musee">Bon pour le Musée</a></button>

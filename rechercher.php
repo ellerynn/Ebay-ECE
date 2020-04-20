@@ -144,6 +144,7 @@ mysqli_close($db_handle);
 	<body> 
 		<!--Ajouter une barre de navigation-->
 		<nav class="navbar navbar-expand-md fixed-top"> <!--indique à quel point la barre de navigation passe d'une icône verticale à une barre horizontale pleine grandeur. Ici défini sur les écrans moyens = supérieur à 768 pixels.-->
+			<a class="navbar-brand" href="accueil.php"><img src="logo.png" style="width: 100px; transform: translateY(-4px);"></a>
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation"> <!--navbar-toggler — Indique le bouton bascule du menu réduit.-->   
 				<span class="navbar-toggler-icon"></span> <!--navbar-toggler-icon — crée l'icône-->      
 			</button>   
