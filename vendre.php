@@ -63,9 +63,6 @@
 	$nom_item = array();
 	$ID_item = array();
 
-	//declaration pour les messages
-	$id_acheteur_bis = "";
-
 	$filevideo = isset($_POST["filevideo"])? $_POST["filevideo"] : "";
 	
 	//Récuperation des ID_item du vendeur (dont admins) connecté
@@ -381,15 +378,16 @@
 			        $statut_bis = $data['Statut'];
 		    	}
 
-                if($statut_bis == 3)
+                if($statut_bis == ACHETEUR)
             	{
-            		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('2','$id','$message','0', '$objet');";
+            		$sql = "INSERT INTO contact(ID_acheteur, Message, Reponse, Objet) VALUES ($id','$message','0', '$objet');";
                 	$result = mysqli_query($db_handle, $sql);
             	}
-            	if($statut_bis == 1 && $id == 2)
+            	if($statut_bis == ADMIN)
             	{
-            		$sql6 = "SELECT * FROM contact WHERE ID_admin = '$id' AND Reponse = '0' AND ID_message = '$id_message';";
+            		$sql6 = "SELECT * FROM contact WHERE Reponse = '0' AND ID_message = '$id_message';";
 					$r6 = mysqli_query($db_handle, $sql6);
+
 					if($data = mysqli_fetch_assoc($r6))
 				    {
 				        $id_acheteur_bis = $data['ID_acheteur'];
@@ -398,38 +396,31 @@
 
             		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('$id','$id_acheteur_bis','$message','2','$objet');";
                 	$result = mysqli_query($db_handle, $sql);
-                	$sql1 = "UPDATE contact SET Reponse = '1' WHERE ID_admin = '2' AND ID_acheteur = '$id_acheteur_bis' AND Reponse = '0' AND ID_message = '$id_message' ;";
+                	$sql1 = "UPDATE contact SET Reponse = '1' WHERE ID_acheteur = '$id_acheteur_bis' AND Reponse = '0' AND ID_message = '$id_message' ;";
 					$result1 = mysqli_query($db_handle, $sql1);
 					$id_manquant = 0;
             	}
             }
         }
 	}
+
 	//Message recu par ladministrateur
 	if ($db_found) 
     {	
-		$sql1 = "SELECT * FROM contact WHERE Reponse = '0' AND ID_admin = '$id' ;";
+		$sql1 = "SELECT * FROM contact WHERE Reponse = '0'";
 		$result1 = mysqli_query($db_handle, $sql1);
 		if (mysqli_num_rows($result1) != 0){
 			$temp = array();
 			$i = 0;
 			while($data = mysqli_fetch_assoc($result1))
 		    {
-		    	if($id == 2)
+		    	if($statut==ADMIN)
 		    	{
-
-			        $i_temp = 0;
-
-					$temp[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
-					$i_temp++;
-					$temp[$i_temp] = $data['Objet']; // i_temp = 1
-					$i_temp++;
-					$temp[$i_temp] = $data['ID_acheteur']; // i_temp = 2
-					$i_temp++;
-					$temp[$i_temp] = $data['ID_message']; // i_temp = 3
-					$i_temp++;
-					$temp[$i_temp] = $data['Reponse']; // i_temp = 4
-
+					$temp[0] = $data['Message']; //on garde en mémoire 
+					$temp[1] = $data['Objet']; 
+					$temp[2] = $data['ID_acheteur']; 
+					$temp[3] = $data['ID_message']; 
+					$temp[4] = $data['Reponse']; 
 
 					$table_reponse["$i"] = $temp; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
 					$i++;
@@ -441,8 +432,6 @@
     	
 	}
 
-
-	
 	//on ne ferme pas la connexion car on en a besoin plus loin dans le code, on fermera a ce moment la
 	//mysqli_close($db_handle); 
 ?>
@@ -513,7 +502,7 @@
 			        <div class="list-group">
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv1">Vendre</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv2">Supprimer une vente</button>
-			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv3">Messages</button>
+			        	<button type="button" class="list-group-item btn" style="display:block; width: 100%;" id="bv3">Messages</button>
 			        	<button type="button" class="list-group-item btn" style="width: 100%;" id="bv4">Offres</button>
 			        </div>	
 			    </div>
@@ -652,18 +641,16 @@
 					<div class="panel" style="display: none;" id="panel_mes_vendeur">
 						<?php 
 						echo '<div class="panel-heading">';
-						echo '<br><h2 class="text-center">Contenu du/des message(s) (non traité(s))</h2><br>';
+						echo '<br><h2 class="text-center">Message(s) non traité(s)</h2><br>';
 						echo '</div>';
-						 for ($i= 0; $i < count($table_reponse); $i++)
-			    		 { //pour chaque item
+						for ($i= 0; $i < count($table_reponse); $i++)
+			    		{ //pour chaque item
 			    			if ($table_reponse[$i][4] == 0)
 			    			{
-									
-								    echo '<div class="panel-body">';
-										echo '<form method="post" action="" enctype="multipart/form-data">';
-											echo '<div class="form-group">';
+			    				echo '<div class="border panel-body">';
+									echo '<form method="post" action="" enctype="multipart/form-data">';
+										echo '<div class="form-group">';
 											echo "ID de l'acheteur: <td>".$table_reponse[$i][2]."</td>"; //id acheteur
-											//echo "ID de l'acheteur: ".$id_acheteur_bis;
 											echo "<br>";
 											echo "ID du message : <td>".$table_reponse[$i][3]."</td>"; //id message
 											echo "<br>";
@@ -671,32 +658,25 @@
 											echo "<br>";
 											echo "Message : <td>".$table_reponse[$i][0]."</td>"; //message
 											echo "<br>";
-											echo '</div>';
-											         	
-									    echo '</form>';
+										echo '</div>';         	
+								    echo '</form>';
+								echo '</div>';  
 							}
-						}
-
-						?>
+						}?>
 
 					    <div class="panel-heading">
-					    	<br><h2 class="text-center">Messages</h2><br>
+					    	<br><h2 class="text-center">Ecrire un message</h2><br>
 					    </div>
 					    <div class="panel-body">
 					    	<form method="post" action="" enctype="multipart/form-data">
 						       	<div class="form-group">
-						          	<div class="row">
-						          		<div class="col-lg-6 col-md-6 col-sm-12">
-						           			<p class="font-weight-bold">Objet de votre message</p>
-						               		<input class="form-control" style="width: 100%" type="text" name="objet" placeholder="Objet" required>
-						               	</div>
-							        </div>
+						            <input class="form-control" style="width: 300px;" type="text" name="objet" placeholder="Objet" required>
 						        </div>
 						        <div class="form-group">
-						            <input class="form-control" style="width: 100%" type="text" name="id_message" placeholder="ID du message" required>
+						            <input class="form-control"  style="width: 300px;" type="text" name="id_message" placeholder="ID du message" required>
 						        </div>
 						        <div class="form-group">
-						            <textarea name="message" rows="5" cols="100" placeholder="Message" id="message" required></textarea>
+						            <textarea name="message" rows="5" cols="110" placeholder="Message" id="message" required></textarea>
 						        </div>
 						        <div class="form-group">
 						           	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonenvoyer" type="submit" value="Envoyer votre message">
@@ -776,7 +756,7 @@
 								}
 							}
 							//fermer la connexion
-											mysqli_close($db_handle); 
+							mysqli_close($db_handle); 
 							?>     					
 				        </div>
 				    </div>
@@ -843,6 +823,10 @@
 				<script>	
 					//Lien du footer	
 					document.getElementById("admin").onclick = function() {return false;}
+
+					//Cache bouton messages pour vendeurs lien admin
+					var x2 = document.getElementById("bv3");
+					x2.style.display = "none";
 				</script> <?php
 			}
 
