@@ -182,7 +182,7 @@
 	       }
     	}
 
-    $sql8 = "SELECT * FROM contact WHERE ID_admin = '0' AND ID_acheteur = '$id' ;";
+    $sql8 = "SELECT * FROM contact WHERE ID_admin = '50' AND ID_acheteur = '$id' ;";
 	$result8 = mysqli_query($db_handle, $sql8);
 	if (mysqli_num_rows($result8) != 0)
 	{

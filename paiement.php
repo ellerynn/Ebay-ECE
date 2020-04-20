@@ -480,8 +480,8 @@ if (isset($_POST["payer"]))
 	$db_found = mysqli_select_db($db_handle, $database);
 	if($erreurPaiement=="")
 	{
-			$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message) VALUES ('0','$id','$prixTot');";
-   			 $result = mysqli_query($db_handle, $sql);
+		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message) VALUES ('50','$id','$prixTot');";
+   		$result = mysqli_query($db_handle, $sql);
 	}
 
 }
