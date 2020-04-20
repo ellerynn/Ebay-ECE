@@ -733,7 +733,7 @@ echo'
 						<td>'.$table_item3["$var"][5].'</td>
 						<td>Votre mise : '.$table_encherir["$i"][2].'€<br>
 							Montant actuel : '.$table_item4["$var"][3].'€</td>
-						<td><a type="button" class="btn btn-secondary" href="paiement.php">Passer au paiement</a></td>
+
 					</tr>';
 					$prix_tot_achat2+=$table_encherir["$i"][2]; //ajout de son prix dans prix potentiel à réglé
 				}
