@@ -195,10 +195,10 @@
 		<!--Si c'est un vendeur, on lui met son image de fond-->
 		<?php if ($statut == VENDEUR)
 		{?>
-			<div class="container-fluid features" style="background-size: cover; background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?php 
+			<div class="container-fluid" style="background-size: cover; background-image : url('images_web/<?php echo $fond_vendeur ?>');"> <?php 
 		} 
 		else
-			echo '<div class="container-fluid features">';
+			echo '<div class="container-fluid">';
 		?>
 
 			<div class="panel">
@@ -227,7 +227,7 @@
 							</tr>
 							<tr>
 								<!--Bouton affiche le form de modifications. Manipulation faite pour tous les boutons de la page-->
-								<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m0()">Modifier mes informations générales</button></td>
+								<td><br><button type="btn" name="general" style="margin-right: 10px;margin-bottom: 10px;" id="general" onclick="m0()">Modifier mes informations générales</button></td>
 							</tr>
 						</table>
 					</div>
@@ -265,7 +265,7 @@
 									<?php echo'<td>Pseudo : '.$pseudo.'</td>'; ?>
 								</tr>
 								<tr>
-									<td><br><button type="btn" name="general" style="margin-right: 10px;" id="general" onclick="m1()">Modifier mes informations vendeur</button></td>
+									<td><br><button type="btn" name="general" style="margin-right: 10px; margin-bottom: 10px;" id="general" onclick="m1()">Modifier mes informations vendeur</button></td>
 								</tr>
 							</table>
 						</div>
@@ -323,7 +323,7 @@
 									<?php echo'<td>Téléphone : '.$telephone.'</td>'; ?>
 								</tr>
 								<tr>
-									<td><br><button type="btn" name="infoAcheteurCoords" style="margin-right: 10px;" id="genAchC" onclick="m2()">Modifier mes informations acheteur</button></td>
+									<td><br><button type="btn" name="infoAcheteurCoords" style="margin-right: 10px;margin-bottom: 10px;" id="genAchC" onclick="m2()">Modifier mes informations acheteur</button></td>
 								</tr>
 							</table>
 						</div>
