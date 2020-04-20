@@ -127,21 +127,80 @@
 		$objet = isset($_POST["objet"])? $_POST["objet"] : "";
 		$message = isset($_POST["message"])? $_POST["message"] : "";
 		$erreur ="";
+		$message1 = "";
+		$objet1 = "";
+		$id_acheteur_bis ="";	
+		$id_message_bis ="";
+		$table_reponse = array();
 		if (isset($_POST["buttonenvoyer"])) 
-		{
-		  	if ($objet == "") 
-	            $erreur .= "Objet est vide. <br>";
-	        if ($message == "") 
-	            $erreur .= "Message est vide. <br>";
-	        if ($erreur == "") 
-	        {
-	        	if ($db_found) 
-	            {	
-	            	$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Objet) VALUES ('3','$id','$message','$objet');";
-	                $result = mysqli_query($db_handle, $sql);
-	            }
-	        }
-		}
+	{
+	  	if ($objet == "") 
+            $erreur .= "Objet est vide. <br>";
+        if ($message == "") 
+            $erreur .= "Message est vide. <br>";
+        if ($erreur == "") 
+        {
+        	if ($db_found) 
+            {	
+            	$sql5 = "SELECT Statut FROM personne WHERE ID = '$id' ;";
+				$result5 = mysqli_query($db_handle, $sql5);
+				if($data = mysqli_fetch_assoc($result5))
+			    {
+			        $statut_bis = $data['Statut'];
+		    	}
+
+                if($statut_bis == 3)
+            	{
+            		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('2','$id','$message','0', '$objet');";
+                	$result = mysqli_query($db_handle, $sql);
+            	}
+            	if($statut_bis == 1 && $id == 2)
+            	{
+            		$sql6 = "SELECT * FROM contact WHERE ID = '$id' AND Reponse = '0' ;";
+					$r6 = mysqli_query($db_handle, $sql6);
+					if($data = mysqli_fetch_assoc($r6))
+				    {
+				        $id_acheteur_bis = $data['ID_acheteur'];
+			    	}
+
+            		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('$id','$id_acheteur_bis','$message','1','$objet');";
+                	$result = mysqli_query($db_handle, $sql);
+                	$sql1 = "UPDATE contact SET Reponse = '1' WHERE ID_admin = '2' AND ID_acheteur = '$id_acheteur_bis' AND Reponse = '0' ;";
+					$result1 = mysqli_query($db_handle, $sql1);
+            	}
+            }
+        }
+	}
+	//Message recu par lacheteur
+	if ($db_found) 
+    {	
+		$sql1 = "SELECT * FROM contact WHERE Reponse = '2' AND ID_acheteur = '$id' ;";
+		$result1 = mysqli_query($db_handle, $sql1);
+		if (mysqli_num_rows($result1) != 0){
+			$temp2 = array();
+			$i = 0;
+			while($data = mysqli_fetch_assoc($result1))
+		    {
+
+			        $i_temp = 0;
+
+					$temp2[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
+					$i_temp++;
+					$temp2[$i_temp] = $data['Objet']; // i_temp = 1
+					$i_temp++;
+					$temp2[$i_temp] = $data['ID_message']; // i_temp = 2
+					$i_temp++;
+					$temp2[$i_temp] = $data['Reponse']; // i_temp = 3
+
+
+					$table_reponse["$i"] = $temp2; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
+					$i++;
+	    	
+	       }
+
+    	}
+    	
+	}
 	}//END
 	else
 		echo "Database not found";
@@ -510,6 +569,52 @@
 					</div>
 					<!-- SECTION MESSAGE POUR SAISIR SON MESSAGE-->
 				    <div class="panel" style="display: none;" id="panel_messages">
+				    	<!--<?php 
+						 
+							/*echo '<div class="panel-heading">';
+						    	echo '<br><h2 class="text-center">Réponse au(x) message(s)</h2><br>';
+						    echo '</div>';
+						    echo '<div class="panel-body">';
+								echo '<form method="post" action="" enctype="multipart/form-data">';
+									echo '<div class="form-group">';
+									echo "ID du message: ".$id_message_bis;
+									echo "<br>";
+									echo "Objet: ".$objet1;
+									echo "<br>";
+									echo "Message: ".$message1;
+									echo "<br>";
+									echo '</div>';
+									//fermer la connexion
+									mysqli_close($db_handle);          	
+							    echo '</form>';*/
+						?>-->
+						<?php 
+						echo '<div class="panel-heading">';
+						echo '<br><h2 class="text-center">Contenu du/des réponse(s)</h2><br>';
+						echo '</div>';
+						 for ($i= 0; $i < count($table_reponse); $i++)
+			    		 { //pour chaque item
+			    			if ($table_reponse[$i][3] == 2)
+			    			{
+									
+								    echo '<div class="panel-body">';
+										echo '<form method="post" action="" enctype="multipart/form-data">';
+											echo '<div class="form-group">';
+											//echo "ID de l'acheteur: ".$id_acheteur_bis;
+											echo "<br>";
+											echo "ID du message : <td>".$table_reponse[$i][2]."</td>"; //id message
+											echo "<br>";
+											echo "Objet : <td>".$table_reponse[$i][1]."</td>"; //objet
+											echo "<br>";
+											echo "Message : <td>".$table_reponse[$i][0]."</td>"; //message
+											echo "<br>";
+											echo '</div>';
+											         	
+									    echo '</form>';
+							}
+						}
+
+						?>
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>
 					    </div>

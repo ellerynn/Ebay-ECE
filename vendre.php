@@ -63,6 +63,9 @@
 	$nom_item = array();
 	$ID_item = array();
 
+	//declaration pour les messages
+	$id_acheteur_bis = "";
+
 	$filevideo = isset($_POST["filevideo"])? $_POST["filevideo"] : "";
 	
 	//Récuperation des ID_item du vendeur (dont admins) connecté
@@ -344,28 +347,104 @@
 		}
 	}
 
-	//MESSAGES SUT
+	//MESSAGE pour ecrire
 	$objet = isset($_POST["objet"])? $_POST["objet"] : "";
+	$id_message = isset($_POST["id_message"])? $_POST["id_message"] : "";
 	$message = isset($_POST["message"])? $_POST["message"] : "";
+	$statut_admin ="";
+	$id_acheteur_bis = array();
+	$id_message_bis = array();
+	$statut_bis ="";
+	$message1 = array();
+	$objet1 = array();
+	$reponse = array();
+	$table_reponse = array();
+	$id_manquant ="";
 	$erreur ="";
 	if (isset($_POST["buttonenvoyer"])) 
 	{
 	  	if ($objet == "") 
             $erreur .= "Objet est vide. <br>";
+        if ($id_message == "") 
+            $erreur .= "ID du Message est vide. <br>";
         if ($message == "") 
             $erreur .= "Message est vide. <br>";
         if ($erreur == "") 
         {
+
         	if ($db_found) 
             {	
-            	$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('$id','0','$message','0','$objet');";
-                $result = mysqli_query($db_handle, $sql);
+            	$sql5 = "SELECT Statut FROM personne WHERE ID = '$id' ;";
+				$result5 = mysqli_query($db_handle, $sql5);
+				if($data = mysqli_fetch_assoc($result5))
+			    {
+			        $statut_bis = $data['Statut'];
+		    	}
+
+                if($statut_bis == 3)
+            	{
+            		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('2','$id','$message','0', '$objet');";
+                	$result = mysqli_query($db_handle, $sql);
+            	}
+            	if($statut_bis == 1 && $id == 2)
+            	{
+            		$sql6 = "SELECT * FROM contact WHERE ID_admin = '$id' AND Reponse = '0' AND ID_message = '$id_message';";
+					$r6 = mysqli_query($db_handle, $sql6);
+					if($data = mysqli_fetch_assoc($r6))
+				    {
+				        $id_acheteur_bis = $data['ID_acheteur'];
+				        $id_message_bis = $data['ID_message'];
+			    	}
+
+            		$sql = "INSERT INTO contact(ID_admin, ID_acheteur, Message, Reponse, Objet) VALUES ('$id','$id_acheteur_bis','$message','2','$objet');";
+                	$result = mysqli_query($db_handle, $sql);
+                	$sql1 = "UPDATE contact SET Reponse = '1' WHERE ID_admin = '2' AND ID_acheteur = '$id_acheteur_bis' AND Reponse = '0' AND ID_message = '$id_message' ;";
+					$result1 = mysqli_query($db_handle, $sql1);
+					$id_manquant = 0;
+            	}
             }
         }
 	}
+	//Message recu par ladministrateur
+	if ($db_found) 
+    {	
+		$sql1 = "SELECT * FROM contact WHERE Reponse = '0' AND ID_admin = '$id' ;";
+		$result1 = mysqli_query($db_handle, $sql1);
+		if (mysqli_num_rows($result1) != 0){
+			$temp = array();
+			$i = 0;
+			while($data = mysqli_fetch_assoc($result1))
+		    {
+		    	if($id == 2)
+		    	{
+
+			        $i_temp = 0;
+
+					$temp[$i_temp] = $data['Message']; //on garde en mémoire  i_temp = 0
+					$i_temp++;
+					$temp[$i_temp] = $data['Objet']; // i_temp = 1
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_acheteur']; // i_temp = 2
+					$i_temp++;
+					$temp[$i_temp] = $data['ID_message']; // i_temp = 3
+					$i_temp++;
+					$temp[$i_temp] = $data['Reponse']; // i_temp = 4
+
+
+					$table_reponse["$i"] = $temp; //$i comme clée, car sinon on peut plus retrouver l'ID_reponse
+					$i++;
+		    	}
+	    	
+	       }
+
+    	}
+    	
+	}
+
+
 	
-	//fermer la connexion
-	mysqli_close($db_handle); 
+	//on ne ferme pas la connexion car on en a besoin plus loin dans le code, on fermera a ce moment la
+	//mysqli_close($db_handle); 
 ?>
 
 <!DOCTYPE html> 
@@ -571,6 +650,35 @@
 				        </div>
 				    </div>
 					<div class="panel" style="display: none;" id="panel_mes_vendeur">
+						<?php 
+						echo '<div class="panel-heading">';
+						echo '<br><h2 class="text-center">Contenu du/des message(s) (non traité(s))</h2><br>';
+						echo '</div>';
+						 for ($i= 0; $i < count($table_reponse); $i++)
+			    		 { //pour chaque item
+			    			if ($table_reponse[$i][4] == 0)
+			    			{
+									
+								    echo '<div class="panel-body">';
+										echo '<form method="post" action="" enctype="multipart/form-data">';
+											echo '<div class="form-group">';
+											echo "ID de l'acheteur: <td>".$table_reponse[$i][2]."</td>"; //id acheteur
+											//echo "ID de l'acheteur: ".$id_acheteur_bis;
+											echo "<br>";
+											echo "ID du message : <td>".$table_reponse[$i][3]."</td>"; //id message
+											echo "<br>";
+											echo "Objet : <td>".$table_reponse[$i][1]."</td>"; //objet
+											echo "<br>";
+											echo "Message : <td>".$table_reponse[$i][0]."</td>"; //message
+											echo "<br>";
+											echo '</div>';
+											         	
+									    echo '</form>';
+							}
+						}
+
+						?>
+
 					    <div class="panel-heading">
 					    	<br><h2 class="text-center">Messages</h2><br>
 					    </div>
@@ -585,10 +693,30 @@
 							        </div>
 						        </div>
 						        <div class="form-group">
+						            <input class="form-control" style="width: 100%" type="text" name="id_message" placeholder="ID du message" required>
+						        </div>
+						        <div class="form-group">
 						            <textarea name="message" rows="5" cols="100" placeholder="Message" id="message" required></textarea>
 						        </div>
 						        <div class="form-group">
 						           	<input class="form-control" style="width:200px; margin: 0 auto" name="buttonenvoyer" type="submit" value="Envoyer votre message">
+						           	<?php
+						           	$id_message_blindage = isset($_POST["id_message"])? $_POST["id_message"] : "";
+						           	if (isset($_POST["buttonenvoyer"]))
+						           		for ($i= 0; $i < count($table_reponse); $i++)
+						           		{
+						           			if($table_reponse[$i][3] == $id_message_blindage)
+						           			{
+						           				$i += count($table_reponse);
+						           			}
+						           			else
+						           			{
+						           				echo "Veuillez mettre un ID message valide, vous les trouverez en haut ! <br>";
+						           				$id_manquant = 0;
+						           				$i += count($table_reponse);
+						           			}
+						           		}
+						           	?>
 								</div>
 						    </form>					
 				        </div>
@@ -646,7 +774,10 @@
 										</form>';
 									}
 								}
-							}?>     					
+							}
+							//fermer la connexion
+											mysqli_close($db_handle); 
+							?>     					
 				        </div>
 				    </div>
 			    </div>
